@@ -1,10 +1,10 @@
 import Image from "next/image";
-import Dashboard from './Pages/Dashboard/page.jsx';
+import Login from './Pages/Login/page.jsx';
 
 export default function Home() {
   return (
    
-      <Dashboard />
+      <Login/>
    
   );
 }

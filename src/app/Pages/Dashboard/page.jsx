@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Sidebar from "../../Components/Sidebar/page.jsx";
 import MainContent from "../../Components/MainContent/page.jsx";
 import { Menu } from "lucide-react";
+import ProtectedRoute from "../Common_Method/protectedroute.js";
+
 
 const Page = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -47,6 +49,6 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ProtectedRoute(Page);
 
 

@@ -1,8 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import {Moon,Sun,Bell,Search,User,Settings,LogOut} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const Header = () => {
+  const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -24,12 +29,26 @@ const Header = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+ const handleLogout = () => {
+  localStorage.removeItem("token");
+  toast.success("Logged out successfully!");
+
+  setTimeout(() => {
+    window.location.href = "/dhakadadmin/Pages/Login";
+  }, 1000); 
+};
+
+
+  const handleNavigateProfile = () => {
+   router.push("/Pages/Pofile"); 
+  }
+
   return (
-    <header className="flex items-center justify-between border-s-1 bg-white dark:bg-white-900 border-b border-gray-200 dark:border-border-700 px-6 py-2 mt-0 shadow-sm">
-      {/* Left: Logo / Title */}
+    <header className="flex items-center justify-between border-s-1 bg-white dark:bg-white-900 border-b border-gray-200 dark:border-border-700 px-6 py-2 mt-0 ">
       <div className="text-xl font-semibold text-gray-800 dark:text-black">
         Dhakad Matrimonial Admin
       </div>
+      <ToastContainer position="top-right" autoClose={2000} />
 
       {/* Center: Search Bar */}
       {/* <div className="hidden md:flex items-center bg-gray-100 dark:bg-blue-100 px-3 py-2 rounded-lg w-1/3">
@@ -87,7 +106,7 @@ const Header = () => {
             <hr className="border-gray-200 dark:border-gray-700 my-2" />
 
             <ul className="text-gray-700 dark:text-gray-200">
-              <li className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition">
+              <li className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition"  onClick={handleNavigateProfile}>
                 <User size={18} className="text-gray-600 dark:text-gray-300" />
                 View Profile
               </li>
@@ -98,13 +117,11 @@ const Header = () => {
                 />
                 Account Settings
               </li>
-              <li className="flex items-center gap-2 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-700 text-red-600 dark:text-red-400 cursor-pointer transition">
+              <li className="flex items-center gap-2 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-700 text-red-600 dark:text-red-400 cursor-pointer transition" onClick={handleLogout}>
                 <LogOut size={18} />
                 Logout
               </li>
             </ul>
-
-            <hr className="border-gray-200 dark:border-gray-700 mt-2" />
           </div>
         )}
       </div>
