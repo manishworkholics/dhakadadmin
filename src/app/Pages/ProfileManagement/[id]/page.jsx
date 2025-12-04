@@ -53,7 +53,7 @@
 //     const handleProfile = (profileId) => {
 //         // toast.info(`Viewing profile ID: ${profileId}`);
 //       router.push(`/Pages/ProfileDetails/${profileId}`);
-       
+
 //     };  
 
 //     return (
@@ -197,22 +197,24 @@ import { Menu, Eye } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {  useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Header from "@/app/Components/Header/page";
 import Sidebar from "@/app/Components/Sidebar/page";
 import ProtectedRoute from "../../Common_Method/protectedroute";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const Page = () => {
-     const { id } = useParams();
+    const { id } = useParams();
+    const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState(null);
-     const [token, setToken] = useState(null);
+    const [token, setToken] = useState(null);
 
     const params = useParams(); // 🔥 GET DYNAMIC ID
     const profileId = params?.id;
 
-     useEffect(() => {
+    useEffect(() => {
         setToken(localStorage.getItem("token"));
     }, []);
 
@@ -237,12 +239,14 @@ const Page = () => {
     };
 
 
-  useEffect(() => {
+    useEffect(() => {
         if (!token || !id) return;
         fetchProfileDetail();
     }, [token, id]);
 
-
+    const handleBackout = () => {
+        router.push('/Pages/ProfileManagement');
+    }
     return (
         <>
             <div className="flex h-screen bg-gray-100">
@@ -278,6 +282,17 @@ const Page = () => {
                     <div className="flex-1 overflow-auto">
                         <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-6 flex justify-center">
                             <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl p-6">
+
+                                {/* PROFILE CARD */}
+                                <div className="flex items-center gap-1 py-2 mb-3">
+                                    <button onClick={handleBackout} className="flex items-center text-gray-700 hover:text-black">
+                                        <IoIosArrowRoundBack size={28} />
+                                    </button>
+
+                                    <h1 className="text-2xl font-semibold text-gray-800">
+                                        Profile Details
+                                    </h1>
+                                </div>
 
                                 {/* LOADING */}
                                 {loading ? (

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const Page = () => {
     const router = useRouter();
@@ -114,6 +115,10 @@ const Page = () => {
 
     const totalPages = Math.ceil(filteredProfiles.length / profilesPerPage);
 
+    const handleBackout = () => {
+        router.push('/Pages/Dashboard');
+    }
+
     return (
         <>
             <div className="flex h-screen bg-gray-100">
@@ -152,9 +157,15 @@ const Page = () => {
 
                                 {/* Page Header */}
                                 <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                                    <h1 className="text-2xl font-semibold text-gray-800">
-                                        Profile Management
-                                    </h1>
+                                    <div className="flex items-center gap-1">
+                                        <button onClick={handleBackout} className="flex items-center text-gray-700 hover:text-black">
+                                            <IoIosArrowRoundBack size={28} />
+                                        </button>
+
+                                        <h1 className="text-2xl font-semibold text-gray-800">
+                                            Profile Management
+                                        </h1>
+                                    </div>
 
                                     <input
                                         type="text"
@@ -196,8 +207,8 @@ const Page = () => {
                                                             <td className="px-6 py-4 border">
                                                                 <button
                                                                     className={`px-3 py-1 text-xs rounded ${profile.featured
-                                                                            ?  "bg-red-500 text-white hover:bg-red-600"  
-                                                                            :  "bg-green-500 text-white hover:bg-green-600"      
+                                                                        ? "bg-red-500 text-white hover:bg-red-600"
+                                                                        : "bg-green-500 text-white hover:bg-green-600"
                                                                         }`}
                                                                     onClick={() => toggleFeatured(profile._id, profile.featured)}
                                                                 >

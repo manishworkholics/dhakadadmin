@@ -3,18 +3,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Header from "../../Components/Header/page.jsx";
 import Sidebar from "@/app/Components/Sidebar/page";
-import { Menu, Ban, Trash2 } from "lucide-react";
+import { Menu, Ban, Trash2, Link } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const Page = () => {
     const router = useRouter();
     const [token, setToken] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    
+
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
 
@@ -76,10 +77,10 @@ const Page = () => {
         const query = e.target.value.toLowerCase();
         setSearchQuery(query);
 
-        const filtered = users.filter((u) => 
+        const filtered = users.filter((u) =>
             u.name?.toLowerCase().includes(query) ||
             u.email?.toLowerCase().includes(query) ||
-            u.phone?.toLowerCase().includes(query)      
+            u.phone?.toLowerCase().includes(query)
         );
 
         setFilteredUsers(filtered);
@@ -87,39 +88,58 @@ const Page = () => {
     };
 
     // Block User
-    const handleBlock = async (userId) => {
-        try {
-            const res = await axios.put(
-                `http://206.189.130.102:5000/api/admin/users/${userId}/block`,
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+  const handleBlock = async (userId) => {
+    try {
+        const res = await axios.put(
+            `http://206.189.130.102:5000/api/admin/users/${userId}/block`,
+            {},
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-            if (res.data.success) {
+        if (res.data.success) {
+            const message = res.data.message?.toLowerCase() || "";
+
+            if (message.includes("unblocked")) {
+                toast.success("User unblocked successfully!");
+            } else if (message.includes("blocked")) {
                 toast.success("User blocked successfully!");
-                fetchUsers();
+            } else {
+                toast.success("User updated successfully!");
             }
-        } catch (error) {
-            toast.error("Error blocking user!");
+
+            fetchUsers();
         }
-    };
+    } catch (error) {
+        toast.error("Error updating user block status!");
+    }
+};
+
+
 
     // Delete User
-    const handleDelete = async (userId) => {
-        try {
-            const res = await axios.delete(
-                `http://206.189.130.102:5000/api/admin/users/${userId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+  const handleDelete = async (userId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmed) return;
 
-            if (res.data.success) {
-                toast.success("User deleted successfully!");
-                fetchUsers();
-            }
-        } catch (error) {
-            toast.error("Error deleting user!");
+    try {
+        const res = await axios.delete(
+            `http://206.189.130.102:5000/api/admin/users/${userId}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (res.data.success) {
+            toast.success("User deleted successfully!");
+            fetchUsers();
         }
-    };
+    } catch (error) {
+        toast.error("Error deleting user!");
+    }
+};
+
+
+   const handleBackout = () => {
+        router.push('/Pages/Dashboard');
+    }
 
     return (
         <>
@@ -157,10 +177,19 @@ const Page = () => {
                         <div className="p-6 flex justify-center">
                             <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl overflow-hidden">
                                 <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                                    <h1 className="text-2xl font-semibold text-gray-800">
-                                        Profile Management
-                                    </h1>
 
+                                    {/* Back Icon + Title (NO GAP) */}
+                                    <div className="flex items-center gap-1">
+                                        <button onClick={handleBackout} className="flex items-center text-gray-700 hover:text-black">
+                                            <IoIosArrowRoundBack size={28} />
+                                        </button>
+
+                                        <h1 className="text-2xl font-semibold text-gray-800">
+                                            User Management
+                                        </h1>
+                                    </div>
+
+                                    {/* Search */}
                                     <input
                                         type="text"
                                         value={searchQuery}
@@ -169,6 +198,8 @@ const Page = () => {
                                         className="w-full lg:w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                                     />
                                 </div>
+
+
 
                                 {/* Table */}
                                 {loading ? (

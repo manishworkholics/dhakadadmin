@@ -68,14 +68,6 @@ const Header = () => {
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
-        {/* Dark Mode Toggle */}
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="text-gray-700 dark:text-gray-300 hover:text-blue-600 transition"
-        >
-          {darkMode ? <Sun size={22} /> : <Moon size={22} />}
-        </button>
-
         {/* Profile */}
         <div
           onClick={() => setOpenDropdown(!openDropdown)}
