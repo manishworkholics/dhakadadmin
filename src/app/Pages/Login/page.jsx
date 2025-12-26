@@ -31,7 +31,7 @@ const Page = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://206.189.130.102:5000/api/admin/login",
+        "http://143.110.244.163:5000/api/admin/login",
         formData
       );
 

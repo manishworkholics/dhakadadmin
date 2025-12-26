@@ -53,7 +53,7 @@ const Page = () => {
         try {
             setLoading(true);
             const res = await axios.get(
-                "http://206.189.130.102:5000/api/admin/users",
+                "http://143.110.244.163:5000/api/admin/users",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -91,7 +91,7 @@ const Page = () => {
   const handleBlock = async (userId) => {
     try {
         const res = await axios.put(
-            `http://206.189.130.102:5000/api/admin/users/${userId}/block`,
+            `http://143.110.244.163:5000/api/admin/users/${userId}/block`,
             {},
             { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -123,7 +123,7 @@ const Page = () => {
 
     try {
         const res = await axios.delete(
-            `http://206.189.130.102:5000/api/admin/users/${userId}`,
+            `http://143.110.244.163:5000/api/admin/users/${userId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -174,9 +174,9 @@ const Page = () => {
 
                     {/* Main Content */}
                     <div className="flex-1 overflow-auto">
-                        <div className="p-6 flex justify-center">
-                            <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl overflow-hidden">
-                                <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div className="p-6 ">
+                            <div >
+                                <div >
 
                                     {/* Back Icon + Title (NO GAP) */}
                                     <div className="flex items-center gap-1">

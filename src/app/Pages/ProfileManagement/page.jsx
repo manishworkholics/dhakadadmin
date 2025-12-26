@@ -39,7 +39,7 @@ const Page = () => {
         if (!token) return;
         try {
             setLoading(true);
-            const res = await axios.get("http://206.189.130.102:5000/api/admin/profiles", {
+            const res = await axios.get("http://143.110.244.163:5000/api/admin/profiles", {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -87,8 +87,8 @@ const Page = () => {
     const toggleFeatured = async (profileId, isFeatured) => {
         try {
             const url = isFeatured
-                ? "http://206.189.130.102:5000/api/featured/unmark"
-                : "http://206.189.130.102:5000/api/featured/mark";
+                ? "http://143.110.244.163:5000/api/featured/unmark"
+                : "http://143.110.244.163:5000/api/featured/mark";
 
             const res = await axios.post(
                 url,
@@ -151,9 +151,9 @@ const Page = () => {
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 overflow-auto">
-                        <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 p-6 flex justify-center">
-                            <div className="bg-white rounded-xl shadow-2xl w-full max-w-7xl overflow-hidden">
+                    <div className="flex-1 p-6 overflow-auto">
+                        <div >
+                            <div >
 
                                 {/* Page Header */}
                                 <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
