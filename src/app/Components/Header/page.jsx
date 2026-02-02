@@ -88,10 +88,10 @@ const Header = () => {
           <div className="absolute right-0 top-14 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 z-50">
             <div className="px-4 py-2">
               <p className="font-semibold text-gray-800 dark:text-gray-100">
-                Priyanshi Choudhary
+              
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                admin@dhakad.com
+               
               </p>
             </div>
 
