@@ -66,8 +66,7 @@ const ContactUs = () => {
     <div className="flex h-screen bg-gray-100">
       <div
         className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300
-          lg:static lg:translate-x-0 ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          lg:static lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <Sidebar />
@@ -90,121 +89,124 @@ const ContactUs = () => {
           </button>
           <Header />
         </div>
+        <div className="flex-1 overflow-auto">
+          <div className="p-6 ">
+            <div >
+              <div className="px-6 py-4  flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" >
+                <h1 className="text-2xl font-semibold mb-3">Contact Messages</h1>
 
-        <div className="p-6 overflow-auto">
-          <h2 className="text-xl font-semibold mb-3">Contact Messages</h2>
+                {/* 🔍 Search Input */}
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="border p-2 rounded lg:w-1/3 md:w-full mb-3"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              {/* 📋 Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white shadow rounded table-auto text-center">
+                  <thead className="bg-gray-200">
+                    <tr>
+                      <th className="p-2">Name</th>
+                      <th className="p-2">Email</th>
+                      <th className="p-2">Phone</th>
+                      <th className="p-2">Subject</th>
+                      <th className="p-2">Date</th>
+                      <th className="p-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedContacts.length > 0 ? (
+                      paginatedContacts.map((item) => (
+                        <tr key={item._id} className="border-b">
+                          <td className="p-2">{item.name}</td>
+                          <td className="p-2">{item.email}</td>
+                          <td className="p-2">{item.phone}</td>
+                          <td className="p-2">{item.subject}</td>
+                          <td className="p-2">
+                            {new Date(item.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="p-2 flex justify-center">
+                            <button
+                              onClick={() => setSelectedMessage(item)}
+                              className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                            >
+                              <Eye size={18} /> View
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={6}
+                          className="text-center p-4 text-gray-500 italic"
+                        >
+                          No messages found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {/* 🔻 Pagination Buttons */}
+              <div className="flex justify-between items-center mt-3">
+                <span>
+                  Page {page} of {totalPages || 1}
+                </span>
 
-          {/* 🔍 Search Input */}
-          <input
-            type="text"
-            placeholder="Search..."
-            className="border p-2 rounded w-full mb-3"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-
-          {/* 📋 Table */}
-          <table className="w-full bg-white shadow rounded table-auto">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="p-2 text-left">Name</th>
-                <th className="p-2 text-left">Email</th>
-                <th className="p-2 text-left">Phone</th>
-                <th className="p-2 text-left">Subject</th>
-                <th className="p-2 text-left">Date</th>
-                <th className="p-2 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedContacts.length > 0 ? (
-                paginatedContacts.map((item) => (
-                  <tr key={item._id} className="border-b">
-                    <td className="p-2">{item.name}</td>
-                    <td className="p-2">{item.email}</td>
-                    <td className="p-2">{item.phone}</td>
-                    <td className="p-2">{item.subject}</td>
-                    <td className="p-2">
-                      {new Date(item.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="p-2">
-                      <button
-                        onClick={() => setSelectedMessage(item)}
-                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                      >
-                        <Eye size={18} /> View
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="text-center p-4 text-gray-500 italic"
+                <div className="flex gap-3">
+                  <button
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                    className={`px-3 py-1 rounded ${page === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+                      }`}
                   >
-                    No messages found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-
-          {/* 🔻 Pagination Buttons */}
-          <div className="flex justify-between items-center mt-3">
-            <span>
-              Page {page} of {totalPages || 1}
-            </span>
-
-            <div className="flex gap-3">
-              <button
-                disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-                className={`px-3 py-1 rounded ${
-                  page === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-                }`}
-              >
-                Prev
-              </button>
-              <button
-                disabled={page >= totalPages}
-                onClick={() => setPage(page + 1)}
-                className={`px-3 py-1 rounded ${
-                  page >= totalPages
-                    ? "bg-gray-300"
-                    : "bg-blue-500 text-white"
-                }`}
-              >
-                Next
-              </button>
+                    Prev
+                  </button>
+                  <button
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(page + 1)}
+                    className={`px-3 py-1 rounded ${page >= totalPages
+                      ? "bg-gray-300"
+                      : "bg-blue-500 text-white"
+                      }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* 🟦 Modal for View Details */}
+          {selectedMessage && (
+            <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-md w-96">
+                <h3 className="text-lg font-semibold mb-3">Contact Detail</h3>
+
+                <p><strong>Name:</strong> {selectedMessage.name}</p>
+                <p><strong>Email:</strong> {selectedMessage.email}</p>
+                <p><strong>Phone:</strong> {selectedMessage.phone}</p>
+                <p><strong>Subject:</strong> {selectedMessage.subject}</p>
+                <p><strong>Message:</strong> {selectedMessage.message}</p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Date: {new Date(selectedMessage.createdAt).toLocaleString()}
+                </p>
+
+                <button
+                  className="bg-red-500 text-white px-3 py-1 rounded mt-4 w-full"
+                  onClick={() => setSelectedMessage(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* 🟦 Modal for View Details */}
-      {selectedMessage && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-96">
-            <h3 className="text-lg font-semibold mb-3">Contact Detail</h3>
-
-            <p><strong>Name:</strong> {selectedMessage.name}</p>
-            <p><strong>Email:</strong> {selectedMessage.email}</p>
-            <p><strong>Phone:</strong> {selectedMessage.phone}</p>
-            <p><strong>Subject:</strong> {selectedMessage.subject}</p>
-            <p><strong>Message:</strong> {selectedMessage.message}</p>
-            <p className="text-sm text-gray-500 mt-2">
-              Date: {new Date(selectedMessage.createdAt).toLocaleString()}
-            </p>
-
-            <button
-              className="bg-red-500 text-white px-3 py-1 rounded mt-4 w-full"
-              onClick={() => setSelectedMessage(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

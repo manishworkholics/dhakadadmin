@@ -173,11 +173,10 @@ const Page = () => {
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 overflow-auto">
-                        <div className="p-6 ">
+                    <div className="flex-1 overflow-auto p-6">
+                        <div className=" ">
                             <div >
-                                <div >
-
+                                <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" >
                                     {/* Back Icon + Title (NO GAP) */}
                                     <div className="flex items-center gap-1">
                                         <button onClick={handleBackout} className="flex items-center text-gray-700 hover:text-black">
@@ -195,11 +194,9 @@ const Page = () => {
                                         value={searchQuery}
                                         onChange={handleSearch}
                                         placeholder="Search by name, email, phone, location..."
-                                        className="w-full lg:w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                                        className="w-full lg:w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-black-300"
                                     />
                                 </div>
-
-
 
                                 {/* Table */}
                                 {loading ? (
@@ -212,28 +209,28 @@ const Page = () => {
                                 ) : (
                                     <>
                                         <div className="overflow-x-auto">
-                                            <table className="min-w-full divide-y divide-gray-200 mb-3">
+                                            <table className="min-w-full mb-3">
                                                 <thead className="bg-gray-900 text-white">
                                                     <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-b-0 border-r-0 ">
                                                             Name
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">
                                                             Email
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">
                                                             Phone
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0 ">
                                                             Create for
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0 ">
                                                             Verified
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0 ">
                                                             Blocked
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0 ">
                                                             Action
                                                         </th>
                                                     </tr>

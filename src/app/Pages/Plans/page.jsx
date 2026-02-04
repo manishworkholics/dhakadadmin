@@ -142,8 +142,8 @@ const Plan = () => {
           </div>
 
           {/* Main Content */}
-          <div className="p-5 overflow-auto">
-            <h2 className="text-xl font-semibold mb-3">Manage Plans</h2>
+          <div className="p-6 overflow-auto">
+            <h1 className="text-2xl font-semibold mb-3">Manage Plans</h1>
 
             {/* Form */}
             <form
@@ -203,7 +203,7 @@ const Plan = () => {
             </form>
 
             {/* Plans Table */}
-            <table className="table-auto w-full bg-white rounded shadow">
+            <table className="table-auto w-full bg-white rounded shadow text-center">
               <thead className="bg-gray-200">
                 <tr>
                   <th className="p-2">Name</th>
@@ -220,7 +220,7 @@ const Plan = () => {
                     <td className="p-2">₹{p.price} + {p.gstPercent}% GST</td>
                     <td className="p-2">{p.durationMonths} Months</td>
                     <td className="p-2">{p.features.join(", ")}</td>
-                    <td className="p-2 flex gap-2">
+                    <td className="p-2 flex gap-2 justify-center">
                       <button
                         className="text-blue-600"
                         onClick={() => handleEdit(p)}

@@ -29,7 +29,7 @@ const Sidebar = () => {
     return (
         <div className="h-full flex flex-col bg-white">
             {/* Logo / Header */}
-            <div className="p-5 pb-4 border-b border-gray-200">
+            <div className="p-5 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-800 truncate">
                     Dhakad Matrimonial
                 </h2>
@@ -42,7 +42,7 @@ const Sidebar = () => {
                     return (
                         <Link href={item.path || "#"} key={index}>
                             <li
-                                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-all 
+                                className={`flex mb-2 items-center gap-3 p-2 rounded-lg cursor-pointer transition-all 
                   ${isActive
                                         ? "bg-black text-white"
                                         : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"

@@ -31,7 +31,7 @@ const Page = () => {
       {/* Main Section */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header with mobile menu button */}
-        <div className="flex items-center justify-between border-b bg-white shadow-sm px-4 py-1 lg:py-0">
+        <div className="flex items-center justify-between bg-white shadow-sm px-4 py-1 lg:py-0">
           <button
             className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -41,7 +41,7 @@ const Page = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 pt-1 overflow-auto">
+        <div className="flex-1 overflow-auto">
           <MainContent />
         </div>
       </div>
