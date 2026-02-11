@@ -16,28 +16,33 @@ const PaymentManagement = () => {
   const [search, setSearch] = useState("");
 
   const [selected, setSelected] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Pagination
   const [page, setPage] = useState(1);
   const pageSize = 10;
-  const totalPages = Math.ceil(filtered.length / pageSize);
+
 
   const token =
-    typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const loadPayments = async () => {
+  const loadPayments = async (pageNumber = 1) => {
     try {
-      const res = await axios.get(API_URL, {
+      const res = await axios.get(`${API_URL}?page=${pageNumber}&limit=10`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (res.data.success) {
-        setPayments(res.data.plans || []);
-        setFiltered(res.data.plans || []);
+        setPayments(res.data.payments || []);
+        setFiltered(res.data.payments || []);
+        setPage(res.data.page);
+        setTotalPages(res.data.totalPages);
       }
     } catch (err) {
       console.log("Error loading payment history:", err);
     }
   };
+
 
   useEffect(() => {
     loadPayments();
@@ -130,13 +135,12 @@ const PaymentManagement = () => {
                     <td className="p-2">{item.razorpayPaymentId || "-"}</td>
                     <td className="p-2">
                       <span
-                        className={`px-2 py-1 rounded text-white text-xs ${
-                          item.status === "paid"
-                            ? "bg-green-600"
-                            : item.status === "failed"
+                        className={`px-2 py-1 rounded text-white text-xs ${item.status === "paid"
+                          ? "bg-green-600"
+                          : item.status === "failed"
                             ? "bg-red-600"
                             : "bg-yellow-500"
-                        }`}
+                          }`}
                       >
                         {item.status.toUpperCase()}
                       </span>
@@ -178,27 +182,28 @@ const PaymentManagement = () => {
             <span>
               Page {page} of {totalPages || 1}
             </span>
+
             <div className="flex gap-3">
               <button
                 disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-                className={`px-3 py-1 rounded ${
-                  page === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-                }`}
+                onClick={() => loadPayments(page - 1)}
+                className={`px-3 py-1 rounded ${page === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
+                  }`}
               >
                 Prev
               </button>
+
               <button
                 disabled={page >= totalPages}
-                onClick={() => setPage(page + 1)}
-                className={`px-3 py-1 rounded ${
-                  page >= totalPages ? "bg-gray-300" : "bg-blue-500 text-white"
-                }`}
+                onClick={() => loadPayments(page + 1)}
+                className={`px-3 py-1 rounded ${page >= totalPages ? "bg-gray-300" : "bg-blue-500 text-white"
+                  }`}
               >
                 Next
               </button>
             </div>
           </div>
+
         </div>
       </div>
 
