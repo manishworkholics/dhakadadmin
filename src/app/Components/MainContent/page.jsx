@@ -57,42 +57,79 @@ const page = () => {
         {/* ================= TOP CARDS ================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-          <Card
-            title="Total Users"
-            value={stats.totalUsers}
-            icon={<Users className="text-blue-500" size={28} />}
-            bg="bg-blue-100"
-          />
+  {/* Total Users */}
+  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
+    
+    {/* FULL HEIGHT STRIP */}
+    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-blue-600 to-blue-400"></div>
 
-          <Card
-            title="Active Matches"
-            value={stats.activeMatches}
-            icon={<Heart className="text-pink-500" size={28} />}
-            bg="bg-pink-100"
-          />
+    <div className="ml-4 w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center mr-5">
+      <Users className="text-blue-600" size={18} />
+    </div>
 
-          <Card
-            title="Revenue"
-            value={`₹ ${stats.revenue}`}
-            icon={<DollarSign className="text-green-500" size={28} />}
-            bg="bg-green-100"
-          />
+    <div className="leading-tight">
+      <h5 className="text-md text-gray-500">Total Users</h5>
+      <p className="text-lg font-semibold text-gray-900">
+        {stats.totalUsers}
+      </p>
+    </div>
+  </div>
 
-          <Card
-            title="Active Today"
-            value={stats.activeToday}
-            icon={<Activity className="text-yellow-500" size={28} />}
-            bg="bg-yellow-100"
-          />
+  {/* Active Matches */}
+  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
+    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-pink-600 to-pink-400"></div>
 
-        </div>
+    <div className="ml-4 w-9 h-9 rounded-full bg-pink-100 flex items-center justify-center mr-5">
+      <Heart className="text-pink-600" size={18} />
+    </div>
 
+    <div className="leading-tight">
+      <h5 className="text-md text-gray-500">Active Matches</h5>
+      <p className="text-lg font-semibold text-gray-900">
+        {stats.activeMatches}
+      </p>
+    </div>
+  </div>
+
+  {/* Revenue */}
+  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
+    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-green-600 to-green-400"></div>
+
+    <div className="ml-4 w-9 h-9 rounded-full bg-green-100 flex items-center justify-center mr-5">
+      <DollarSign className="text-green-600" size={18} />
+    </div>
+
+    <div className="leading-tight">
+      <h5 className="text-md text-gray-500">Revenue</h5>
+      <p className="text-lg font-semibold text-gray-900">
+        ₹ {stats.revenue}
+      </p>
+    </div>
+  </div>
+
+  {/* Active Today */}
+  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
+    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-yellow-500 to-yellow-300"></div>
+
+    <div className="ml-4 w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center mr-5">
+      <Activity className="text-yellow-500" size={18} />
+    </div>
+
+    <div className="leading-tight">
+      <h5 className="text-md text-gray-500">Active Today</h5>
+      <p className="text-lg font-semibold text-gray-900">
+        {stats.activeToday}
+      </p>
+    </div>
+  </div>
+
+</div>
 
         {/* ================= CHARTS ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
           {/* User Growth */}
-          <div className="bg-white rounded-2xl p-6 shadow-md">
+          <div className="bg-white rounded-2xl p-4 shadow-md">
             <h3 className="text-lg font-semibold mb-4 text-black">User Growth</h3>
 
             <ResponsiveContainer width="100%" height={300}>
@@ -106,7 +143,7 @@ const page = () => {
           </div>
 
           {/* Revenue */}
-          <div className="bg-white rounded-2xl p-6 shadow-md">
+          <div className="bg-white rounded-2xl p-4 shadow-md">
             <h3 className="text-lg font-semibold mb-4 text-black">Revenue Overview</h3>
 
             <ResponsiveContainer width="100%" height={300}>
@@ -123,7 +160,7 @@ const page = () => {
 
 
         {/* ================= RECENT ACTIVITIES ================= */}
-        <div className="bg-white rounded-2xl shadow-md p-6">
+        <div className="bg-white rounded-2xl shadow-md p-4">
           <h3 className="text-lg font-semibold mb-4 text-black">Recent Activities</h3>
 
           <ul className="divide-y divide-gray-200">

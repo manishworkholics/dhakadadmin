@@ -44,8 +44,8 @@ const Header = () => {
   }
 
   return (
-    <header className="flex items-center justify-between border-s-1 bg-white dark:bg-white-900 border-b border-gray-200 dark:border-border-700 px-6 py-2 mt-0 ">
-      <div className="text-xl font-semibold text-gray-800 dark:text-black">
+    <header className="flex items-center justify-between border-s-1 bg-[#0F172A] dark:bg-white-900 border-b border-gray-200 dark:border-border-700 px-6 py-2 mt-0 ">
+      <div className="text-xl font-semibold text-white dark:text-black">
         Dhakad Matrimonial Admin
       </div>
       <ToastContainer position="top-right" autoClose={2000} />
@@ -63,7 +63,7 @@ const Header = () => {
       {/* Right: Icons and Profile */}
       <div className="flex items-center gap-5 relative" ref={dropdownRef}>
         {/* Notification */}
-        <button className="relative text-gray-700 hover:text-blue-600 transition">
+        <button className="relative text-white hover:text-blue-600 transition">
           <Bell size={22} />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>

@@ -27,13 +27,17 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="h-full flex flex-col bg-white">
+        <div className="h-full flex flex-col bg-[#0F172A]">
             {/* Logo / Header */}
-            <div className="p-5 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-800 truncate">
-                    Dhakad Matrimonial
-                </h2>
-            </div>
+            <div className="p-3 border-b border-gray-200 flex justify-center">
+  <Link href="/" className="flex justify-center">
+    <img
+      src="/dhakadadmin/assets/images/dhakadlogo.png"
+      alt="Dhakad Matrimonial"
+      className="h-10 object-contain"
+    />
+  </Link>
+</div>
 
             {/* Menu */}
             <ul className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -42,10 +46,10 @@ const Sidebar = () => {
                     return (
                         <Link href={item.path || "#"} key={index}>
                             <li
-                                className={`flex mb-2 items-center gap-3 p-2 rounded-lg cursor-pointer transition-all 
+                                className={`flex mb-2 items-center gap-3 p-3 rounded-lg cursor-pointer transition-all 
                   ${isActive
-                                        ? "bg-black text-white"
-                                        : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                                        ? "bg-[#7B2A3A] text-white"
+                                        : "text-white hover:bg-[#7B2A3A] hover:text-white"
                                     }
                 `}
                             >
