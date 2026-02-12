@@ -63,7 +63,7 @@ const Header = () => {
       {/* Right: Icons and Profile */}
       <div className="flex items-center gap-5 relative" ref={dropdownRef}>
         {/* Notification */}
-        <button className="relative text-white hover:text-blue-600 transition">
+        <button className="relative text-white hover:text-blue-600 transition cursor-pointer">
           <Bell size={22} />
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>

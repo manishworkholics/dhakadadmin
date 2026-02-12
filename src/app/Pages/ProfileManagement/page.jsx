@@ -184,14 +184,14 @@ const Page = () => {
                                 ) : (
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-gray-200 mb-3">
-                                            <thead className="bg-gray-900 text-white">
+                                            <thead className="bg-[#7B2A3A] text-white">
                                                 <tr>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-b-0 border-r-0">Name</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">Email</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">Phone</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">Location</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">Featured</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-black border-l-0 border-b-0 border-r-0">Action</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-b-0 border-r-0">Name</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Email</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Phone</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Location</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Featured</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Action</th>
                                                 </tr>
                                             </thead>
 
@@ -199,13 +199,13 @@ const Page = () => {
                                                 {currentProfiles && currentProfiles.length > 0 ? (
                                                     currentProfiles.map((profile) => (
                                                         <tr key={profile._id} className="hover:bg-gray-100 transition">
-                                                            <td className="px-6 py-4 text-xs font-medium border">{profile.name || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border">{profile.email || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border">{profile.userId?.phone || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border">{profile.location || "N/A"}</td>
-                                                            <td className="px-6 py-4 border">
+                                                            <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A]">{profile.name || "N/A"}</td>
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.email || "N/A"}</td>
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.userId?.phone || "N/A"}</td>
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.location || "N/A"}</td>
+                                                            <td className="px-6 py-4 border border-[#7B2A3A]">
                                                                 <button
-                                                                    className={`px-3 py-1 text-xs rounded ${profile.featured
+                                                                    className={`cursor-pointer px-3 py-1 text-xs rounded ${profile.featured
                                                                         ? "bg-red-500 text-white hover:bg-red-600"
                                                                         : "bg-green-500 text-white hover:bg-green-600"
                                                                         }`}
@@ -214,9 +214,9 @@ const Page = () => {
                                                                     {profile.featured ? "Unmark" : "Mark"}
                                                                 </button>
                                                             </td>
-                                                            <td className="px-6 py-4 border">
+                                                            <td className="px-6 py-4 border border-[#7B2A3A]">
                                                                 <button
-                                                                    className="text-blue-600 hover:text-blue-800 transition"
+                                                                    className="text-blue-600 hover:text-blue-800 transition cursor-pointer"
                                                                     title="View Profile"
                                                                     onClick={() => handleProfile(profile._id)}
                                                                 >

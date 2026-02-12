@@ -16,28 +16,33 @@ const PaymentManagement = () => {
   const [search, setSearch] = useState("");
 
   const [selected, setSelected] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Pagination
   const [page, setPage] = useState(1);
   const pageSize = 10;
-  const totalPages = Math.ceil(filtered.length / pageSize);
+
 
   const token =
-    typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const loadPayments = async () => {
+  const loadPayments = async (pageNumber = 1) => {
     try {
-      const res = await axios.get(API_URL, {
+      const res = await axios.get(`${API_URL}?page=${pageNumber}&limit=10`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (res.data.success) {
-        setPayments(res.data.plans || []);
-        setFiltered(res.data.plans || []);
+        setPayments(res.data.payments || []);
+        setFiltered(res.data.payments || []);
+        setPage(res.data.page);
+        setTotalPages(res.data.totalPages);
       }
     } catch (err) {
       console.log("Error loading payment history:", err);
     }
   };
+
 
   useEffect(() => {
     loadPayments();
@@ -111,28 +116,28 @@ const PaymentManagement = () => {
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="table-auto w-full bg-white shadow-md rounded">
-                  <thead className="bg-gray-200">
+                  <thead className="bg-[#7B2A3A] text-white">
                     <tr>
-                      <th className="p-2 text-left">User</th>
-                      <th className="p-2 text-left">Email</th>
-                      <th className="p-2 text-left">Plan</th>
-                      <th className="p-2 text-left">Amount</th>
-                      <th className="p-2 text-left">Payment ID</th>
-                      <th className="p-2 text-left">Status</th>
-                      <th className="p-2 text-left">Date</th>
-                      <th className="p-2 text-left">Action</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">User</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Email</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Plan</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Amount</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Payment ID</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Status</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Date</th>
+                      <th className="p-2 text-left border border-[#7B2A3A]">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {paginated.length > 0 ? (
                       paginated.map((item) => (
-                        <tr key={item._id} className="border-b">
-                          <td className="p-2">{item?.user?.name || "-"}</td>
-                          <td className="p-2">{item?.user?.email || "-"}</td>
-                          <td className="p-2">{item?.plan?.name || "-"}</td>
-                          <td className="p-2">₹{item.amount}</td>
-                          <td className="p-2">{item.razorpayPaymentId || "-"}</td>
-                          <td className="p-2">
+                        <tr key={item._id} className="">
+                          <td className="p-2 border border-[#7B2A3A]">{item?.user?.name || "-"}</td>
+                          <td className="p-2 border border-[#7B2A3A]">{item?.user?.email || "-"}</td>
+                          <td className="p-2 border border-[#7B2A3A]">{item?.plan?.name || "-"}</td>
+                          <td className="p-2 border border-[#7B2A3A]">₹{item.amount}</td>
+                          <td className="p-2 border border-[#7B2A3A]">{item.razorpayPaymentId || "-"}</td>
+                          <td className="p-2 border border-[#7B2A3A]">
                             <span
                               className={`px-2 py-1 rounded text-white text-xs ${item.status === "paid"
                                 ? "bg-green-600"
@@ -144,22 +149,24 @@ const PaymentManagement = () => {
                               {item.status.toUpperCase()}
                             </span>
                           </td>
-                          <td className="p-2">
+                          <td className="p-2 border border-[#7B2A3A]">
                             {new Date(item.createdAt).toLocaleString()}
                           </td>
-                          <td className="p-2 flex gap-3">
-                            <button
-                              className="text-blue-500 flex gap-1 items-center"
-                              onClick={() => setSelected(item)}
-                            >
-                              <Eye size={16} /> View
-                            </button>
-                            <button className="text-gray-500 flex gap-1 items-center" disabled>
-                              <FileDown size={16} /> Invoice
-                            </button>
-                            <button className="text-orange-500 flex gap-1 items-center" disabled>
-                              <RefreshCw size={16} /> Resend
-                            </button>
+                          <td className="p-2  border border-[#7B2A3A]">
+                            <div className="flex gap-3">
+                              <button
+                                className="text-blue-500 flex gap-1 items-center cursor-pointer"
+                                onClick={() => setSelected(item)}
+                              >
+                                <Eye size={16} /> View
+                              </button>
+                              <button className="text-gray-500 flex gap-1 items-center cursor-pointer" disabled>
+                                <FileDown size={16} /> Invoice
+                              </button>
+                              <button className="text-orange-500 flex gap-1 items-center cursor-pointer" disabled>
+                                <RefreshCw size={16} /> Resend
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))
@@ -228,6 +235,7 @@ const PaymentManagement = () => {
               </div>
             </div>
           )}
+
         </div>
       </div>
     </div>
