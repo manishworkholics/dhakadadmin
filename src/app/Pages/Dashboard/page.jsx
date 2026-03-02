@@ -5,52 +5,59 @@ import MainContent from "../../Components/MainContent/page.jsx";
 import { Menu } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
-
 const Page = () => {
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300 lg:static lg:translate-x-0 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <Sidebar />
-      </div>
+    <div className="flex h-screen bg-gray-100 overflow-hidden">
 
-      {/* Overlay when sidebar open (mobile only) */}
+      {/* ================= SIDEBAR ================= */}
+
+      {/* Desktop Sidebar (FLEX ITEM) */}
+      <div className="hidden lg:block ...">
+  <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+</div>
+
+{/* Mobile Sidebar */}
+<div className="lg:hidden fixed ...">
+  <Sidebar collapsed={false} setCollapsed={() => {}} />
+</div>
+
+      {/* Overlay Mobile */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-40 z-30 lg:hidden"
-        ></div>
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+        />
       )}
 
+      {/* ================= MAIN AREA ================= */}
 
-
-      {/* Main Section */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header with mobile menu button */}
-        <div className="flex items-center justify-between bg-white shadow-sm px-4 py-1 lg:py-0">
+
+        {/* HEADER */}
+        <div className="flex items-center bg-white shadow-sm px-4">
+
           <button
             className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <Menu size={22} />
           </button>
+
         </div>
 
-        {/* Main Content */}
-        <div className="flex-1 overflow-auto">
+        {/* CONTENT */}
+        <div className="flex-1 overflow-auto transition-all duration-300">
           <MainContent />
         </div>
+
       </div>
+
     </div>
   );
 };
 
 export default ProtectedRoute(Page);
-
-

@@ -52,14 +52,13 @@ const page = () => {
     <div className="min-h-screen bg-[#F7FBFF]">
       <Header />
 
-      <div className="p-6 space-y-8">
+      <div className="p-6 space-y-8 w-full max-w-none">
 
         {/* ================= TOP CARDS ================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
   {/* Total Users */}
-  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
-    
+<div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-full overflow-hidden">    
     {/* FULL HEIGHT STRIP */}
     <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-blue-600 to-blue-400"></div>
 
@@ -76,8 +75,7 @@ const page = () => {
   </div>
 
   {/* Active Matches */}
-  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
-    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-pink-600 to-pink-400"></div>
+<div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-full overflow-hidden">    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-pink-600 to-pink-400"></div>
 
     <div className="ml-4 w-9 h-9 rounded-full bg-pink-100 flex items-center justify-center mr-5">
       <Heart className="text-pink-600" size={18} />
@@ -92,8 +90,7 @@ const page = () => {
   </div>
 
   {/* Revenue */}
-  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
-    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-green-600 to-green-400"></div>
+<div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-full overflow-hidden">    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-green-600 to-green-400"></div>
 
     <div className="ml-4 w-9 h-9 rounded-full bg-green-100 flex items-center justify-center mr-5">
       <DollarSign className="text-green-600" size={18} />
@@ -108,8 +105,7 @@ const page = () => {
   </div>
 
   {/* Active Today */}
-  <div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-[375px] overflow-hidden hover:shadow-md transition-all duration-200">
-    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-yellow-500 to-yellow-300"></div>
+<div className="relative bg-white rounded-xl shadow-sm flex items-center pe-4 py-3 w-full overflow-hidden">    <div className="absolute left-0 top-0 h-full w-[10px] bg-gradient-to-b from-yellow-500 to-yellow-300"></div>
 
     <div className="ml-4 w-9 h-9 rounded-full bg-yellow-100 flex items-center justify-center mr-5">
       <Activity className="text-yellow-500" size={18} />
