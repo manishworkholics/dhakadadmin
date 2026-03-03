@@ -36,30 +36,30 @@ const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/Pages/Dashboard" },
     { name: "BackUp", icon: <DatabaseBackup size={20} />, path: "/Pages/BackUp" },
-    { name: "AutoSendEmail", icon: <Mail size={20} />, path: "/Pages/AutoSendEmail" },
+    { name: "Auto Send Email", icon: <Mail size={20} />, path: "/Pages/AutoSendEmail" },
     { name: "Seo", icon: <Search size={20} />, path: "/Pages/Seo" },
     { name: "Members", icon: <Users size={20} />, path: "/Pages/Members" },
-    { name: "ContactInfo", icon: <Phone size={20} />, path: "/Pages/ContactInfo" },
+    { name: "Contact Info", icon: <Phone size={20} />, path: "/Pages/ContactInfo" },
     { name: "Contact Us", icon: <Phone size={20} />, path: "/Pages/ContactUs" },
-    { name: "AboutUs", icon: <Info size={20} />, path: "/Pages/AboutUs" },
+    { name: "About Us", icon: <Info size={20} />, path: "/Pages/AboutUs" },
     { name: "Sliders", icon: <Image size={20} />, path: "/Pages/Sliders" },
     { name: "Gallery", icon: <Image size={20} />, path: "/Pages/Gallery" },
-    { name: "TeamMembers", icon: <UsersRound size={20} />, path: "/Pages/TeamMembers" },
+    { name: "Team Members", icon: <UsersRound size={20} />, path: "/Pages/TeamMembers" },
     { name: "Committee", icon: <UsersRound size={20} />, path: "/Pages/Committee" },
-    { name: "BusinessCategory", icon: <Briefcase size={20} />, path: "/Pages/BusinessCategory" },
-    { name: "NewsCategory", icon: <Newspaper size={20} />, path: "/Pages/NewsCategory" },
-    { name: "SuccessStory", icon: <Trophy size={20} />, path: "/Pages/SuccessStory" },
+    { name: "Business Category", icon: <Briefcase size={20} />, path: "/Pages/BusinessCategory" },
+    { name: "News Category", icon: <Newspaper size={20} />, path: "/Pages/NewsCategory" },
+    { name: "Success Stories", icon: <Trophy size={20} />, path: "/Pages/SuccessStory" },
     { name: "Profile Management", icon: <UserCog size={20} />, path: "/Pages/ProfileManagement" },
     { name: "Hobbies", icon: <Heart size={20} />, path: "/Pages/Hobbies" },
     { name: "Testimonials", icon: <Star size={20} />, path: "/Pages/Testimonials" },
     { name: "Casts", icon: <Users size={20} />, path: "/Pages/Casts" },
     { name: "Cities", icon: <MapPin size={20} />, path: "/Pages/Cities" },
-    { name: "MembershipPlans", icon: <CreditCard size={20} />, path: "/Pages/MembershipPlans" },
-    { name: "MarriagePackages", icon: <Gift size={20} />, path: "/Pages/MarriagePackages" },
+    { name: "Membership Plans", icon: <CreditCard size={20} />, path: "/Pages/MembershipPlans" },
+    { name: "Marriage Packages", icon: <Gift size={20} />, path: "/Pages/MarriagePackages" },
     { name: "Relation", icon: <Heart size={20} />, path: "/Pages/Relation" },
-    { name: "UserOffer", icon: <Gift size={20} />, path: "/Pages/UserOffer" },
+    { name: "User  Offer", icon: <Gift size={20} />, path: "/Pages/UserOffer" },
     { name: "Vendors", icon: <Store size={20} />, path: "/Pages/Vendors" },
-    { name: "AdminUser", icon: <Shield size={20} />, path: "/Pages/AdminUser" },
+    { name: "Admin User", icon: <Shield size={20} />, path: "/Pages/AdminUser" },
     { name: "Users Management", icon: <Users size={20} />, path: "/Pages/UserManagement" },
     { name: "Payment Management", icon: <BarChart2 size={20} />, path: "/Pages/PaymentManagement" },
     { name: "Settings", icon: <Settings size={20} /> },
@@ -67,8 +67,10 @@ const Sidebar = () => {
 
   return (
     <div
-  className={`h-full flex flex-col bg-[#0F172A]
+  className={`h-screen flex flex-col 
+  bg-slate-800 text-slate-200
   transition-all duration-300
+  shadow-xl
   ${collapsed ? "w-20" : "w-64"}`}
 >
       {/* Header */}
@@ -98,11 +100,11 @@ const Sidebar = () => {
           return (
             <Link href={item.path || "#"} key={index}>
               <li
-                className={`group relative flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all
+                className={`group relative flex items-center gap-3 p-3 rounded-lg cursor-pointer mb-2 transition-all
                 ${
                   isActive
-                    ? "bg-[#7B2A3A] text-white"
-                    : "text-white hover:bg-[#7B2A3A]"
+                    ? "bg-[#F7FBFF] text-slate-800"
+                    : "text-white hover:bg-[#F7FBFF] hover:text-slate-800"
                 }`}
               >
                 {/* ICON FIX */}

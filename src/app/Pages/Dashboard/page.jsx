@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Sidebar from "../../Components/Sidebar/page.jsx";
+import Header from "../../Components/Header/page.jsx";
 import MainContent from "../../Components/MainContent/page.jsx";
 import { Menu } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
 const Page = () => {
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -15,15 +15,19 @@ const Page = () => {
 
       {/* ================= SIDEBAR ================= */}
 
-      {/* Desktop Sidebar (FLEX ITEM) */}
-      <div className="hidden lg:block ...">
-  <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-</div>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block h-screen">
+        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+      </div>
 
-{/* Mobile Sidebar */}
-<div className="lg:hidden fixed ...">
-  <Sidebar collapsed={false} setCollapsed={() => {}} />
-</div>
+      {/* Mobile Sidebar */}
+      <div
+        className={`lg:hidden fixed inset-y-0 left-0 z-40 w-64 
+        transform transition-transform duration-300
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <Sidebar collapsed={false} setCollapsed={() => {}} />
+      </div>
 
       {/* Overlay Mobile */}
       {isSidebarOpen && (
@@ -35,22 +39,13 @@ const Page = () => {
 
       {/* ================= MAIN AREA ================= */}
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen">
 
-        {/* HEADER */}
-        <div className="flex items-center bg-white shadow-sm px-4">
+        {/* HEADER (FIXED) */}
+        <Header />
 
-          <button
-            className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            <Menu size={22} />
-          </button>
-
-        </div>
-
-        {/* CONTENT */}
-        <div className="flex-1 overflow-auto transition-all duration-300">
+        {/* CONTENT (SCROLLABLE ONLY) */}
+        <div className="flex-1 overflow-y-auto">
           <MainContent />
         </div>
 
