@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { handleApiError } from "@/utils/apiErrorHandler.js";
 
 const Page = () => {
     const router = useRouter();
@@ -62,7 +63,7 @@ const Page = () => {
                 setFilteredUsers(res.data.users); // default
             }
         } catch (error) {
-            console.error("Error fetching users:", error);
+           handleApiError(error);
         } finally {
             setLoading(false);
         }
@@ -110,7 +111,7 @@ const Page = () => {
             fetchUsers();
         }
     } catch (error) {
-        toast.error("Error updating user block status!");
+       handleApiError(error);
     }
 };
 
@@ -132,7 +133,7 @@ const Page = () => {
             fetchUsers();
         }
     } catch (error) {
-        toast.error("Error deleting user!");
+       handleApiError(error);
     }
 };
 

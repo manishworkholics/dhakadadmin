@@ -8,6 +8,7 @@ import ProtectedRoute from "../Common_Method/protectedroute.js";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { handleApiError } from "@/utils/apiErrorHandler.js";
 
 const API_URL = "http://143.110.244.163:5000/api/plan";
 
