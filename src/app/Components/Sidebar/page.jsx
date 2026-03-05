@@ -86,7 +86,7 @@ const Sidebar = () => {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="text-white p-1 rounded hover:bg-[#7B2A3A]"
+          className="bg-[#F7FBFF] text-slate-800 p-1 rounded hover:bg-slate-700"
         >
           {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
