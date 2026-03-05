@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { IoIosArrowRoundBack } from "react-icons/io";
+import { handleApiError } from "@/utils/apiErrorHandler.js";
 
 const Page = () => {
     const router = useRouter();
@@ -108,6 +109,44 @@ const Page = () => {
         }
     };
 
+    // Approve Profile
+    const approveProfile = async (profileId) => {
+        try {
+            const res = await axios.put(
+                `http://143.110.244.163:5000/api/admin/profiles/${profileId}/approve`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                toast.success("Profile Approved Successfully");
+                fetchProfiles();
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to approve profile");
+        }
+    };
+
+    // Reject Profile
+    const rejectProfile = async (profileId) => {
+        try {
+            const res = await axios.put(
+                `http://143.110.244.163:5000/api/admin/profiles/${profileId}/reject`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                toast.success("Profile Rejected");
+                fetchProfiles();
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to reject profile");
+        }
+    };
+
     // Pagination Logic
     const indexOfLastProfile = currentPage * profilesPerPage;
     const indexOfFirstProfile = indexOfLastProfile - profilesPerPage;
@@ -192,6 +231,13 @@ const Page = () => {
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Location</th>
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Featured</th>
                                                     <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Action</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                        Status
+                                                    </th>
+
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                        Approval
+                                                    </th>
                                                 </tr>
                                             </thead>
 
@@ -199,21 +245,36 @@ const Page = () => {
                                                 {currentProfiles && currentProfiles.length > 0 ? (
                                                     currentProfiles.map((profile) => (
                                                         <tr key={profile._id} className="hover:bg-gray-100 transition">
-                                                            <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A]">{profile.name || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.email || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.userId?.phone || "N/A"}</td>
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">{profile.location || "N/A"}</td>
+                                                            <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A]">
+                                                                {profile.name || "N/A"}
+                                                            </td>
+
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                                {profile.email || "N/A"}
+                                                            </td>
+
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                                {profile.userId?.phone || "N/A"}
+                                                            </td>
+
+                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                                {profile.location || "N/A"}
+                                                            </td>
+
+                                                            {/* Featured */}
                                                             <td className="px-6 py-4 border border-[#7B2A3A]">
                                                                 <button
                                                                     className={`cursor-pointer px-3 py-1 text-xs rounded ${profile.featured
-                                                                        ? "bg-red-500 text-white hover:bg-red-600"
-                                                                        : "bg-green-500 text-white hover:bg-green-600"
+                                                                            ? "bg-red-500 text-white hover:bg-red-600"
+                                                                            : "bg-green-500 text-white hover:bg-green-600"
                                                                         }`}
                                                                     onClick={() => toggleFeatured(profile._id, profile.featured)}
                                                                 >
                                                                     {profile.featured ? "Unmark" : "Mark"}
                                                                 </button>
                                                             </td>
+
+                                                            {/* Action */}
                                                             <td className="px-6 py-4 border border-[#7B2A3A]">
                                                                 <button
                                                                     className="text-blue-600 hover:text-blue-800 transition cursor-pointer"
@@ -221,6 +282,32 @@ const Page = () => {
                                                                     onClick={() => handleProfile(profile._id)}
                                                                 >
                                                                     <Eye size={20} />
+                                                                </button>
+                                                            </td>
+
+                                                            {/* Status */}
+                                                            <td className="px-6 py-4 border border-[#7B2A3A] text-xs">
+                                                                {profile.isVisible ? (
+                                                                    <span className="text-green-600 font-semibold">Approved</span>
+                                                                ) : (
+                                                                    <span className="text-yellow-600 font-semibold">Pending</span>
+                                                                )}
+                                                            </td>
+
+                                                            {/* Approval */}
+                                                            <td className="px-6 py-4 border border-[#7B2A3A] space-x-2">
+                                                                <button
+                                                                    onClick={() => approveProfile(profile._id)}
+                                                                    className="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600"
+                                                                >
+                                                                    Approve
+                                                                </button>
+
+                                                                <button
+                                                                    onClick={() => rejectProfile(profile._id)}
+                                                                    className="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600"
+                                                                >
+                                                                    Reject
                                                                 </button>
                                                             </td>
                                                         </tr>

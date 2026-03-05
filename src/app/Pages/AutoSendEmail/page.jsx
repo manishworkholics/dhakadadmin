@@ -2,6 +2,7 @@
 import React from "react";
 import Sidebar from "../../Components/Sidebar/page.jsx";
 import Header from "../../Components/Header/page.jsx";
+import { handleApiError } from "@/utils/apiErrorHandler.js";
 
 const AutoSendEmail = () => {
     return (

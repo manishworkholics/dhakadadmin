@@ -5,6 +5,7 @@ import Header from "../../Components/Header/page.jsx";
 import Sidebar from "@/app/Components/Sidebar/page";
 import { Menu } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
+import { handleApiError } from "@/utils/apiErrorHandler.js";
 
 const Page = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
