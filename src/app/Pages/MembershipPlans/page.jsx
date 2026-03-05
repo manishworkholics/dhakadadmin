@@ -196,7 +196,7 @@ const Plan = () => {
 
               <button
                 type="submit"
-                className="bg-[#7B2A3A] text-white px-4 py-2 rounded col-span-2 w-1/4 cursor-pointer  border border-[#7B2A3A] hover:bg-[#fff] transition duration-300 hover:text-[#7B2A3A]"
+                className="bg-slate-800 text-white px-4 py-2 rounded col-span-2 w-1/4 cursor-pointer  border border-[#7B2A3A] hover:bg-[#fff] transition duration-300 hover:text-[#7B2A3A]"
               >
                 {editMode ? "Update Plan" : "Create Plan"}
               </button>
@@ -204,23 +204,23 @@ const Plan = () => {
 
             {/* Plans Table */}
             <table className="table-auto w-full bg-white rounded shadow text-center">
-              <thead className="bg-[#7B2A3A] text-white">
+              <thead className="bg-slate-800 text-white">
                 <tr>
-                  <th className="p-2 border border-[#7B2A3A]">Name</th>
-                  <th className="p-2 border border-[#7B2A3A]">Price</th>
-                  <th className="p-2 border border-[#7B2A3A]">Duration</th>
-                  <th className="p-2 border border-[#7B2A3A]">Features</th>
-                  <th className="p-2 border border-[#7B2A3A]">Actions</th>
+                  <th className="p-2 border border-slate-800">Name</th>
+                  <th className="p-2 border border-slate-800">Price</th>
+                  <th className="p-2 border border-slate-800">Duration</th>
+                  <th className="p-2 border border-slate-800">Features</th>
+                  <th className="p-2 border border-slate-800">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {plans.map((p) => (
                   <tr key={p._id} className="">
-                    <td className="p-2 border border-[#7B2A3A]">{p.name}</td>
-                    <td className="p-2 border border-[#7B2A3A]">₹{p.price} + {p.gstPercent}% GST</td>
-                    <td className="p-2 border border-[#7B2A3A]">{p.durationMonths} Months</td>
-                    <td className="p-2 border border-[#7B2A3A]">{p.features.join(", ")}</td>
-                    <td className="p-2 border border-[#7B2A3A]">
+                    <td className="p-2 border border-slate-800">{p.name}</td>
+                    <td className="p-2 border border-slate-800">₹{p.price} + {p.gstPercent}% GST</td>
+                    <td className="p-2 border border-slate-800">{p.durationMonths} Months</td>
+                    <td className="p-2 border border-slate-800">{p.features.join(", ")}</td>
+                    <td className="p-2 border border-slate-800">
                       <div className="flex gap-2 justify-center">
                         <button
                           className="text-blue-600 cursor-pointer"

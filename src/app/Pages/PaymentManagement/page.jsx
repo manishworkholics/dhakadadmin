@@ -117,28 +117,28 @@ const PaymentManagement = () => {
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="table-auto w-full bg-white shadow-md rounded">
-                  <thead className="bg-[#7B2A3A] text-white">
+                  <thead className="bg-slate-800 text-white">
                     <tr>
-                      <th className="p-2 text-left border border-[#7B2A3A]">User</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Email</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Plan</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Amount</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Payment ID</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Status</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Date</th>
-                      <th className="p-2 text-left border border-[#7B2A3A]">Action</th>
+                      <th className="p-2 text-left border border-slate-800">User</th>
+                      <th className="p-2 text-left border border-slate-800">Email</th>
+                      <th className="p-2 text-left border border-slate-800">Plan</th>
+                      <th className="p-2 text-left border border-slate-800">Amount</th>
+                      <th className="p-2 text-left border border-slate-800">Payment ID</th>
+                      <th className="p-2 text-left border border-slate-800">Status</th>
+                      <th className="p-2 text-left border border-slate-800">Date</th>
+                      <th className="p-2 text-left border border-slate-800">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {paginated.length > 0 ? (
                       paginated.map((item) => (
                         <tr key={item._id} className="">
-                          <td className="p-2 border border-[#7B2A3A]">{item?.user?.name || "-"}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item?.user?.email || "-"}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item?.plan?.name || "-"}</td>
-                          <td className="p-2 border border-[#7B2A3A]">₹{item.amount}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item.razorpayPaymentId || "-"}</td>
-                          <td className="p-2 border border-[#7B2A3A]">
+                          <td className="p-2 border border-slate-800">{item?.user?.name || "-"}</td>
+                          <td className="p-2 border border-slate-800">{item?.user?.email || "-"}</td>
+                          <td className="p-2 border border-slate-800">{item?.plan?.name || "-"}</td>
+                          <td className="p-2 border border-slate-800">₹{item.amount}</td>
+                          <td className="p-2 border border-slate-800">{item.razorpayPaymentId || "-"}</td>
+                          <td className="p-2 border border-slate-800">
                             <span
                               className={`px-2 py-1 rounded text-white text-xs ${item.status === "paid"
                                 ? "bg-green-600"
@@ -150,10 +150,10 @@ const PaymentManagement = () => {
                               {item.status.toUpperCase()}
                             </span>
                           </td>
-                          <td className="p-2 border border-[#7B2A3A]">
+                          <td className="p-2 border border-slate-800">
                             {new Date(item.createdAt).toLocaleString()}
                           </td>
-                          <td className="p-2  border border-[#7B2A3A]">
+                          <td className="p-2  border border-slate-800">
                             <div className="flex gap-3">
                               <button
                                 className="text-blue-500 flex gap-1 items-center cursor-pointer"

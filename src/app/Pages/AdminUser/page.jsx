@@ -227,7 +227,7 @@ const Page = () => {
 
               <button
                 onClick={createRole}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-slate-800 text-white px-4 py-2 rounded"
               >
                 Create Role
               </button>
@@ -288,7 +288,7 @@ const Page = () => {
 
             <button
               type="submit"
-              className="bg-green-600 text-white rounded px-4"
+              className="bg-slate-800 text-white rounded px-4"
             >
               Add Admin
             </button>
@@ -301,7 +301,7 @@ const Page = () => {
 
             <table className="min-w-full">
 
-              <thead className="bg-[#7B2A3A] text-white">
+              <thead className="bg-slate-800 text-white">
 
                 <tr>
                   <th className="px-6 py-3 text-left text-xs uppercase">Name</th>
@@ -375,7 +375,7 @@ const Page = () => {
 
             <table className="min-w-full border">
 
-              <thead className="bg-gray-100">
+              <thead className="bg-slate-800 text-white">
 
                 <tr>
                   <th className="px-4 py-2 text-left">Admin</th>

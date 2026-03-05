@@ -108,28 +108,28 @@ const ContactUs = () => {
               {/* 📋 Table */}
               <div className="overflow-x-auto">
                 <table className="w-full bg-white shadow rounded table-auto text-center">
-                  <thead className="bg-[#7B2A3A] text-white">
+                  <thead className="bg-slate-800 text-white">
                     <tr>
-                      <th className="p-2 border border-[#7B2A3A]">Name</th>
-                      <th className="p-2 border border-[#7B2A3A]">Email</th>
-                      <th className="p-2 border border-[#7B2A3A]">Phone</th>
-                      <th className="p-2 border border-[#7B2A3A]">Subject</th>
-                      <th className="p-2 border border-[#7B2A3A]">Date</th>
-                      <th className="p-2 border border-[#7B2A3A]">Action</th>
+                      <th className="p-2 border border-slate-800">Name</th>
+                      <th className="p-2 border border-slate-800">Email</th>
+                      <th className="p-2 border border-slate-800">Phone</th>
+                      <th className="p-2 border border-slate-800">Subject</th>
+                      <th className="p-2 border border-slate-800">Date</th>
+                      <th className="p-2 border border-slate-800">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {paginatedContacts.length > 0 ? (
                       paginatedContacts.map((item) => (
                         <tr key={item._id} className="">
-                          <td className="p-2 border border-[#7B2A3A]">{item.name}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item.email}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item.phone}</td>
-                          <td className="p-2 border border-[#7B2A3A]">{item.subject}</td>
-                          <td className="p-2 border border-[#7B2A3A]">
+                          <td className="p-2 border border-slate-800">{item.name}</td>
+                          <td className="p-2 border border-slate-800">{item.email}</td>
+                          <td className="p-2 border border-slate-800">{item.phone}</td>
+                          <td className="p-2 border border-slate-800">{item.subject}</td>
+                          <td className="p-2 border border-slate-800">
                             {new Date(item.createdAt).toLocaleDateString()}
                           </td>
-                          <td className="border border-[#7B2A3A]">
+                          <td className="border border-slate-800">
                             <div className="p-2 flex justify-center">
                               <button
                                 onClick={() => setSelectedMessage(item)}

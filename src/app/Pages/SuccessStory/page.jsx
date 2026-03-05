@@ -12,7 +12,7 @@ const Page = () => {
 
   const [stories, setStories] = useState([]);
   const [editingId, setEditingId] = useState(null);
-
+  const [selectedStory, setSelectedStory] = useState(null);
   const [form, setForm] = useState({
     name: "",
     partnerName: "",
@@ -167,7 +167,7 @@ const Page = () => {
 
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded mt-4"
+              className="bg-slate-800 text-white px-6 py-2 rounded mt-4"
             >
               {editingId ? "Update Story" : "Create Story"}
             </button>
@@ -176,51 +176,119 @@ const Page = () => {
 
           {/* ================= LIST ================= */}
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-5 gap-6">
 
-            {stories?.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-lg shadow p-4"
-              >
+            {stories?.map((item) => {
 
-                <img
-                  src={item.image}
-                  className="w-full h-40 object-cover rounded"
-                />
+              const isLongStory = item.story.length > 120;
 
-                <h3 className="font-bold mt-3">
-                  {item.name} ❤️ {item.partnerName}
-                </h3>
+              return (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 p-4"
+                >
+                  <div className="relative  w-full h-56 rounded-xl overflow-hidden flex items-center justify-center">
+                    {/* Blurred Background */}
+                    <img
+                      src={item.image}
+                      className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-80"
+                    />
+                    {/* Main Image */}
+                    <img
+                      src={item.image}
+                      className="relative h-56 object-contain z-10 shadow"
+                    />
+                  </div>
 
-                <p className="text-sm text-gray-500">
-                  {item.title}
-                </p>
+                  <h3 className="font-bold mt-3">
+                    {item.name} ❤️ {item.partnerName}
+                  </h3>
 
-                <p className="text-sm mt-2">
-                  {item.story}
-                </p>
+                  <p className="text-sm text-gray-500">
+                    {item.title}
+                  </p>
 
-                <div className="flex gap-2 mt-4">
+                  {/* Story Preview */}
+                  <p className="text-sm mt-2 line-clamp-3">
+                    {item.story}
+                  </p>
 
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex gap-2 mt-4">
 
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Delete
-                  </button>
+                    {/* View button only if story long */}
+                    {isLongStory && (
+                      <button
+                        onClick={() => setSelectedStory(item)}
+                        className="bg-blue-600 text-white px-3 py-1 rounded"
+                      >
+                        View
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="bg-yellow-500 text-white px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
 
                 </div>
+              );
 
+            })}
+            {selectedStory && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+                <div className="bg-white w-[1200px] rounded-lg p-6 shadow-lg">
+
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="relative w-full h-[350px] rounded overflow-hidden mb-3">
+
+                      {/* Blur background */}
+                      <img
+                        src={selectedStory.image}
+                        className="absolute inset-0 w-full h-full object-cover blur-xl scale-110"
+                      />
+
+                      {/* Main image */}
+                      <img
+                        src={selectedStory.image}
+                        className="relative h-full mx-auto object-contain"
+                      />
+
+                    </div>
+                    <div className="flex flex-col">
+                      <h2 className="text-lg font-bold mb-2">
+                        {selectedStory.name} ❤️ {selectedStory.partnerName}
+                      </h2>
+
+                      <p className="text-sm text-gray-500 mb-3">
+                        {selectedStory.title}
+                      </p>
+                      <p className="text-sm text-gray-700">
+                        {selectedStory.story}
+                      </p>
+
+                      <button
+                        onClick={() => setSelectedStory(null)}
+                        className="mt-4 bg-gray-800 text-white px-4 py-2 rounded"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
 
           </div>
 
@@ -228,7 +296,7 @@ const Page = () => {
 
       </div>
 
-    </div>
+    </div >
   );
 };
 

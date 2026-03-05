@@ -211,27 +211,27 @@ const Page = () => {
                                     <>
                                         <div className="overflow-x-auto">
                                             <table className="min-w-full mb-3">
-                                                <thead className="bg-[#7B2A3A] text-white">
+                                                <thead className="bg-slate-800 text-white">
                                                     <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-b-0 border-r-0 ">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-b-0 border-r-0 ">
                                                             Name
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
                                                             Email
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
                                                             Phone
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0 ">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Create for
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0 ">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Verified
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0 ">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Blocked
                                                         </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0 ">
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Action
                                                         </th>
                                                     </tr>
@@ -241,19 +241,19 @@ const Page = () => {
                                                     {currentUsers.length > 0 ? (
                                                         currentUsers.map((user) => (
                                                             <tr key={user._id} className="hover:bg-gray-100 transition">
-                                                                <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.name || "N/A"}
                                                                 </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.email || "N/A"}
                                                                 </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.phone || "N/A"}
                                                                 </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.createdfor || "N/A"}
                                                                 </td>
-                                                                <td className="px-6 py-4 border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
                                                                     <span
                                                                         className={`px-3 py-1 rounded-full text-xs font-medium 
                                                                             ${user.isVerified ? "bg-green-100 text-green-600" : "bg-red-100 text-red-500"}`}
@@ -262,7 +262,7 @@ const Page = () => {
                                                                     </span>
                                                                 </td>
 
-                                                                <td className="px-6 py-4 border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
                                                                     <span
                                                                         className={`px-3 py-1 rounded-full text-xs 
                                                                         ${user.isBlocked ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}
@@ -271,7 +271,7 @@ const Page = () => {
                                                                     </span>
                                                                 </td>
 
-                                                                <td className="px-6 py-4  border border-[#7B2A3A] whitespace-nowrap">
+                                                                <td className="px-6 py-4  border border-slate-800 whitespace-nowrap">
                                                                     <button
                                                                         className=" me-3  text-yellow-600 hover:text-yellow-800 cursor-pointer"
                                                                         onClick={() => handleBlock(user._id)}

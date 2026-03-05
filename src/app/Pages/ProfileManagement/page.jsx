@@ -223,19 +223,19 @@ const Page = () => {
                                 ) : (
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-gray-200 mb-3">
-                                            <thead className="bg-[#7B2A3A] text-white">
+                                            <thead className="bg-slate-800 text-white">
                                                 <tr>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-b-0 border-r-0">Name</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Email</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Phone</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Location</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Featured</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">Action</th>
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-b-0 border-r-0">Name</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">Email</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">Phone</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">Location</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">Featured</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">Action</th>
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
                                                         Status
                                                     </th>
 
-                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-[#7B2A3A] border-l-0 border-b-0 border-r-0">
+                                                    <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
                                                         Approval
                                                     </th>
                                                 </tr>
@@ -245,24 +245,24 @@ const Page = () => {
                                                 {currentProfiles && currentProfiles.length > 0 ? (
                                                     currentProfiles.map((profile) => (
                                                         <tr key={profile._id} className="hover:bg-gray-100 transition">
-                                                            <td className="px-6 py-4 text-xs font-medium border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 text-xs font-medium border border-slate-800">
                                                                 {profile.name || "N/A"}
                                                             </td>
 
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 text-xs border border-slate-800">
                                                                 {profile.email || "N/A"}
                                                             </td>
 
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 text-xs border border-slate-800">
                                                                 {profile.userId?.phone || "N/A"}
                                                             </td>
 
-                                                            <td className="px-6 py-4 text-xs border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 text-xs border border-slate-800">
                                                                 {profile.location || "N/A"}
                                                             </td>
 
                                                             {/* Featured */}
-                                                            <td className="px-6 py-4 border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 border border-slate-800">
                                                                 <button
                                                                     className={`cursor-pointer px-3 py-1 text-xs rounded ${profile.featured
                                                                             ? "bg-red-500 text-white hover:bg-red-600"
@@ -275,7 +275,7 @@ const Page = () => {
                                                             </td>
 
                                                             {/* Action */}
-                                                            <td className="px-6 py-4 border border-[#7B2A3A]">
+                                                            <td className="px-6 py-4 border border-slate-800">
                                                                 <button
                                                                     className="text-blue-600 hover:text-blue-800 transition cursor-pointer"
                                                                     title="View Profile"
@@ -286,7 +286,7 @@ const Page = () => {
                                                             </td>
 
                                                             {/* Status */}
-                                                            <td className="px-6 py-4 border border-[#7B2A3A] text-xs">
+                                                            <td className="px-6 py-4 border border-slate-800 text-xs">
                                                                 {profile.isVisible ? (
                                                                     <span className="text-green-600 font-semibold">Approved</span>
                                                                 ) : (
@@ -295,7 +295,7 @@ const Page = () => {
                                                             </td>
 
                                                             {/* Approval */}
-                                                            <td className="px-6 py-4 border border-[#7B2A3A] space-x-2">
+                                                            <td className="px-6 py-4 border border-slate-800 space-x-2">
                                                                 <button
                                                                     onClick={() => approveProfile(profile._id)}
                                                                     className="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600"
