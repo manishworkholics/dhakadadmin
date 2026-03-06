@@ -7,7 +7,6 @@
     "build": "next build --webpack",
     "export": "next export",
     "start": "next start -p 3002",
-
     "lint": "eslint"
   },
   "dependencies": {

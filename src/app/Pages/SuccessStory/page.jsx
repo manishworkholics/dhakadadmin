@@ -13,6 +13,7 @@ const Page = () => {
   const [stories, setStories] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [selectedStory, setSelectedStory] = useState(null);
+
   const [form, setForm] = useState({
     name: "",
     partnerName: "",
@@ -20,6 +21,53 @@ const Page = () => {
     story: "",
     image: "",
   });
+
+  const [uploading, setUploading] = useState(false);
+
+
+  const handleImageUpload = async (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+
+      setUploading(true);
+
+      const res = await axios.post(
+        "http://143.110.244.163:5000/api/upload-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+
+      if (res.data.success) {
+
+        setForm({
+          ...form,
+          image: res.data.url
+        });
+
+      }
+
+    } catch (error) {
+
+      handleApiError(error);
+
+    } finally {
+
+      setUploading(false);
+
+    }
+
+  };
 
   const fetchStories = async () => {
     try {
@@ -143,15 +191,29 @@ const Page = () => {
                 required
               />
 
-              <input
-                type="text"
-                name="image"
-                placeholder="Image URL"
-                value={form.image}
-                onChange={handleChange}
-                className="border p-2 rounded"
-                required
-              />
+              <div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="border p-2 rounded w-full"
+                />
+
+                {uploading && (
+                  <p className="text-sm text-blue-500 mt-1">
+                    Uploading image...
+                  </p>
+                )}
+
+                {form.image && (
+                  <img
+                    src={form.image}
+                    className="mt-2 h-24 rounded"
+                  />
+                )}
+
+              </div>
 
             </div>
 

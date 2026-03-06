@@ -46,12 +46,13 @@ const Sidebar = () => {
     { name: "Admin User", icon: <Shield size={20} />, path: "/Pages/AdminUser" },
     { name: "Users Management", icon: <Users size={20} />, path: "/Pages/UserManagement" },
     { name: "Payment Management", icon: <BarChart2 size={20} />, path: "/Pages/PaymentManagement" },
-
-
+    { name: "Cities", icon: <MapPin size={20} />, path: "/Pages/Cities" },
+    { name: "Seo", icon: <Search size={20} />, path: "/Pages/Seo" },
+    { name: "Blog", icon: <Search size={20} />, path: "/Pages/Blog" },
 
     //  { name: "Backup", icon: <DatabaseBackup size={20} />, path: "/Pages/Backup" },
     // { name: "Auto Send Email", icon: <Mail size={20} />, path: "/Pages/AutoSendEmail" },
-    // { name: "Seo", icon: <Search size={20} />, path: "/Pages/Seo" },
+
     // { name: "Members", icon: <Users size={20} />, path: "/Pages/Members" },
     // { name: "Contact Info", icon: <Phone size={20} />, path: "/Pages/ContactInfo" },
     // { name: "About Us", icon: <Info size={20} />, path: "/Pages/AboutUs" },
@@ -63,7 +64,7 @@ const Sidebar = () => {
     // { name: "News Category", icon: <Newspaper size={20} />, path: "/Pages/NewsCategory" },
     // { name: "Hobbies", icon: <Heart size={20} />, path: "/Pages/Hobbies" },
     // { name: "Casts", icon: <Users size={20} />, path: "/Pages/Casts" },
-    // { name: "Cities", icon: <MapPin size={20} />, path: "/Pages/Cities" },
+
     // { name: "Marriage Packages", icon: <Gift size={20} />, path: "/Pages/MarriagePackages" },
     // { name: "Relation", icon: <Heart size={20} />, path: "/Pages/Relation" },
     // { name: "User  Offer", icon: <Gift size={20} />, path: "/Pages/UserOffer" },

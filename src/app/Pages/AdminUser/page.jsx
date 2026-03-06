@@ -18,6 +18,8 @@ const Page = () => {
   const [logs, setLogs] = useState([]);
 
   const [roleName, setRoleName] = useState("");
+  const [permissions, setPermissions] = useState([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   const [form, setForm] = useState({
     name: "",
@@ -44,7 +46,10 @@ const Page = () => {
 
       const res = await axios.post(
         `${API}/roles`,
-        { name: roleName },
+        {
+          name: roleName,
+          permissions: selectedPermissions
+        },
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -53,6 +58,7 @@ const Page = () => {
       if (res.data.success) {
         toast.success("Role created");
         setRoleName("");
+        setSelectedPermissions([]);
         fetchRoles();
       }
 
@@ -97,6 +103,24 @@ const Page = () => {
     }
   };
 
+  const fetchPermissions = async () => {
+    try {
+
+      const res = await axios.get(
+        `${API}/permissions`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      if (res.data.success) {
+        setPermissions(res.data.permissions);
+      }
+
+    } catch (err) {
+      handleApiError(err);
+    }
+  };
   // ================= FETCH LOGS =================
 
   const fetchLogs = async () => {
@@ -123,11 +147,31 @@ const Page = () => {
       fetchAdmins();
       fetchRoles();
       fetchLogs();
+      fetchPermissions();
     }
 
   }, [token]);
 
   // ================= HANDLE FORM =================
+
+  const togglePermission = (id) => {
+
+    if (selectedPermissions.includes(id)) {
+
+      setSelectedPermissions(
+        selectedPermissions.filter(p => p !== id)
+      );
+
+    } else {
+
+      setSelectedPermissions([
+        ...selectedPermissions,
+        id
+      ]);
+
+    }
+
+  };
 
   const handleChange = (e) => {
     setForm({
@@ -191,6 +235,39 @@ const Page = () => {
     }
   };
 
+
+  const updateRolePermission = async (role, permId) => {
+
+    let newPermissions = role.permissions?.map(p => p._id) || [];
+
+    if (newPermissions.includes(permId)) {
+
+      newPermissions = newPermissions.filter(p => p !== permId);
+
+    } else {
+
+      newPermissions.push(permId);
+
+    }
+
+    try {
+
+      await axios.put(
+        `${API}/roles/${role._id}/permissions`,
+        { permissions: newPermissions },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      fetchRoles();
+
+    } catch (err) {
+      handleApiError(err);
+    }
+
+  };
+
   return (
 
     <div className="flex h-screen bg-gray-100">
@@ -215,24 +292,88 @@ const Page = () => {
               Create Role
             </h2>
 
-            <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder="Role name"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+              className="border p-2 rounded mb-3 w-full"
+            />
 
-              <input
-                type="text"
-                placeholder="Role name"
-                value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
-                className="border p-2 rounded"
-              />
+            <div className="grid grid-cols-3 gap-2 mb-3">
 
-              <button
-                onClick={createRole}
-                className="bg-slate-800 text-white px-4 py-2 rounded"
-              >
-                Create Role
-              </button>
+              {permissions.map((perm) => (
+
+                <label key={perm._id} className="flex items-center gap-2">
+
+                  <input
+                    type="checkbox"
+                    checked={selectedPermissions.includes(perm._id)}
+                    onChange={() => togglePermission(perm._id)}
+                  />
+
+                  {perm.name}
+
+                </label>
+
+              ))}
 
             </div>
+
+            <button
+              onClick={createRole}
+              className="bg-slate-800 text-white px-4 py-2 rounded"
+            >
+              Create Role
+            </button>
+
+          </div>
+
+
+          <div className="bg-white p-6 rounded shadow">
+
+            <h2 className="text-lg font-semibold mb-4">
+              Roles & Permissions
+            </h2>
+
+            {roles.map(role => (
+
+              <div key={role._id} className="border p-4 mb-3 rounded">
+
+                <h3 className="font-semibold mb-2">
+                  {role.name}
+                </h3>
+
+                <div className="grid grid-cols-3 gap-2">
+
+                  {permissions.map(perm => {
+
+                    const checked =
+                      role.permissions?.some(p => p._id === perm._id);
+
+                    return (
+
+                      <label key={perm._id} className="flex items-center gap-2">
+
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => updateRolePermission(role, perm._id)}
+                        />
+
+                        {perm.name}
+
+                      </label>
+
+                    );
+
+                  })}
+
+                </div>
+
+              </div>
+
+            ))}
 
           </div>
 
@@ -279,11 +420,17 @@ const Page = () => {
               onChange={handleChange}
               className="border p-2 rounded"
             >
+
+              {roles.length === 0 && (
+                <option>No Roles Found</option>
+              )}
+
               {roles.map(role => (
                 <option key={role._id} value={role.name}>
                   {role.name}
                 </option>
               ))}
+
             </select>
 
             <button
@@ -364,6 +511,8 @@ const Page = () => {
             </table>
 
           </div>
+
+
 
           {/* ================= ADMIN LOGS ================= */}
 
