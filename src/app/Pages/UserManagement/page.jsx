@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Header from "../../Components/Header/page.jsx";
 import Sidebar from "@/app/Components/Sidebar/page";
-import { Menu, Ban, Trash2, Link } from "lucide-react";
+import { Menu, Ban, Trash2, Check, X } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,58 +16,58 @@ const Page = () => {
     const router = useRouter();
     const [token, setToken] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const [users, setUsers] = useState([]);
-    const [filteredUsers, setFilteredUsers] = useState([]);
 
     const [loading, setLoading] = useState(true);
-
-    // 🔥 Search
     const [searchQuery, setSearchQuery] = useState("");
-
-    // 🔥 Pagination
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    const indexOfLast = currentPage * itemsPerPage;
-    const indexOfFirst = indexOfLast - itemsPerPage;
-
-    const currentUsers = filteredUsers.slice(indexOfFirst, indexOfLast);
-    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
-
-    // Load token
     useEffect(() => {
         if (typeof window !== "undefined") {
             setToken(localStorage.getItem("token"));
         }
     }, []);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchQuery);
+            setCurrentPage(1);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
     // Fetch Users
     const fetchUsers = useCallback(async () => {
         if (!token) return;
+
         try {
             setLoading(true);
+
             const res = await axios.get(
                 "http://143.110.244.163:5000/api/admin/users",
-                { headers: { Authorization: `Bearer ${token}` } }
+                {
+                    params: {
+                        search: debouncedSearch,
+                        page: currentPage,
+                        limit: itemsPerPage,
+                    },
+                    headers: { Authorization: `Bearer ${token}` },
+                }
             );
 
             if (res.data.success) {
                 setUsers(res.data.users);
-                setFilteredUsers(res.data.users); // default
+                setTotalUsers(res.data.total);
             }
         } catch (error) {
-           handleApiError(error);
+            handleApiError(error);
         } finally {
             setLoading(false);
         }
-    }, [token]);
+    }, [token, currentPage, debouncedSearch]);
 
     useEffect(() => {
         if (token) fetchUsers();
@@ -75,70 +75,93 @@ const Page = () => {
 
     // 🔍 Search Handler
     const handleSearch = (e) => {
-        const query = e.target.value.toLowerCase();
-        setSearchQuery(query);
-
-        const filtered = users.filter((u) =>
-            u.name?.toLowerCase().includes(query) ||
-            u.email?.toLowerCase().includes(query) ||
-            u.phone?.toLowerCase().includes(query)
-        );
-
-        setFilteredUsers(filtered);
-        setCurrentPage(1);
+        setSearchQuery(e.target.value);
     };
 
     // Block User
-  const handleBlock = async (userId) => {
-    try {
-        const res = await axios.put(
-            `http://143.110.244.163:5000/api/admin/users/${userId}/block`,
-            {},
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+    const handleBlock = async (userId) => {
+        try {
+            const res = await axios.put(
+                `http://143.110.244.163:5000/api/admin/users/${userId}/block`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-        if (res.data.success) {
-            const message = res.data.message?.toLowerCase() || "";
+            if (res.data.success) {
+                const message = res.data.message?.toLowerCase() || "";
 
-            if (message.includes("unblocked")) {
-                toast.success("User unblocked successfully!");
-            } else if (message.includes("blocked")) {
-                toast.success("User blocked successfully!");
-            } else {
-                toast.success("User updated successfully!");
+                if (message.includes("unblocked")) {
+                    toast.success("User unblocked successfully!");
+                } else if (message.includes("blocked")) {
+                    toast.success("User blocked successfully!");
+                } else {
+                    toast.success("User updated successfully!");
+                }
+
+                fetchUsers();
             }
-
-            fetchUsers();
+        } catch (error) {
+            handleApiError(error);
         }
-    } catch (error) {
-       handleApiError(error);
-    }
-};
+    };
+
+
+    const handleVerify = async (userId) => {
+        try {
+            const res = await axios.put(
+                `http://143.110.244.163:5000/api/admin/users/${userId}/verify`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                const message = res.data.message?.toLowerCase() || "";
+
+                if (message.includes("unblocked")) {
+                    toast.success("User unblocked successfully!");
+                } else if (message.includes("blocked")) {
+                    toast.success("User blocked successfully!");
+                } else {
+                    toast.success("User updated successfully!");
+                }
+
+                fetchUsers();
+            }
+        } catch (error) {
+            handleApiError(error);
+        }
+    };
 
 
 
     // Delete User
-  const handleDelete = async (userId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmed) return;
+    const handleDelete = async (userId) => {
+        const confirmed = window.confirm("Are you sure you want to delete this user?");
+        if (!confirmed) return;
 
-    try {
-        const res = await axios.delete(
-            `http://143.110.244.163:5000/api/admin/users/${userId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+        try {
+            const res = await axios.delete(
+                `http://143.110.244.163:5000/api/admin/users/${userId}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
-        if (res.data.success) {
-            toast.success("User deleted successfully!");
-            fetchUsers();
+            if (res.data.success) {
+                toast.success("User deleted successfully!");
+                fetchUsers();
+            }
+        } catch (error) {
+            handleApiError(error);
         }
-    } catch (error) {
-       handleApiError(error);
-    }
-};
+    };
 
+    const totalPages = Math.ceil(totalUsers / itemsPerPage);
 
-   const handleBackout = () => {
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+    const handleBackout = () => {
         router.push('/Pages/Dashboard');
     }
 
@@ -238,8 +261,8 @@ const Page = () => {
                                                 </thead>
 
                                                 <tbody className="bg-white divide-y divide-gray-300">
-                                                    {currentUsers.length > 0 ? (
-                                                        currentUsers.map((user) => (
+                                                    {users.length > 0 ? (
+                                                        users.map((user) => (
                                                             <tr key={user._id} className="hover:bg-gray-100 transition">
                                                                 <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.name || "N/A"}
@@ -271,20 +294,39 @@ const Page = () => {
                                                                     </span>
                                                                 </td>
 
-                                                                <td className="px-6 py-4  border border-slate-800 whitespace-nowrap">
+                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
+
+                                                                    {/* Block / Unblock */}
                                                                     <button
-                                                                        className=" me-3  text-yellow-600 hover:text-yellow-800 cursor-pointer"
+                                                                        className="me-3 text-yellow-600 hover:text-yellow-800 cursor-pointer"
                                                                         onClick={() => handleBlock(user._id)}
+                                                                        title={user.isBlocked ? "Unblock User" : "Block User"}
                                                                     >
                                                                         <Ban size={20} />
                                                                     </button>
 
+                                                                    {/* Verify / Unverify */}
+                                                                    <button
+                                                                        className="me-3 cursor-pointer"
+                                                                        onClick={() => handleVerify(user._id)}
+                                                                        title={user.isVerified ? "Remove Verification" : "Verify User"}
+                                                                    >
+                                                                        {user.isVerified ? (
+                                                                            <X size={20} className="text-red-500 hover:text-red-700" />
+                                                                        ) : (
+                                                                            <Check size={20} className="text-green-600 hover:text-green-800" />
+                                                                        )}
+                                                                    </button>
+
+                                                                    {/* Delete */}
                                                                     <button
                                                                         className="text-red-600 hover:text-red-800 cursor-pointer"
                                                                         onClick={() => handleDelete(user._id)}
+                                                                        title="Delete User"
                                                                     >
                                                                         <Trash2 size={20} />
                                                                     </button>
+
                                                                 </td>
                                                             </tr>
                                                         ))
