@@ -265,8 +265,8 @@ const Page = () => {
                                                             <td className="px-6 py-4 border border-slate-800">
                                                                 <button
                                                                     className={`cursor-pointer px-3 py-1 text-xs rounded ${profile.featured
-                                                                            ? "bg-red-500 text-white hover:bg-red-600"
-                                                                            : "bg-green-500 text-white hover:bg-green-600"
+                                                                            ? "bg-rose-400 text-white hover:bg-rose-600"
+                                                                            : "bg-green-400 text-white hover:bg-green-600"
                                                                         }`}
                                                                     onClick={() => toggleFeatured(profile._id, profile.featured)}
                                                                 >
@@ -277,7 +277,7 @@ const Page = () => {
                                                             {/* Action */}
                                                             <td className="px-6 py-4 border border-slate-800">
                                                                 <button
-                                                                    className="text-blue-600 hover:text-blue-800 transition cursor-pointer"
+                                                                    className="text-indigo-400 hover:text-indigo-600 transition cursor-pointer"
                                                                     title="View Profile"
                                                                     onClick={() => handleProfile(profile._id)}
                                                                 >
@@ -288,9 +288,9 @@ const Page = () => {
                                                             {/* Status */}
                                                             <td className="px-6 py-4 border border-slate-800 text-xs">
                                                                 {profile.isVisible ? (
-                                                                    <span className="text-green-600 font-semibold">Approved</span>
+                                                                    <span className="text-green-400 font-semibold">Approved</span>
                                                                 ) : (
-                                                                    <span className="text-yellow-600 font-semibold">Pending</span>
+                                                                    <span className="text-yellow-400 font-semibold">Pending</span>
                                                                 )}
                                                             </td>
 
@@ -298,14 +298,14 @@ const Page = () => {
                                                             <td className="px-6 py-4 border border-slate-800 space-x-2">
                                                                 <button
                                                                     onClick={() => approveProfile(profile._id)}
-                                                                    className="bg-green-500 text-white px-2 py-1 text-xs rounded hover:bg-green-600"
+                                                                    className="bg-green-400 text-white px-2 py-1 text-xs rounded hover:bg-green-600 cursor-pointer"
                                                                 >
                                                                     Approve
                                                                 </button>
 
                                                                 <button
                                                                     onClick={() => rejectProfile(profile._id)}
-                                                                    className="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600"
+                                                                    className="bg-rose-400 text-white px-2 py-1 text-xs rounded hover:bg-rose-600 cursor-pointer"
                                                                 >
                                                                     Reject
                                                                 </button>
@@ -328,7 +328,7 @@ const Page = () => {
                                                 <button
                                                     disabled={currentPage === 1}
                                                     onClick={() => setCurrentPage((prev) => prev - 1)}
-                                                    className="px-3 py-1 border rounded disabled:opacity-50"
+                                                    className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
                                                 >
                                                     Prev
                                                 </button>
@@ -337,7 +337,7 @@ const Page = () => {
                                                     <button
                                                         key={i + 1}
                                                         onClick={() => setCurrentPage(i + 1)}
-                                                        className={`px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-gray-900 text-white" : ""}`}
+                                                        className={`cursor-pointer px-3 py-1 border rounded ${currentPage === i + 1 ? "bg-gray-900 text-white" : ""}`}
                                                     >
                                                         {i + 1}
                                                     </button>
@@ -346,7 +346,7 @@ const Page = () => {
                                                 <button
                                                     disabled={currentPage === totalPages}
                                                     onClick={() => setCurrentPage((prev) => prev + 1)}
-                                                    className="px-3 py-1 border rounded disabled:opacity-50"
+                                                    className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
                                                 >
                                                     Next
                                                 </button>

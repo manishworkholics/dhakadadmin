@@ -281,7 +281,7 @@ const Page = () => {
                     {isLongStory && (
                       <button
                         onClick={() => setSelectedStory(item)}
-                        className="bg-blue-600 text-white px-3 py-1 rounded"
+                        className="bg-indigo-400 hover:bg-indigo-600 text-white px-3 py-1 rounded cursor-pointer"
                       >
                         View
                       </button>
@@ -289,14 +289,14 @@ const Page = () => {
 
                     <button
                       onClick={() => handleEdit(item)}
-                      className="bg-yellow-500 text-white px-3 py-1 rounded"
+                      className="bg-slate-600 hover:bg-slate-700 text-white px-3 py-1 rounded"
                     >
                       Edit
                     </button>
 
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="bg-red-600 text-white px-3 py-1 rounded"
+                      className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded"
                     >
                       Delete
                     </button>

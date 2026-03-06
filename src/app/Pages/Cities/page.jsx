@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
-const API = "http://localhost:5000/api/location";
+const API = "http://143.110.244.163:5000/api/location";
 
 const Page = () => {
 

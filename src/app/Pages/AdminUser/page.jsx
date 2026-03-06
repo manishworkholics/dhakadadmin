@@ -20,6 +20,7 @@ const Page = () => {
   const [roleName, setRoleName] = useState("");
   const [permissions, setPermissions] = useState([]);
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -278,31 +279,105 @@ const Page = () => {
 
         <Header />
 
-        <div className="p-6 space-y-8">
+        <div className="p-6 overflow-y-auto">
 
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold mb-2">
             Admin Management
           </h1>
+          {/* ================= TOP STATS ================= */}
 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
+
+            {/* TOTAL ROLES */}
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
+
+              <div>
+                <p className="text-sm text-gray-500">Total Roles</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {roles?.length || 0}
+                </h2>
+              </div>
+
+              <div className="bg-blue-100 text-blue-600 p-3 rounded-lg text-xl">
+                🛡️
+              </div>
+
+            </div>
+
+
+            {/* TOTAL ADMINS */}
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
+
+              <div>
+                <p className="text-sm text-gray-500">Total Admins</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {admins?.length || 0}
+                </h2>
+              </div>
+
+              <div className="bg-green-100 text-green-600 p-3 rounded-lg text-xl">
+                👤
+              </div>
+
+            </div>
+
+
+            {/* TOTAL PERMISSIONS */}
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
+
+              <div>
+                <p className="text-sm text-gray-500">Permissions</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {permissions?.length || 0}
+                </h2>
+              </div>
+
+              <div className="bg-yellow-100 text-yellow-600 p-3 rounded-lg text-xl">
+                🔐
+              </div>
+
+            </div>
+
+
+            {/* TOTAL LOGS */}
+
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
+
+              <div>
+                <p className="text-sm text-gray-500">Activity Logs</p>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {logs?.length || 0}
+                </h2>
+              </div>
+
+              <div className="bg-purple-100 text-purple-600 p-3 rounded-lg text-xl">
+                📊
+              </div>
+
+            </div>
+
+          </div>
           {/* ================= CREATE ROLE ================= */}
-
-          <div className="bg-white p-6 rounded shadow">
-
-            <h2 className="text-lg font-semibold mb-3">
-              Create Role
-            </h2>
-
+          <h2 className="text-lg font-bold mb-3">
+            Create Role
+          </h2>
+          <div className="flex items-center justify-between gap-6 bg-white p-3 rounded-md shadow mb-4">
             <input
               type="text"
               placeholder="Role name"
               value={roleName}
               onChange={(e) => setRoleName(e.target.value)}
-              className="border p-2 rounded mb-3 w-full"
+              className="border p-2 rounded w-150"
             />
 
-            <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="flex items-center justify-between gap-6 flex-wrap  w-160 border p-2 rounded">
 
-              {permissions.map((perm) => (
+              {/* FIRST 2 PERMISSIONS */}
+
+              {permissions.slice(0, 2).map((perm) => (
 
                 <label key={perm._id} className="flex items-center gap-2">
 
@@ -310,6 +385,7 @@ const Page = () => {
                     type="checkbox"
                     checked={selectedPermissions.includes(perm._id)}
                     onChange={() => togglePermission(perm._id)}
+                    className="cursor-pointer"
                   />
 
                   {perm.name}
@@ -318,70 +394,103 @@ const Page = () => {
 
               ))}
 
-            </div>
+              {/* SIMPLE DROPDOWN */}
 
-            <button
-              onClick={createRole}
-              className="bg-slate-800 text-white px-4 py-2 rounded"
-            >
-              Create Role
-            </button>
+              <div className="relative">
 
-          </div>
+                <select
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="outline-none bg-white cursor-pointer"
+                >
+                  <option>More Permissions</option>
+                </select>
 
+                {showDropdown && (
 
-          <div className="bg-white p-6 rounded shadow">
+                  <div className="absolute bg-white border rounded shadow p-3 space-y-2 z-50 min-w-[200px]">
 
-            <h2 className="text-lg font-semibold mb-4">
-              Roles & Permissions
-            </h2>
-
-            {roles.map(role => (
-
-              <div key={role._id} className="border p-4 mb-3 rounded">
-
-                <h3 className="font-semibold mb-2">
-                  {role.name}
-                </h3>
-
-                <div className="grid grid-cols-3 gap-2">
-
-                  {permissions.map(perm => {
-
-                    const checked =
-                      role.permissions?.some(p => p._id === perm._id);
-
-                    return (
+                    {permissions.slice(2).map((perm) => (
 
                       <label key={perm._id} className="flex items-center gap-2">
 
                         <input
                           type="checkbox"
-                          checked={checked}
-                          onChange={() => updateRolePermission(role, perm._id)}
+                          checked={selectedPermissions.includes(perm._id)}
+                          onChange={() => togglePermission(perm._id)}
                         />
 
                         {perm.name}
 
                       </label>
 
-                    );
+                    ))}
 
-                  })}
+                  </div>
 
-                </div>
+                )}
 
               </div>
 
-            ))}
+            </div>
 
+            <button
+              onClick={createRole}
+              className="bg-slate-800 text-white p-2 rounded w-80 cursor-pointer"
+            >
+              Create Role
+            </button>
+
+          </div>
+          <h2 className="text-lg font-bold mb-4">
+            Roles & Permissions
+          </h2>
+          <div className=" bg-white p-6 rounded shadow mb-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {roles.map(role => (
+
+                <div key={role._id} className="border p-4 mb-3 rounded">
+
+                  <h3 className="font-bold mb-2">
+                    {role.name}
+                  </h3>
+
+                  <div className="grid grid-cols-2 gap-2">
+
+                    {permissions.map(perm => {
+
+                      const checked =
+                        role.permissions?.some(p => p._id === perm._id);
+
+                      return (
+
+                        <label key={perm._id} className="flex items-center gap-2">
+
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => updateRolePermission(role, perm._id)}
+                          />
+
+                          {perm.name}
+
+                        </label>
+
+                      );
+                    })}
+
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* ================= CREATE ADMIN ================= */}
-
+          <h2 className="text-lg font-bold mb-4">
+            Create Admin
+          </h2>
           <form
             onSubmit={createAdmin}
-            className="bg-white p-6 rounded shadow grid md:grid-cols-5 gap-4"
+            className="grid md:grid-cols-5 gap-4 mb-4"
           >
 
             <input
@@ -435,7 +544,7 @@ const Page = () => {
 
             <button
               type="submit"
-              className="bg-slate-800 text-white rounded px-4"
+              className="bg-slate-800 text-white rounded px-4 cursor-pointer"
             >
               Add Admin
             </button>
@@ -444,7 +553,7 @@ const Page = () => {
 
           {/* ================= ADMIN TABLE ================= */}
 
-          <div className="bg-white rounded shadow">
+          <div className="bg-white rounded shadow mb-4">
 
             <table className="min-w-full">
 
@@ -485,7 +594,7 @@ const Page = () => {
 
                         <button
                           onClick={() => deleteAdmin(admin._id)}
-                          className="bg-red-500 text-white px-3 py-1 rounded"
+                          className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded cursor-pointer"
                         >
                           Delete
                         </button>
@@ -509,10 +618,7 @@ const Page = () => {
               </tbody>
 
             </table>
-
           </div>
-
-
 
           {/* ================= ADMIN LOGS ================= */}
 

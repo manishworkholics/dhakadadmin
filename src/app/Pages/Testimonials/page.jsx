@@ -98,8 +98,8 @@ const Page = () => {
 
       <div
         className={`lg:hidden fixed inset-y-0 left-0 z-40 w-64 
-        transform transition-transform duration-300
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+    transform transition-transform duration-300
+    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <Sidebar collapsed={false} setCollapsed={() => { }} />
       </div>
@@ -111,53 +111,92 @@ const Page = () => {
         />
       )}
 
-      {/* MAIN */}
+      {/* MAIN AREA */}
 
       <div className="flex-1 flex flex-col h-screen">
 
+        {/* HEADER */}
         <Header />
 
-        <div className="flex-1 overflow-y-auto p-6">
+        {/* CONTENT */}
+        <div className="flex-1 overflow-y-auto p-6 bg-[#F7FBFF]">
 
-          <h1 className="text-2xl font-bold mb-6">Testimonials / Reviews</h1>
+          <h1 className="text-2xl font-semibold text-gray-900 mb-8">
+            Testimonials / Reviews
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {/* Pending Reviews */}
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 hover:shadow-lg transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center">
+                <span className="text-yellow-600 text-xl">📥</span>
+              </div>
+              <div>
+                <h4 className="text-gray-500 text-sm">Pending Reviews</h4>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {pending?.length || 0}
+                </h2>
+              </div>
+            </div>
 
+            {/* Approved Reviews */}
+            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 hover:shadow-lg transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                <span className="text-green-600 text-xl">✔</span>
+              </div>
+
+              <div>
+                <h4 className="text-gray-500 text-sm">Approved Reviews</h4>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  {approved?.length || 0}
+                </h2>
+              </div>
+            </div>
+          </div>
           {/* ================= PENDING ================= */}
 
-          <h2 className="text-xl font-semibold mb-4">Pending Reviews</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Pending Reviews
+          </h2>
 
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+
             {pending?.map((item) => (
-              <div key={item?._id} className="bg-white p-4 rounded shadow">
+              <div
+                key={item?._id}
+                className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 hover:shadow-lg transition-all duration-300"
+              >
 
-                <p className="font-bold">{item?.title}</p>
+                <h3 className="font-semibold text-gray-900">
+                  {item?.title}
+                </h3>
 
-                <p className="text-yellow-500">
+                <div className="text-yellow-400 mt-1 text-lg">
                   {"⭐".repeat(item?.rating || 5)}
-                </p>
+                </div>
 
-                <p className="text-gray-600 mt-2">
+                <p className="text-gray-600 text-sm mt-3 leading-relaxed">
                   {item?.comment}
                 </p>
 
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-5">
 
                   <button
                     onClick={() => approveReview(item?._id)}
-                    className="bg-green-600 text-white px-3 py-1 rounded"
+                    className="bg-green-400 hover:bg-green-700 text-white text-sm px-3 py-1.5 rounded-md transition"
                   >
                     Approve
                   </button>
 
                   <button
                     onClick={() => rejectReview(item?._id)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded"
+                    className="bg-indigo-400 hover:bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-md transition"
                   >
                     Reject
                   </button>
 
                   <button
                     onClick={() => deleteReview(item?._id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
+                    className="bg-rose-400 hover:bg-rose-600 text-white text-sm px-3 py-1.5 rounded-md transition"
                   >
                     Delete
                   </button>
@@ -166,35 +205,45 @@ const Page = () => {
 
               </div>
             ))}
+
           </div>
 
           {/* ================= APPROVED ================= */}
 
-          <h2 className="text-xl font-semibold mb-4">Approved Reviews</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            Approved Reviews
+          </h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
             {approved?.map((item) => (
-              <div key={item._id} className="bg-white p-4 rounded shadow">
+              <div
+                key={item._id}
+                className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5 hover:shadow-lg transition-all duration-300"
+              >
 
-                <p className="font-bold">{item?.title}</p>
+                <h3 className="font-semibold text-gray-900">
+                  {item?.title}
+                </h3>
 
-                <p className="text-yellow-500">
+                <div className="text-yellow-400 mt-1 text-lg">
                   {"⭐".repeat(item?.rating || 5)}
-                </p>
+                </div>
 
-                <p className="text-gray-600 mt-2">
+                <p className="text-gray-600 text-sm mt-3 leading-relaxed">
                   {item?.comment}
                 </p>
 
                 <button
                   onClick={() => deleteReview(item?._id)}
-                  className="bg-red-600 text-white px-3 py-1 rounded mt-4"
+                  className="mt-5 bg-rose-400 hover:bg-rose-600 text-white text-sm px-3 py-1.5 rounded-md transition"
                 >
                   Delete
                 </button>
 
               </div>
             ))}
+
           </div>
 
         </div>

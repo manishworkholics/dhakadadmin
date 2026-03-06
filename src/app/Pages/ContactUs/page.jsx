@@ -133,7 +133,7 @@ const ContactUs = () => {
                             <div className="p-2 flex justify-center">
                               <button
                                 onClick={() => setSelectedMessage(item)}
-                                className="text-blue-600 hover:text-blue-800 flex items-center gap-1 cursor-pointer"
+                                className="text-indigo-400 hover:text-indigo-600 flex items-center gap-1 cursor-pointer"
                               >
                                 <Eye size={18} /> View
                               </button>
