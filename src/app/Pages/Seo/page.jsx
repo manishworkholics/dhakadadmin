@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
-const API = "http://localhost:5000/api/seo";
+const API = "http://143.110.244.163:5000/api/seo";
 
 const Page = () => {
 
@@ -152,33 +152,21 @@ const Page = () => {
 
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-
       {/* SIDEBAR */}
-
       <div className="hidden lg:block h-screen">
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
-
       {/* MAIN */}
-
       <div className="flex-1 flex flex-col h-screen">
-
         <Header />
-
         {/* CONTENT */}
-
         <div className="flex-1 overflow-y-auto p-6">
-
           {/* FORM */}
-
           <div className="bg-white p-6 rounded shadow mb-6">
-
             <h2 className="text-lg font-semibold mb-4">
               {editId ? "Update SEO" : "Add SEO"}
             </h2>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
               <input
                 type="text"
                 name="page"
@@ -187,7 +175,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <input
                 type="text"
                 name="title"
@@ -196,7 +183,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <input
                 type="text"
                 name="keywords"
@@ -205,7 +191,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <textarea
                 name="description"
                 placeholder="Meta Description"
@@ -221,7 +206,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <input
                 type="text"
                 name="ogDescription"
@@ -230,7 +214,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <input
                 type="text"
                 name="ogImage"
@@ -239,7 +222,6 @@ const Page = () => {
                 onChange={handleChange}
                 className="border p-2 rounded"
               />
-
               <input
                 type="text"
                 name="canonicalUrl"
@@ -249,79 +231,54 @@ const Page = () => {
                 className="border p-2 rounded"
               />
             </div>
-
             <button
               onClick={handleSubmit}
-              className="mt-4 bg-blue-600 text-white px-6 py-2 rounded"
+              className="mt-4 bg-slate-700 text-white px-6 py-2 rounded"
             >
               {editId ? "Update SEO" : "Add SEO"}
             </button>
-
           </div>
-
           {/* TABLE */}
-
           <div className="bg-white p-6 rounded shadow">
-
             <h2 className="text-lg font-semibold mb-4">
               SEO List
             </h2>
-
             <table className="w-full border">
-
               <thead>
-                <tr className="bg-gray-200">
+                <tr className="bg-slate-700 text-white">
                   <th className="p-2">Page</th>
                   <th className="p-2">Title</th>
                   <th className="p-2">Keywords</th>
                   <th className="p-2">Actions</th>
                 </tr>
               </thead>
-
               <tbody>
-
                 {seoList.map((seo) => (
-
                   <tr key={seo._id} className="border-t">
-
                     <td className="p-2">{seo.page}</td>
-
                     <td className="p-2">{seo.title}</td>
-
                     <td className="p-2">{seo.keywords}</td>
-
                     <td className="p-2 flex gap-2">
-
                       <button
                         onClick={() => handleEdit(seo)}
-                        className="bg-yellow-500 text-white px-3 py-1 rounded"
+                        className="bg-slate-500 text-white px-3 py-1 rounded"
                       >
                         Edit
                       </button>
-
                       <button
                         onClick={() => handleDelete(seo._id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded"
+                        className="bg-rose-400 text-white px-3 py-1 rounded"
                       >
                         Delete
                       </button>
-
                     </td>
-
                   </tr>
-
                 ))}
-
               </tbody>
-
             </table>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 };

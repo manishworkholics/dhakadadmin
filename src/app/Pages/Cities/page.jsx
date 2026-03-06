@@ -138,37 +138,23 @@ const Page = () => {
   return (
 
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-
       {/* ================= SIDEBAR ================= */}
-
       <div className="hidden lg:block h-screen">
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
-
       {/* ================= MAIN AREA ================= */}
-
       <div className="flex-1 flex flex-col h-screen">
-
         <Header />
-
         {/* ================= CONTENT ================= */}
-
-        <div className="flex-1 overflow-y-auto p-6">
-
+       <div className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
             {/* ================= STATE PANEL ================= */}
-
             <div className="bg-white p-6 rounded shadow">
-
               <h2 className="text-lg font-semibold mb-4">
                 State Management
               </h2>
-
               {/* Add State */}
-
               <div className="flex gap-3 mb-4">
-
                 <input
                   type="text"
                   placeholder="Enter State Name"
@@ -176,22 +162,16 @@ const Page = () => {
                   onChange={(e) => setStateName(e.target.value)}
                   className="border p-2 rounded w-full"
                 />
-
                 <button
                   onClick={addState}
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                  className="bg-slate-600 text-white px-4 py-2 rounded"
                 >
                   Add
                 </button>
-
               </div>
-
               {/* State List */}
-
               <div className="space-y-2">
-
                 {states.map((state) => (
-
                   <div
                     key={state._id}
                     className={`flex justify-between items-center border p-2 rounded cursor-pointer
@@ -201,7 +181,6 @@ const Page = () => {
                       fetchCities(state.state);
                     }}
                   >
-
                     <span>{state.state}</span>
 
                     <button
@@ -213,34 +192,21 @@ const Page = () => {
                     >
                       Delete
                     </button>
-
                   </div>
-
                 ))}
-
               </div>
-
             </div>
-
             {/* ================= CITY PANEL ================= */}
-
             <div className="bg-white p-6 rounded shadow">
-
               <h2 className="text-lg font-semibold mb-4">
-
                 {selectedState
                   ? `Cities in ${selectedState.state}`
                   : "Select State to Manage Cities"}
-
               </h2>
-
               {selectedState && (
-
                 <>
                   {/* Add City */}
-
                   <div className="flex gap-3 mb-4">
-
                     <input
                       type="text"
                       placeholder="Enter City"
@@ -248,27 +214,20 @@ const Page = () => {
                       onChange={(e) => setCityName(e.target.value)}
                       className="border p-2 rounded w-full"
                     />
-
                     <button
                       onClick={addCity}
-                      className="bg-green-600 text-white px-4 py-2 rounded"
+                      className="bg-rose-400 text-white px-4 py-2 rounded"
                     >
                       Add
                     </button>
-
                   </div>
-
                   {/* City List */}
-
                   <div className="space-y-2">
-
                     {cities.map((city, index) => (
-
                       <div
                         key={index}
                         className="flex justify-between border p-2 rounded"
                       >
-
                         <span>{city}</span>
 
                         <button
@@ -277,24 +236,15 @@ const Page = () => {
                         >
                           Delete
                         </button>
-
                       </div>
-
                     ))}
-
                   </div>
-
                 </>
               )}
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 };

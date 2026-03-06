@@ -302,7 +302,7 @@ const Page = () => {
 
                     {/* ================= BLOG LIST ================= */}
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-5 gap-6">
 
                         {blogs.map((blog) => (
 
@@ -328,14 +328,14 @@ const Page = () => {
 
                                     <button
                                         onClick={() => handleEdit(blog)}
-                                        className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                        className="bg-slate-600 hover:bg-slate-700 text-white px-3 py-1 rounded"
                                     >
                                         Edit
                                     </button>
 
                                     <button
                                         onClick={() => handleDelete(blog._id)}
-                                        className="bg-red-600 text-white px-3 py-1 rounded"
+                                        className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded"
                                     >
                                         Delete
                                     </button>

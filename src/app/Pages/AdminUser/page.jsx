@@ -272,93 +272,63 @@ const Page = () => {
   return (
 
     <div className="flex h-screen bg-gray-100">
-
       <Sidebar />
-
       <div className="flex-1 flex flex-col">
-
         <Header />
-
         <div className="p-6 overflow-y-auto">
-
           <h1 className="text-2xl font-bold mb-2">
             Admin Management
           </h1>
           {/* ================= TOP STATS ================= */}
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
-
             {/* TOTAL ROLES */}
-
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-
               <div>
                 <p className="text-sm text-gray-500">Total Roles</p>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {roles?.length || 0}
                 </h2>
               </div>
-
               <div className="bg-blue-100 text-blue-600 p-3 rounded-lg text-xl">
                 🛡️
               </div>
-
             </div>
-
-
             {/* TOTAL ADMINS */}
-
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-
               <div>
                 <p className="text-sm text-gray-500">Total Admins</p>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {admins?.length || 0}
                 </h2>
               </div>
-
               <div className="bg-green-100 text-green-600 p-3 rounded-lg text-xl">
                 👤
               </div>
-
             </div>
-
-
             {/* TOTAL PERMISSIONS */}
-
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-
               <div>
                 <p className="text-sm text-gray-500">Permissions</p>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {permissions?.length || 0}
                 </h2>
               </div>
-
               <div className="bg-yellow-100 text-yellow-600 p-3 rounded-lg text-xl">
                 🔐
               </div>
-
             </div>
-
-
             {/* TOTAL LOGS */}
-
             <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-
               <div>
                 <p className="text-sm text-gray-500">Activity Logs</p>
                 <h2 className="text-2xl font-bold text-gray-900">
                   {logs?.length || 0}
                 </h2>
               </div>
-
               <div className="bg-purple-100 text-purple-600 p-3 rounded-lg text-xl">
                 📊
               </div>
-
             </div>
-
           </div>
           {/* ================= CREATE ROLE ================= */}
           <h2 className="text-lg font-bold mb-3">
@@ -447,43 +417,30 @@ const Page = () => {
           <div className=" bg-white p-6 rounded shadow mb-4">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
               {roles.map(role => (
-
                 <div key={role._id} className="border p-4 mb-3 rounded">
-
                   <h3 className="font-bold mb-2">
                     {role.name}
                   </h3>
-
                   <div className="grid grid-cols-2 gap-2">
-
                     {permissions.map(perm => {
-
                       const checked =
                         role.permissions?.some(p => p._id === perm._id);
-
                       return (
-
                         <label key={perm._id} className="flex items-center gap-2">
-
                           <input
                             type="checkbox"
                             checked={checked}
                             onChange={() => updateRolePermission(role, perm._id)}
                           />
-
                           {perm.name}
-
                         </label>
-
                       );
                     })}
-
                   </div>
                 </div>
               ))}
             </div>
           </div>
-
           {/* ================= CREATE ADMIN ================= */}
           <h2 className="text-lg font-bold mb-4">
             Create Admin
@@ -492,7 +449,6 @@ const Page = () => {
             onSubmit={createAdmin}
             className="grid md:grid-cols-5 gap-4 mb-4"
           >
-
             <input
               type="text"
               name="name"
@@ -502,7 +458,6 @@ const Page = () => {
               required
               className="border p-2 rounded"
             />
-
             <input
               type="email"
               name="email"
@@ -512,7 +467,6 @@ const Page = () => {
               required
               className="border p-2 rounded"
             />
-
             <input
               type="password"
               name="password"
@@ -522,14 +476,12 @@ const Page = () => {
               required
               className="border p-2 rounded"
             />
-
             <select
               name="roleName"
               value={form.roleName}
               onChange={handleChange}
               className="border p-2 rounded"
             >
-
               {roles.length === 0 && (
                 <option>No Roles Found</option>
               )}
@@ -539,72 +491,46 @@ const Page = () => {
                   {role.name}
                 </option>
               ))}
-
             </select>
-
             <button
               type="submit"
               className="bg-slate-800 text-white rounded px-4 cursor-pointer"
             >
               Add Admin
             </button>
-
           </form>
-
           {/* ================= ADMIN TABLE ================= */}
-
           <div className="bg-white rounded shadow mb-4">
-
             <table className="min-w-full">
-
               <thead className="bg-slate-800 text-white">
-
                 <tr>
                   <th className="px-6 py-3 text-left text-xs uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs uppercase">Email</th>
                   <th className="px-6 py-3 text-left text-xs uppercase">Role</th>
                   <th className="px-6 py-3 text-left text-xs uppercase">Action</th>
                 </tr>
-
               </thead>
-
               <tbody>
-
                 {admins.length > 0 ? (
-
                   admins.map(admin => (
-
                     <tr key={admin._id} className="border-b">
-
                       <td className="px-6 py-4">{admin.name}</td>
-
                       <td className="px-6 py-4">{admin.email}</td>
-
                       <td className="px-6 py-4">
-
                         <span className="px-2 py-1 bg-gray-200 rounded text-xs">
-
                           {admin.roles?.map(r => r.name).join(", ")}
-
                         </span>
-
                       </td>
-
                       <td className="px-6 py-4">
-
                         <button
                           onClick={() => deleteAdmin(admin._id)}
                           className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded cursor-pointer"
                         >
                           Delete
                         </button>
-
                       </td>
-
                     </tr>
-
                   ))
-
                 ) : (
 
                   <tr>
@@ -614,14 +540,10 @@ const Page = () => {
                   </tr>
 
                 )}
-
               </tbody>
-
             </table>
           </div>
-
           {/* ================= ADMIN LOGS ================= */}
-
           <div className="bg-white p-6 rounded shadow">
 
             <h2 className="text-xl font-semibold mb-4">
@@ -684,13 +606,9 @@ const Page = () => {
             </table>
 
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   );
 };
 
