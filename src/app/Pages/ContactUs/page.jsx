@@ -3,215 +3,312 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../Components/Header/page.jsx";
 import Sidebar from "@/app/Components/Sidebar/page";
-import { Menu, Eye } from "lucide-react";
+import { Menu, Eye, Trash2, CheckCircle, Mail } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import axios from "axios";
-import { handleApiError } from "@/utils/apiErrorHandler.js";
 
-const API_URL = "http://143.110.244.163:5000/api/contact";
+const API = "http://143.110.244.163:5000/api/contact";
 
-const ContactUs = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [contacts, setContacts] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filtered, setFiltered] = useState([]);
+const ContactCRM = () => {
 
-  // Pagination
-  const [page, setPage] = useState(1);
-  const pageSize = 10;
-  const totalPages = Math.ceil(filtered.length / pageSize);
-
-  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [contacts, setContacts] = useState([])
+  const [filtered, setFiltered] = useState([])
+  const [search, setSearch] = useState("")
+  const [selected, setSelected] = useState(null)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null
 
-  /* 🔹 Fetch Contact Messages */
+
+  /* ================= LOAD CONTACTS ================= */
+
   const loadContacts = async () => {
-    try {
-      const res = await axios.get(API_URL, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.data.success) {
-        setContacts(res.data.contacts);
-        setFiltered(res.data.contacts);
-      }
-    } catch (error) {
-      console.log("Error fetching contacts", error);
-    }
-  };
+
+    const res = await axios.get(API, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    setContacts(res.data.contacts)
+    setFiltered(res.data.contacts)
+
+  }
 
   useEffect(() => {
-    loadContacts();
-  }, []);
+    loadContacts()
+  }, [])
 
-  /* 🔹 Search Filter */
+
+
+  /* ================= SEARCH ================= */
+
   useEffect(() => {
-    const list = contacts.filter(
-      (item) =>
-        item.name.toLowerCase().includes(search.toLowerCase()) ||
-        item.email.toLowerCase().includes(search.toLowerCase()) ||
-        item.phone.includes(search) ||
-        item.subject.toLowerCase().includes(search.toLowerCase())
-    );
-    setFiltered(list);
-    setPage(1);
-  }, [search, contacts]);
 
-  const paginatedContacts = filtered.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+    const list = contacts.filter(c =>
+
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.email.toLowerCase().includes(search.toLowerCase())
+
+    )
+
+    setFiltered(list)
+
+  }, [search, contacts])
+
+
+
+  /* ================= DELETE ================= */
+
+  const deleteMessage = async (id) => {
+
+    if (!confirm("Delete message?")) return
+
+    await axios.delete(`${API}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    loadContacts()
+
+  }
+
+
+
+  /* ================= RESOLVE ================= */
+
+  const resolveMessage = async (id) => {
+
+    await axios.patch(`${API}/${id}/resolve`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    loadContacts()
+
+  }
+
+
+
+  /* ================= EXPORT CSV ================= */
+
+  const exportCSV = () => {
+
+    const rows = contacts.map(c => [
+      c.name,
+      c.email,
+      c.phone,
+      c.subject,
+      c.status
+    ])
+
+    let csv = "Name,Email,Phone,Subject,Status\n"
+
+    rows.forEach(r => {
+      csv += r.join(",") + "\n"
+    })
+
+    const blob = new Blob([csv])
+    const url = window.URL.createObjectURL(blob)
+
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "contacts.csv"
+    a.click()
+
+  }
+
+
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300
-          lg:static lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-      >
+
+    <div className="flex h-screen bg-[#F6FAFF]">
+
+
+      {/* SIDEBAR */}
+
+      <div className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300
+lg:static lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+
         <Sidebar />
+
       </div>
 
-      {isSidebarOpen && (
-        <div
-          onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-40 z-30 lg:hidden"
-        ></div>
-      )}
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="items-center justify-between">
-          <button
-            className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            <Menu size={22} />
-          </button>
-          <Header />
-        </div>
-        <div className="flex-1 overflow-auto">
-          <div className="p-6 ">
-            <div >
-              <div className="px-6 py-4  flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" >
-                <h1 className="text-2xl font-semibold mb-3">Contact Messages</h1>
+      <div className="flex-1 flex flex-col">
 
-                {/* 🔍 Search Input */}
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="border p-2 rounded lg:w-1/3 md:w-full mb-3"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-              {/* 📋 Table */}
-              <div className="overflow-x-auto">
-                <table className="w-full bg-white shadow rounded table-auto text-center">
-                  <thead className="bg-slate-800 text-white">
-                    <tr>
-                      <th className="p-2 border border-slate-800">Name</th>
-                      <th className="p-2 border border-slate-800">Email</th>
-                      <th className="p-2 border border-slate-800">Phone</th>
-                      <th className="p-2 border border-slate-800">Subject</th>
-                      <th className="p-2 border border-slate-800">Date</th>
-                      <th className="p-2 border border-slate-800">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {paginatedContacts.length > 0 ? (
-                      paginatedContacts.map((item) => (
-                        <tr key={item._id} className="">
-                          <td className="p-2 border border-slate-800">{item.name}</td>
-                          <td className="p-2 border border-slate-800">{item.email}</td>
-                          <td className="p-2 border border-slate-800">{item.phone}</td>
-                          <td className="p-2 border border-slate-800">{item.subject}</td>
-                          <td className="p-2 border border-slate-800">
-                            {new Date(item.createdAt).toLocaleDateString()}
-                          </td>
-                          <td className="border border-slate-800">
-                            <div className="p-2 flex justify-center">
-                              <button
-                                onClick={() => setSelectedMessage(item)}
-                                className="text-indigo-400 hover:text-indigo-600 flex items-center gap-1 cursor-pointer"
-                              >
-                                <Eye size={18} /> View
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={6}
-                          className="text-center p-4 text-gray-500 italic"
-                        >
-                          No messages found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              {/* 🔻 Pagination Buttons */}
-              <div className="flex justify-between items-center mt-3">
-                <span>
-                  Page {page} of {totalPages || 1}
-                </span>
 
-                <div className="flex gap-3">
-                  <button
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
-                    className={`px-3 py-1 rounded ${page === 1 ? "bg-gray-300" : "bg-blue-500 text-white"
-                      }`}
-                  >
-                    Prev
-                  </button>
-                  <button
-                    disabled={page >= totalPages}
-                    onClick={() => setPage(page + 1)}
-                    className={`px-3 py-1 rounded ${page >= totalPages
-                      ? "bg-gray-300"
-                      : "bg-blue-500 text-white"
-                      }`}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
+        <Header />
+
+
+        <div className="p-6 space-y-6">
+
+
+          {/* HEADER */}
+
+          <div className="flex justify-between items-center">
+
+            <h1 className="text-2xl font-semibold">
+              Contact CRM
+            </h1>
+
+            <div className="flex gap-3">
+
+              <input
+                placeholder="Search..."
+                className="border px-3 py-2 rounded-lg"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+
+              <button
+                onClick={exportCSV}
+                className="bg-green-600 text-white px-3 py-2 rounded-lg"
+              >
+                Export CSV
+              </button>
+
             </div>
+
           </div>
 
-          {/* 🟦 Modal for View Details */}
-          {selectedMessage && (
-            <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-              <div className="bg-white p-6 rounded-lg shadow-md w-96">
-                <h3 className="text-lg font-semibold mb-3">Contact Detail</h3>
 
-                <p><strong>Name:</strong> {selectedMessage.name}</p>
-                <p><strong>Email:</strong> {selectedMessage.email}</p>
-                <p><strong>Phone:</strong> {selectedMessage.phone}</p>
-                <p><strong>Subject:</strong> {selectedMessage.subject}</p>
-                <p><strong>Message:</strong> {selectedMessage.message}</p>
-                <p className="text-sm text-gray-500 mt-2">
-                  Date: {new Date(selectedMessage.createdAt).toLocaleString()}
-                </p>
 
-                <button
-                  className="bg-red-500 text-white px-3 py-1 rounded mt-4 w-full"
-                  onClick={() => setSelectedMessage(null)}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          )}
+          {/* TABLE */}
+
+          <div className="bg-white rounded-xl shadow overflow-hidden">
+
+            <table className="w-full text-sm">
+
+              <thead className="bg-slate-900 text-white">
+
+                <tr>
+
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Subject</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-center">Actions</th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody>
+
+                {filtered.map(item => (
+
+                  <tr key={item._id} className="border-b hover:bg-gray-50">
+
+                    <td className="p-3">{item.name}</td>
+
+                    <td className="p-3">{item.email}</td>
+
+                    <td className="p-3">{item.subject}</td>
+
+
+                    <td className="p-3">
+
+                      <span className={`px-2 py-1 text-xs rounded-full
+${item.status === "resolved"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"}`}>
+
+                        {item.status || "new"}
+
+                      </span>
+
+                    </td>
+
+
+                    <td className="p-3 flex gap-2 justify-center">
+
+
+                      {/* VIEW */}
+
+                      <button onClick={() => setSelected(item)}>
+                        <Eye size={18} />
+                      </button>
+
+
+                      {/* EMAIL */}
+
+                      <a href={`mailto:${item.email}?subject=Reply: ${item.subject}`}>
+                        <Mail size={18} />
+                      </a>
+
+
+                      {/* RESOLVE */}
+
+                      <button onClick={() => resolveMessage(item._id)}>
+                        <CheckCircle size={18} />
+                      </button>
+
+
+                      {/* DELETE */}
+
+                      <button onClick={() => deleteMessage(item._id)}>
+                        <Trash2 size={18} />
+                      </button>
+
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default ProtectedRoute(ContactUs);
+      </div>
+
+
+
+      {/* ================= MODAL ================= */}
+
+      {selected && (
+
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
+
+          <div className="bg-white rounded-xl p-6 w-[420px]">
+
+            <h3 className="text-lg font-semibold mb-4">
+              Contact Message
+            </h3>
+
+            <p><strong>Name:</strong> {selected.name}</p>
+
+            <p><strong>Email:</strong> {selected.email}</p>
+
+            <p><strong>Phone:</strong> {selected.phone}</p>
+
+            <p><strong>Subject:</strong> {selected.subject}</p>
+
+            <p className="mt-3">{selected.message}</p>
+
+            <button
+              onClick={() => setSelected(null)}
+              className="mt-4 bg-red-500 text-white px-3 py-2 rounded w-full"
+            >
+              Close
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
+    </div>
+
+  )
+
+}
+
+export default ProtectedRoute(ContactCRM)
