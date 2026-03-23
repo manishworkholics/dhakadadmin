@@ -342,28 +342,81 @@ const Page = () => {
                                         </div>
 
                                         {/* Pagination */}
-                                        <div className="flex justify-center my-6 gap-2">
+                                        <div className="flex justify-center items-center my-6 gap-2 flex-wrap">
+
+                                            {/* Prev Button */}
                                             <button
-                                                className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer"
+                                                className="px-3 py-2 bg-gray-200 rounded-md disabled:opacity-50"
                                                 onClick={() => handlePageChange(currentPage - 1)}
                                                 disabled={currentPage === 1}
                                             >
                                                 Prev
                                             </button>
 
-                                            {[...Array(totalPages)].map((_, index) => (
-                                                <button
-                                                    key={index}
-                                                    className={`cursor-pointer px-4 py-2 rounded-md 
-                                                        ${currentPage === index + 1 ? "bg-black text-white" : "bg-gray-200"}`}
-                                                    onClick={() => handlePageChange(index + 1)}
-                                                >
-                                                    {index + 1}
-                                                </button>
-                                            ))}
+                                            {/* Dynamic Pages */}
+                                            {(() => {
+                                                const pages = [];
+                                                const maxVisible = 5;
 
+                                                let start = Math.max(currentPage - 2, 1);
+                                                let end = Math.min(start + maxVisible - 1, totalPages);
+
+                                                if (end - start < maxVisible - 1) {
+                                                    start = Math.max(end - maxVisible + 1, 1);
+                                                }
+
+                                                // First page + dots
+                                                if (start > 1) {
+                                                    pages.push(
+                                                        <button key={1}
+                                                            onClick={() => handlePageChange(1)}
+                                                            className="px-3 py-2 bg-gray-200 rounded-md"
+                                                        >
+                                                            1
+                                                        </button>
+                                                    );
+
+                                                    if (start > 2) {
+                                                        pages.push(<span key="start-dots">...</span>);
+                                                    }
+                                                }
+
+                                                // Middle pages
+                                                for (let i = start; i <= end; i++) {
+                                                    pages.push(
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => handlePageChange(i)}
+                                                            className={`px-3 py-2 rounded-md 
+                        ${currentPage === i ? "bg-black text-white" : "bg-gray-200"}`}
+                                                        >
+                                                            {i}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                // Last page + dots
+                                                if (end < totalPages) {
+                                                    if (end < totalPages - 1) {
+                                                        pages.push(<span key="end-dots">...</span>);
+                                                    }
+
+                                                    pages.push(
+                                                        <button key={totalPages}
+                                                            onClick={() => handlePageChange(totalPages)}
+                                                            className="px-3 py-2 bg-gray-200 rounded-md"
+                                                        >
+                                                            {totalPages}
+                                                        </button>
+                                                    );
+                                                }
+
+                                                return pages;
+                                            })()}
+
+                                            {/* Next Button */}
                                             <button
-                                                className="px-4 py-2 bg-gray-200 rounded-md cursor-pointer"
+                                                className="px-3 py-2 bg-gray-200 rounded-md disabled:opacity-50"
                                                 onClick={() => handlePageChange(currentPage + 1)}
                                                 disabled={currentPage === totalPages}
                                             >
