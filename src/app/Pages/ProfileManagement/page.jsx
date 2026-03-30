@@ -6,11 +6,12 @@ import Sidebar from "@/app/Components/Sidebar/page";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const API = "http://143.110.244.163:5000";
 
 const Page = () => {
-
+    const router = useRouter();
     const [token, setToken] = useState(null);
 
     const [profiles, setProfiles] = useState([]);
@@ -308,6 +309,13 @@ const Page = () => {
                                                             </button>
                                                         )}
 
+
+                                                        <button
+                                                            onClick={() => router.push(`/Pages/ProfileManagement/edit/${profile._id}`)}
+                                                            className="bg-blue-500 text-white px-2 py-1 rounded text-xs"
+                                                        >
+                                                            Edit
+                                                        </button>
                                                     </div>
                                                 </td>
 

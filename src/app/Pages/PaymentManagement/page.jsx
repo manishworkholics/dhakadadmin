@@ -159,9 +159,9 @@ const PaymentManagement = () => {
 
             <div className="bg-white p-4 rounded-xl shadow">
               <p className="text-gray-500 text-sm">Total Revenue</p>
-              <h2 className="text-2xl font-bold text-green-600">
-                ₹{totalRevenue}
-              </h2>
+             <h2 className="text-2xl font-bold text-green-600">
+  ₹{Math.round(totalRevenue)}
+</h2>
             </div>
 
             <div className="bg-white p-4 rounded-xl shadow">

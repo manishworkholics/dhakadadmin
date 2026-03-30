@@ -90,9 +90,9 @@ return(
 
 <Card title="Active Matches" value={stats.activeMatches} icon={<Heart/>} color="pink"/>
 
-<Card title="Total Revenue" value={`₹${stats.totalRevenue}`} icon={<DollarSign/>} color="green"/>
+<Card title="Total Revenue" value={`₹${Math.round(stats.totalRevenue)}`} icon={<DollarSign/>} color="green"/>
 
-<Card title="Today Revenue" value={`₹${stats.todayRevenue}`} icon={<DollarSign/>} color="yellow"/>
+<Card title="Today Revenue" value={`₹${Math.round(stats.todayRevenue)}`} icon={<DollarSign/>} color="yellow"/>
 
 <Card title="Pending Profiles" value={stats.pendingProfiles} icon={<Clock/>} color="red"/>
 

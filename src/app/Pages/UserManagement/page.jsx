@@ -19,16 +19,27 @@ const Page = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [users, setUsers] = useState([]);
-
+    const [planFilter, setPlanFilter] = useState("all");
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [plans, setPlans] = useState([]);
+
     const itemsPerPage = 10;
 
     useEffect(() => {
         if (typeof window !== "undefined") {
             setToken(localStorage.getItem("token"));
         }
+    }, []);
+
+    const fetchPlans = async () => {
+        const res = await axios.get("http://143.110.244.163:5000/api/plan");
+        setPlans(res.data.plans || []);
+    };
+
+    useEffect(() => {
+        fetchPlans();
     }, []);
 
     useEffect(() => {
@@ -53,6 +64,7 @@ const Page = () => {
                         search: debouncedSearch,
                         page: currentPage,
                         limit: itemsPerPage,
+                        plan: planFilter,
                     },
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -67,7 +79,7 @@ const Page = () => {
         } finally {
             setLoading(false);
         }
-    }, [token, currentPage, debouncedSearch]);
+    }, [token, currentPage, debouncedSearch, planFilter]); // ✅ ADD THIS
 
     useEffect(() => {
         if (token) fetchUsers();
@@ -220,6 +232,24 @@ const Page = () => {
                                         placeholder="Search by name, email, phone, location..."
                                         className="w-full lg:w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-black-300"
                                     />
+
+                                    <select
+                                        value={planFilter}
+                                        onChange={(e) => {
+                                            setPlanFilter(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                        className="px-4 py-2 border rounded-md"
+                                    >
+                                        <option value="all">All Plans</option>
+                                        <option value="free">Free</option> {/* ✅ FIX */}
+
+                                        {plans.map((plan) => (
+                                            <option key={plan._id} value={plan._id}>
+                                                {plan.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
                                 {/* Table */}
@@ -245,6 +275,9 @@ const Page = () => {
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
                                                             Phone
                                                         </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
+                                                            Plan
+                                                        </th>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Create for
                                                         </th>
@@ -257,6 +290,7 @@ const Page = () => {
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
                                                             Action
                                                         </th>
+
                                                     </tr>
                                                 </thead>
 
@@ -272,6 +306,35 @@ const Page = () => {
                                                                 </td>
                                                                 <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.phone || "N/A"}
+                                                                </td>
+                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
+                                                                    {user.currentPlan ? (
+                                                                        <div className="flex flex-col gap-1">
+
+                                                                            {/* 🔥 Plan Name */}
+                                                                            <span className="text-blue-600 font-semibold">
+                                                                                {user.currentPlan.plan?.name || "Plan"}
+                                                                            </span>
+
+                                                                            {/* 🔥 Status + Expiry */}
+                                                                            <span
+                                                                                className={`px-2 py-1 rounded-full text-[10px] w-fit ${user.currentPlan.status === "active"
+                                                                                    ? "bg-green-100 text-green-600"
+                                                                                    : "bg-red-100 text-red-600"
+                                                                                    }`}
+                                                                            >
+                                                                                {user.currentPlan.status === "active" ? "Active" : "Expired"} |
+                                                                                Exp: {new Date(user.currentPlan.endDate).toLocaleDateString("en-IN")}
+
+
+                                                                            </span>
+
+                                                                        </div>
+                                                                    ) : (
+                                                                        <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-xs">
+                                                                            Free Plan
+                                                                        </span>
+                                                                    )}
                                                                 </td>
                                                                 <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
                                                                     {user.createdfor || "N/A"}
