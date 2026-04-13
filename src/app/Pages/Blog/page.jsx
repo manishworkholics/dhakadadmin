@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
+import Badge from "@/components/ui/Badge";
+import Select from "@/components/ui/Select";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
@@ -177,183 +183,156 @@ const Page = () => {
 
     };
 
-    return (
+   return (
+  <AdminShell>
 
-        <div className="flex h-screen bg-gray-100 overflow-hidden">
+    <Card className="p-4 md:p-6">
 
-            <Sidebar />
+      <PageHeader title="Blog Management" />
 
-            <div className="flex-1 flex flex-col">
+      {/* ================= FORM ================= */}
+      <Card className="p-5 mt-6">
 
-                <Header />
+        <h2 className="font-semibold mb-4">
+          {editingId ? "Update Blog" : "Create Blog"}
+        </h2>
 
-                <div className="p-6 overflow-y-auto">
+        <form onSubmit={handleSubmit}>
 
-                    <h1 className="text-2xl font-bold mb-6">
-                        Blog Management
-                    </h1>
+          <div className="grid md:grid-cols-2 gap-4">
 
-                    {/* ================= FORM ================= */}
+            <Input
+              name="title"
+              placeholder="Blog Title"
+              value={form.title}
+              onChange={handleChange}
+            />
 
-                    <form
-                        onSubmit={handleSubmit}
-                        className="bg-white p-6 rounded shadow mb-8"
-                    >
+            <Input
+              name="tags"
+              placeholder="Tags (comma separated)"
+              value={form.tags}
+              onChange={handleChange}
+            />
 
-                        <div className="grid grid-cols-2 gap-4">
+            <Input
+              name="seoTitle"
+              placeholder="SEO Title"
+              value={form.seoTitle}
+              onChange={handleChange}
+            />
 
-                            <input
-                                type="text"
-                                name="title"
-                                placeholder="Blog Title"
-                                value={form.title}
-                                onChange={handleChange}
-                                className="border p-2 rounded"
-                                required
-                            />
+            <Input
+              name="seoDescription"
+              placeholder="SEO Description"
+              value={form.seoDescription}
+              onChange={handleChange}
+            />
 
-                            <input
-                                type="text"
-                                name="tags"
-                                placeholder="Tags (comma separated)"
-                                value={form.tags}
-                                onChange={handleChange}
-                                className="border p-2 rounded"
-                            />
+            <Select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </Select>
 
-                            <input
-                                type="text"
-                                name="seoTitle"
-                                placeholder="SEO Title"
-                                value={form.seoTitle}
-                                onChange={handleChange}
-                                className="border p-2 rounded"
-                            />
+            <input
+              type="file"
+              onChange={handleImageUpload}
+              className="border rounded-lg p-2"
+            />
 
-                            <input
-                                type="text"
-                                name="seoDescription"
-                                placeholder="SEO Description"
-                                value={form.seoDescription}
-                                onChange={handleChange}
-                                className="border p-2 rounded"
-                            />
+          </div>
 
-                            <select
-                                name="status"
-                                value={form.status}
-                                onChange={handleChange}
-                                className="border p-2 rounded"
-                            >
-                                <option value="draft">Draft</option>
-                                <option value="published">Published</option>
-                            </select>
+          {uploading && (
+            <p className="text-sm text-primary mt-2">
+              Uploading image...
+            </p>
+          )}
 
-                            <input
-                                type="file"
-                                onChange={handleImageUpload}
-                                className="border p-2 rounded"
-                            />
+          {form.image && (
+            <img
+              src={form.image}
+              className="h-28 mt-3 rounded"
+            />
+          )}
 
-                        </div>
+          <textarea
+            name="excerpt"
+            placeholder="Short excerpt"
+            value={form.excerpt}
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3 mt-4"
+          />
 
-                        {uploading && (
-                            <p className="text-blue-500 text-sm mt-2">
-                                Uploading image...
-                            </p>
-                        )}
+          <textarea
+            name="content"
+            placeholder="Write blog content..."
+            value={form.content}
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3 mt-4 h-48"
+          />
 
-                        {form.image && (
-                            <img
-                                src={form.image}
-                                className="h-28 mt-3 rounded"
-                            />
-                        )}
+          <Button type="submit" className="mt-4">
+            {editingId ? "Update Blog" : "Create Blog"}
+          </Button>
 
-                        <textarea
-                            name="excerpt"
-                            placeholder="Short excerpt"
-                            value={form.excerpt}
-                            onChange={handleChange}
-                            className="border p-2 rounded w-full mt-4"
-                        />
+        </form>
 
-                        {/* ================= RICH TEXT ================= */}
+      </Card>
 
-                        <div className="mt-4">
-                            <textarea
-                                name="content"
-                                placeholder="Write blog content..."
-                                value={form.content}
-                                onChange={handleChange}
-                                className="border p-3 rounded w-full mt-4 h-48"
-                                required
-                            />
-                        </div>
+      {/* ================= BLOG LIST ================= */}
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6">
 
-                        <button
-                            type="submit"
-                            className="bg-slate-800 text-white px-6 py-2 rounded mt-4"
-                        >
-                            {editingId ? "Update Blog" : "Create Blog"}
-                        </button>
+        {blogs.map((blog) => (
 
-                    </form>
+          <Card key={blog._id} className="p-3 space-y-2">
 
-                    {/* ================= BLOG LIST ================= */}
+            <img
+              src={blog.image}
+              className="h-40 w-full object-cover rounded"
+            />
 
-                    <div className="grid md:grid-cols-5 gap-6">
+            <h3 className="font-semibold line-clamp-2">
+              {blog.title}
+            </h3>
 
-                        {blogs.map((blog) => (
+            <Badge variant={blog.status === "published" ? "success" : "secondary"}>
+              {blog.status}
+            </Badge>
 
-                            <div
-                                key={blog._id}
-                                className="bg-white rounded shadow p-4"
-                            >
+            <div className="flex gap-2 pt-2">
 
-                                <img
-                                    src={blog.image}
-                                    className="h-40 w-full object-cover rounded"
-                                />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleEdit(blog)}
+              >
+                Edit
+              </Button>
 
-                                <h3 className="font-bold mt-3">
-                                    {blog.title}
-                                </h3>
-
-                                <p className="text-sm text-gray-500">
-                                    {blog.status}
-                                </p>
-
-                                <div className="flex gap-2 mt-3">
-
-                                    <button
-                                        onClick={() => handleEdit(blog)}
-                                        className="bg-slate-600 hover:bg-slate-700 text-white px-3 py-1 rounded"
-                                    >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        onClick={() => handleDelete(blog._id)}
-                                        className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded"
-                                    >
-                                        Delete
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        ))}
-
-                    </div>
-
-                </div>
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={() => handleDelete(blog._id)}
+              >
+                Delete
+              </Button>
 
             </div>
 
-        </div>
-    );
+          </Card>
+
+        ))}
+
+      </div>
+
+    </Card>
+
+  </AdminShell>
+);
 };
 
 export default ProtectedRoute(Page);

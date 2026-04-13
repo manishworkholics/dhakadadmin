@@ -1,8 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { MapPin, Trash2, Plus, Search } from "lucide-react";
@@ -151,138 +156,151 @@ const Page = () => {
 
 
 
-  return (
+ return (
+  <AdminShell>
 
-    <div className="flex h-screen bg-[#F6FAFF]">
+    <Card className="p-4 md:p-6">
 
-      {/* SIDEBAR */}
+      <PageHeader
+        title="Location Management"
+        subtitle="Manage states and cities"
+      />
 
-      <div className="hidden lg:block h-screen">
-        <Sidebar />
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
 
+        {/* ================= STATES ================= */}
+        <Card className="p-5">
 
-      <div className="flex-1 flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-semibold">States</h2>
+            <span className="text-sm text-muted-foreground">
+              {states.length} total
+            </span>
+          </div>
 
-        <Header />
+          {/* ADD STATE */}
+          <div className="flex gap-3 mb-4">
+            <Input
+              placeholder="Add new state"
+              value={stateName}
+              onChange={(e) => setStateName(e.target.value)}
+            />
 
+            <Button onClick={addState} className="flex gap-1">
+              <Plus size={16} />
+              Add
+            </Button>
+          </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* SEARCH */}
+          <Input
+            placeholder="Search states..."
+            value={stateSearch}
+            onChange={(e) => setStateSearch(e.target.value)}
+            className="mb-4"
+          />
 
+          {/* LIST */}
+          <div className="space-y-2 max-h-[420px] overflow-auto">
 
-          {/* PAGE HEADER */}
+            {filteredStates.map((state) => (
 
-          <div className="flex justify-between items-center">
+              <div
+                key={state._id}
+                onClick={() => {
+                  setSelectedState(state);
+                  fetchCities(state.state);
+                }}
+                className={`flex justify-between items-center p-3 border rounded-lg cursor-pointer transition
+                ${
+                  selectedState?._id === state._id
+                    ? "bg-primary/10 border-primary"
+                    : "hover:bg-muted"
+                }`}
+              >
 
-            <h1 className="text-2xl font-semibold flex items-center gap-2">
+                <span className="font-medium">{state.state}</span>
 
-              <MapPin size={22} />
-              Location Management
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteState(state._id);
+                  }}
+                >
+                  <Trash2 size={14} />
+                </Button>
 
-            </h1>
+              </div>
+
+            ))}
 
           </div>
 
+        </Card>
 
+        {/* ================= CITIES ================= */}
+        <Card className="p-5">
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <h2 className="font-semibold mb-4">
 
+            {selectedState
+              ? `Cities in ${selectedState.state}`
+              : "Select state to manage cities"}
 
-            {/* ================= STATES ================= */}
+          </h2>
 
-            <div className="bg-white rounded-xl shadow p-6">
+          {selectedState && (
+            <>
 
-              <div className="flex justify-between items-center mb-4">
-
-                <h2 className="font-semibold">
-                  States
-                </h2>
-
-                <span className="text-sm text-gray-500">
-                  {states.length} total
-                </span>
-
-              </div>
-
-
-
-              {/* ADD STATE */}
-
+              {/* ADD CITY */}
               <div className="flex gap-3 mb-4">
 
-                <input
-                  placeholder="Add new state"
-                  value={stateName}
-                  onChange={(e) => setStateName(e.target.value)}
-                  className="border px-3 py-2 rounded-lg w-full"
+                <Input
+                  placeholder="Add new city"
+                  value={cityName}
+                  onChange={(e) => setCityName(e.target.value)}
                 />
 
-                <button
-                  onClick={addState}
-                  className="bg-slate-800 text-white px-4 py-2 rounded-lg flex items-center gap-1"
+                <Button
+                  onClick={addCity}
+                  variant="primary"
+                  className="flex gap-1"
                 >
-
                   <Plus size={16} />
                   Add
-
-                </button>
+                </Button>
 
               </div>
-
-
 
               {/* SEARCH */}
+              <Input
+                placeholder="Search cities..."
+                value={citySearch}
+                onChange={(e) => setCitySearch(e.target.value)}
+                className="mb-4"
+              />
 
-              <div className="relative mb-4">
-
-                <Search size={16} className="absolute left-3 top-3 text-gray-400" />
-
-                <input
-                  placeholder="Search states..."
-                  value={stateSearch}
-                  onChange={(e) => setStateSearch(e.target.value)}
-                  className="border pl-9 pr-3 py-2 rounded-lg w-full"
-                />
-
-              </div>
-
-
-
-              {/* STATE LIST */}
-
+              {/* LIST */}
               <div className="space-y-2 max-h-[420px] overflow-auto">
 
-                {filteredStates.map(state => (
+                {filteredCities.map((city, index) => (
 
                   <div
-                    key={state._id}
-                    onClick={() => {
-
-                      setSelectedState(state)
-
-                      fetchCities(state.state)
-
-                    }}
-
-                    className={`flex justify-between items-center p-3 border rounded-lg cursor-pointer transition
-${selectedState?._id === state._id ? "bg-blue-50 border-blue-300" : "hover:bg-gray-50"}`}
+                    key={index}
+                    className="flex justify-between items-center p-3 border rounded-lg hover:bg-muted"
                   >
 
-                    <span className="font-medium">
-                      {state.state}
-                    </span>
+                    <span>{city}</span>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        deleteState(state._id)
-                      }}
-                      className="text-red-500 hover:text-red-700"
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => deleteCity(city)}
                     >
-
-                      <Trash2 size={16} />
-
-                    </button>
+                      <Trash2 size={14} />
+                    </Button>
 
                   </div>
 
@@ -290,116 +308,17 @@ ${selectedState?._id === state._id ? "bg-blue-50 border-blue-300" : "hover:bg-gr
 
               </div>
 
-            </div>
+            </>
+          )}
 
-
-
-            {/* ================= CITIES ================= */}
-
-            <div className="bg-white rounded-xl shadow p-6">
-
-              <h2 className="font-semibold mb-4">
-
-                {selectedState
-                  ? `Cities in ${selectedState.state}`
-                  : "Select state to manage cities"}
-
-              </h2>
-
-
-              {selectedState && (
-
-                <>
-
-
-                  {/* ADD CITY */}
-
-                  <div className="flex gap-3 mb-4">
-
-                    <input
-                      placeholder="Add new city"
-                      value={cityName}
-                      onChange={(e) => setCityName(e.target.value)}
-                      className="border px-3 py-2 rounded-lg w-full"
-                    />
-
-                    <button
-                      onClick={addCity}
-                      className="bg-rose-500 text-white px-4 py-2 rounded-lg flex items-center gap-1"
-                    >
-
-                      <Plus size={16} />
-                      Add
-
-                    </button>
-
-                  </div>
-
-
-
-                  {/* SEARCH */}
-
-                  <div className="relative mb-4">
-
-                    <Search size={16} className="absolute left-3 top-3 text-gray-400" />
-
-                    <input
-                      placeholder="Search cities..."
-                      value={citySearch}
-                      onChange={(e) => setCitySearch(e.target.value)}
-                      className="border pl-9 pr-3 py-2 rounded-lg w-full"
-                    />
-
-                  </div>
-
-
-
-                  {/* CITY LIST */}
-
-                  <div className="space-y-2 max-h-[420px] overflow-auto">
-
-                    {filteredCities.map((city, index) => (
-
-                      <div
-                        key={index}
-                        className="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50"
-                      >
-
-                        <span>
-                          {city}
-                        </span>
-
-                        <button
-                          onClick={() => deleteCity(city)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-
-                          <Trash2 size={16} />
-
-                        </button>
-
-                      </div>
-
-                    ))}
-
-                  </div>
-
-                </>
-
-              )}
-
-            </div>
-
-          </div>
-
-        </div>
+        </Card>
 
       </div>
 
-    </div>
+    </Card>
 
-  )
-
+  </AdminShell>
+);
 }
 
 export default ProtectedRoute(Page)

@@ -1,22 +1,14 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import {Moon,Sun,Bell,Search,User,Settings,LogOut} from "lucide-react";
+import { Bell, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
+import Button from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 
 const Header = () => {
   const router = useRouter();
-  const [darkMode, setDarkMode] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
-  // Toggle dark mode
-  useEffect(() => {
-    if (darkMode) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-  }, [darkMode]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -30,12 +22,8 @@ const Header = () => {
   }, []);
 
  const handleLogout = () => {
-  localStorage.removeItem("token");
-  toast.success("Logged out successfully!");
-
-  setTimeout(() => {
-    window.location.href = "/dhakadadmin/Pages/Login";
-  }, 1000); 
+  localStorage.removeItem("admintoken");
+  window.location.href = "/dhakadadmin/Pages/Login";
 };
 
 
@@ -44,47 +32,40 @@ const Header = () => {
   }
 
   return (
-    <header className="flex items-center justify-between 
-bg-slate-800 text-slate-100
-border-b border-slate-700
-px-6 py-2 mt-0 shadow-md">
+    <header className="flex items-center justify-between px-4 py-2">
+      <div className="hidden lg:block text-sm font-semibold text-foreground">
+        Dhakad Matrimonial Admin
+      </div>
 
-  <div className="text-xl font-semibold text-white">
-    Dhakad Matrimonial Admin
-  </div>
-
-  <ToastContainer position="top-right" autoClose={2000} />
-
-  {/* Right: Icons and Profile */}
-  <div className="flex items-center gap-5 relative" ref={dropdownRef}>
+      {/* Right: Icons and Profile */}
+      <div className="flex items-center gap-3 relative" ref={dropdownRef}>
     
     {/* Notification */}
-    <button className="relative text-slate-300 hover:text-white transition cursor-pointer">
-      <Bell size={22} />
+    <Button variant="outline" size="sm" className="h-9 w-9 px-0 relative" aria-label="Notifications">
+      <Bell />
       <span className="absolute top-0 right-0 w-2 h-2 bg-rose-500 rounded-full"></span>
-    </button>
+    </Button>
 
     {/* Profile */}
     <div
       onClick={() => setOpenDropdown(!openDropdown)}
-      className="flex items-center gap-2 cursor-pointer hover:bg-slate-800 p-2 rounded-lg transition"
+      className="flex items-center gap-2 cursor-pointer rounded-lg px-2 py-1.5 hover:bg-muted transition"
     >
       <img
         src="https://i.pravatar.cc/40"
         alt="Profile"
-        className="w-8 h-8 rounded-full border border-slate-600"
+        className="w-8 h-8 rounded-full border border-border"
       />
-      <span className="hidden md:block text-slate-200 font-medium">
+      <span className="hidden md:block text-foreground font-medium">
         Admin
       </span>
     </div>
 
     {/* Dropdown Menu */}
     {openDropdown && (
-      <div className="absolute right-0 top-14 w-56 
-      bg-white 
-      border border-gray-200 
-      rounded-lg shadow-lg py-2 z-50">
+      <div className={cn(
+        "absolute right-0 top-12 w-56 rounded-xl border border-border bg-background shadow-soft py-2 z-50"
+      )}>
 
         <div className="px-4 py-2">
           <p className="font-semibold text-gray-800"></p>
@@ -93,25 +74,25 @@ px-6 py-2 mt-0 shadow-md">
 
         <hr className="border-gray-200 my-2" />
 
-        <ul className="text-gray-700">
+        <ul className="text-sm text-foreground">
           <li
-            className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer transition"
+            className="flex items-center gap-2 px-4 py-2 hover:bg-muted cursor-pointer transition"
             onClick={handleNavigateProfile}
           >
-            <User size={18} className="text-gray-600" />
+            <User className="text-muted-foreground size-4" />
             View Profile
           </li>
 
-          <li className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 cursor-pointer transition">
-            <Settings size={18} className="text-gray-600" />
+          <li className="flex items-center gap-2 px-4 py-2 hover:bg-muted cursor-pointer transition">
+            <Settings className="text-muted-foreground size-4" />
             Account Settings
           </li>
 
           <li
-            className="flex items-center gap-2 px-4 py-2 hover:bg-red-50 text-red-600 cursor-pointer transition"
+            className="flex items-center gap-2 px-4 py-2 hover:bg-danger/10 text-danger cursor-pointer transition"
             onClick={handleLogout}
           >
-            <LogOut size={18} />
+            <LogOut className="size-4" />
             Logout
           </li>
         </ul>

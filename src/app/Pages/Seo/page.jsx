@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import Table from "@/components/ui/Table";
+import Badge from "@/components/ui/Badge";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Search, Pencil, Trash2, Eye, Globe } from "lucide-react";
@@ -14,7 +20,7 @@ const Page = () => {
 
   const token =
     typeof window !== "undefined"
-      ? localStorage.getItem("token")
+      ? localStorage.getItem("admintoken")
       : null;
 
   const axiosAuth = axios.create({
@@ -210,369 +216,215 @@ const Page = () => {
 
 
   return (
+  <AdminShell>
 
-    <div className="flex h-screen bg-[#F6FAFF]">
+    <Card className="p-4 md:p-6">
 
+      <PageHeader
+        title="SEO Management"
+        actions={
+          <div className="flex gap-3">
 
-      {/* SIDEBAR */}
-
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
-
-
-
-      {/* MAIN */}
-
-      <div className="flex-1 flex flex-col">
-
-        <Header />
-
-
-        <div className="p-6 space-y-6 overflow-auto">
-
-
-          {/* HEADER */}
-
-          <div className="flex justify-between items-center">
-
-            <h1 className="text-2xl font-semibold">
-              SEO Management
-            </h1>
-
-            <div className="flex gap-3">
-
-              <button
-                onClick={() => window.open(`${API}/sitemap.xml`)}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg flex gap-2 items-center"
-              >
-
-                <Globe size={16} />
-                Sitemap
-
-              </button>
-
-              <div className="relative">
-
-                <Search size={16} className="absolute left-3 top-3 text-gray-400" />
-
-                <input
-                  placeholder="Search page..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="border pl-9 pr-3 py-2 rounded-lg"
-                />
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-
-          {/* ================= FORM ================= */}
-
-          <div className="bg-white rounded-xl shadow p-6">
-
-            <h2 className="text-lg font-semibold mb-4">
-
-              {editId ? "Update SEO" : "Add SEO"}
-
-            </h2>
-
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-              <input
-                name="page"
-                placeholder="Page slug"
-                value={formData.page}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <input
-                name="title"
-                placeholder="Meta Title"
-                value={formData.title}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <input
-                name="keywords"
-                placeholder="Keywords"
-                value={formData.keywords}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <input
-                name="canonicalUrl"
-                placeholder="Canonical URL"
-                value={formData.canonicalUrl}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <textarea
-                name="description"
-                placeholder="Meta Description"
-                value={formData.description}
-                onChange={handleChange}
-                className="border p-2 rounded col-span-2"
-              />
-
-              <input
-                name="ogTitle"
-                placeholder="OG Title"
-                value={formData.ogTitle}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <input
-                name="ogDescription"
-                placeholder="OG Description"
-                value={formData.ogDescription}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-              <input
-                name="ogImage"
-                placeholder="OG Image URL"
-                value={formData.ogImage}
-                onChange={handleChange}
-                className="border p-2 rounded"
-              />
-
-            </div>
-
-            <div className="flex gap-3 mt-4">
-
-              <button
-                onClick={handleSubmit}
-                className="bg-slate-800 text-white px-6 py-2 rounded-lg"
-              >
-
-                {editId ? "Update SEO" : "Create SEO"}
-
-              </button>
-
-              {editId && (
-
-                <button
-                  onClick={resetForm}
-                  className="bg-gray-300 px-4 py-2 rounded-lg"
-                >
-
-                  Cancel
-
-                </button>
-
-              )}
-
-            </div>
-
-          </div>
-
-
-
-          {/* ================= TABLE ================= */}
-
-          <div className="bg-white rounded-xl shadow p-6">
-
-            <h2 className="text-lg font-semibold mb-4">
-
-              SEO Pages
-
-            </h2>
-
-
-            {loading ? (
-
-              <div className="text-center py-10">
-                Loading SEO pages...
-              </div>
-
-            ) : (
-
-
-              <table className="w-full text-sm">
-
-                <thead className="bg-slate-900 text-white">
-
-                  <tr>
-
-                    <th className="p-3 text-left">Page</th>
-                    <th className="p-3 text-left">Title</th>
-                    <th className="p-3 text-left">Keywords</th>
-                    <th className="p-3 text-left">Actions</th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {filteredSeo.map(seo => (
-
-                    <tr key={seo._id} className="border-b hover:bg-gray-50">
-
-                      <td className="p-3">
-
-                        <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
-
-                          {seo.page}
-
-                        </span>
-
-                      </td>
-
-                      <td className="p-3">
-                        {seo.title}
-                      </td>
-
-                      <td className="p-3 text-gray-600">
-                        {seo.keywords}
-                      </td>
-
-                      <td className="p-3 flex gap-3">
-
-                        <button
-                          onClick={() => handlePreview(seo._id)}
-                          className="text-purple-600 flex items-center gap-1"
-                        >
-
-                          <Eye size={16} />
-                          Preview
-
-                        </button>
-
-                        <button
-                          onClick={() => handleEdit(seo)}
-                          className="text-blue-600 flex items-center gap-1"
-                        >
-
-                          <Pencil size={16} />
-                          Edit
-
-                        </button>
-
-                        <button
-                          onClick={() => handleDelete(seo._id)}
-                          className="text-red-600 flex items-center gap-1"
-                        >
-
-                          <Trash2 size={16} />
-                          Delete
-
-                        </button>
-
-                      </td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
-
-            )}
-
-
-
-            {/* PAGINATION */}
-
-            <div className="flex justify-end gap-3 mt-4">
-
-              <button
-                disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-                className="px-3 py-1 border rounded"
-              >
-
-                Prev
-
-              </button>
-
-              <span>
-
-                Page {page} / {totalPages}
-
-              </span>
-
-              <button
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-                className="px-3 py-1 border rounded"
-              >
-
-                Next
-
-              </button>
-
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-
-
-      {/* ================= PREVIEW MODAL ================= */}
-
-      {preview && (
-
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-
-          <div className="bg-white p-6 rounded-xl w-[500px]">
-
-            <h2 className="text-lg font-semibold mb-3">
-              SEO Preview
-            </h2>
-
-            <p className="font-semibold text-blue-600">
-              {preview.title}
-            </p>
-
-            <p className="text-sm text-gray-600 mt-2">
-              {preview.meta?.[0]?.content}
-            </p>
-
-            {preview.og?.image && (
-
-              <img
-                src={preview.og.image}
-                className="mt-4 rounded"
-              />
-
-            )}
-
-            <button
-              onClick={() => setPreview(null)}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+            <Button
+              onClick={() => window.open(`${API}/sitemap.xml`)}
+              className="flex gap-2"
             >
+              <Globe size={16} />
+              Sitemap
+            </Button>
 
-              Close
-
-            </button>
+            <div className="w-64">
+              <Input
+                placeholder="Search page..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
           </div>
+        }
+      />
+
+      {/* ================= FORM ================= */}
+      <Card className="p-5 mt-6">
+
+        <h2 className="font-semibold mb-4">
+          {editId ? "Update SEO" : "Add SEO"}
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-4">
+
+          <Input name="page" placeholder="Page slug" value={formData.page} onChange={handleChange} />
+          <Input name="title" placeholder="Meta Title" value={formData.title} onChange={handleChange} />
+          <Input name="keywords" placeholder="Keywords" value={formData.keywords} onChange={handleChange} />
+          <Input name="canonicalUrl" placeholder="Canonical URL" value={formData.canonicalUrl} onChange={handleChange} />
+
+          <div className="md:col-span-2">
+            <textarea
+              name="description"
+              placeholder="Meta Description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-3"
+            />
+          </div>
+
+          <Input name="ogTitle" placeholder="OG Title" value={formData.ogTitle} onChange={handleChange} />
+          <Input name="ogDescription" placeholder="OG Description" value={formData.ogDescription} onChange={handleChange} />
+          <Input name="ogImage" placeholder="OG Image URL" value={formData.ogImage} onChange={handleChange} />
 
         </div>
 
-      )}
+        <div className="flex gap-3 mt-4">
 
-    </div>
+          <Button onClick={handleSubmit}>
+            {editId ? "Update SEO" : "Create SEO"}
+          </Button>
 
-  )
+          {editId && (
+            <Button variant="outline" onClick={resetForm}>
+              Cancel
+            </Button>
+          )}
+
+        </div>
+
+      </Card>
+
+      {/* ================= TABLE ================= */}
+      <div className="mt-6">
+
+        {loading ? (
+          <div className="text-center py-10">
+            Loading SEO pages...
+          </div>
+        ) : (
+
+          <Table
+            columns={[
+              {
+                key: "page",
+                header: "Page",
+                render: (seo) => (
+                  <Badge variant="secondary">
+                    {seo.page}
+                  </Badge>
+                ),
+              },
+              { key: "title", header: "Title" },
+              { key: "keywords", header: "Keywords" },
+              {
+                key: "actions",
+                header: "Action",
+                render: (seo) => (
+                  <div className="flex gap-2">
+
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handlePreview(seo._id)}
+                    >
+                      <Eye size={14} />
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleEdit(seo)}
+                    >
+                      <Pencil size={14} />
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => handleDelete(seo._id)}
+                    >
+                      <Trash2 size={14} />
+                    </Button>
+
+                  </div>
+                ),
+              },
+            ]}
+            rows={filteredSeo}
+            emptyText="No SEO pages found"
+          />
+
+        )}
+
+        {/* PAGINATION */}
+        <div className="flex justify-end items-center gap-3 mt-5">
+
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          >
+            Prev
+          </Button>
+
+          <span className="text-sm text-muted-foreground">
+            Page {page} / {totalPages}
+          </span>
+
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </Button>
+
+        </div>
+
+      </div>
+
+    </Card>
+
+    {/* ================= PREVIEW MODAL ================= */}
+    {preview && (
+
+      <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+        <Card className="p-6 w-[500px]">
+
+          <h2 className="text-lg font-semibold mb-3">
+            SEO Preview
+          </h2>
+
+          <p className="font-semibold text-primary">
+            {preview.title}
+          </p>
+
+          <p className="text-sm text-muted-foreground mt-2">
+            {preview.meta?.[0]?.content}
+          </p>
+
+          {preview.og?.image && (
+            <img
+              src={preview.og.image}
+              className="mt-4 rounded"
+            />
+          )}
+
+          <Button
+            className="mt-4 w-full"
+            onClick={() => setPreview(null)}
+          >
+            Close
+          </Button>
+
+        </Card>
+
+      </div>
+
+    )}
+
+  </AdminShell>
+);
 
 }
 

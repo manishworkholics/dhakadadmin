@@ -1,4 +1,67 @@
+@config "../../tailwind.config.js";
 @import 'tailwindcss';
+@import '@webbycrown/react-advanced-richtext-editor/dist/styles.css';
+
+/* -----------------------------
+   Design tokens (SaaS-neutral)
+------------------------------ */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --muted: 210 40% 98%;
+  --muted-foreground: 215 16% 47%;
+  --border: 214 32% 91%;
+  --ring: 221 83% 53%;
+
+  --primary: 221 83% 53%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 215 25% 27%;
+  --secondary-foreground: 210 40% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 210 40% 98%;
+  --danger: 0 84% 60%;
+  --danger-foreground: 210 40% 98%;
+}
+
+.dark {
+  --background: 222 47% 7%;
+  --foreground: 210 40% 98%;
+  --muted: 217 33% 12%;
+  --muted-foreground: 215 20% 65%;
+  --border: 217 33% 18%;
+  --ring: 221 83% 60%;
+
+  --primary: 221 83% 60%;
+  --primary-foreground: 222 47% 11%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --success: 142 71% 50%;
+  --success-foreground: 222 47% 11%;
+  --danger: 0 84% 65%;
+  --danger-foreground: 222 47% 11%;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* legacy cleanup: replace old `.input` usage with a consistent class */
+  .ui-input {
+    @apply w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-foreground shadow-soft-sm outline-none transition placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/25 focus:border-ring;
+  }
+  .dark .ui-input {
+    @apply bg-background;
+  }
+}
 /* Hide Scrollbar but allow scroll */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -7,4 +70,19 @@
 .no-scrollbar {
   -ms-overflow-style: none;  /* IE + Edge */
   scrollbar-width: none;     /* Firefox */
+}
+
+
+/* NProgress Loader */
+#nprogress .bar {
+  background: #6366f1; /* primary color */
+  height: 3px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #6366f1, 0 0 5px #6366f1;
+}
+
+#nprogress .spinner {
+  display: none;
 }

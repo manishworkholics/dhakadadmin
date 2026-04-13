@@ -1,21 +1,26 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Header from "../../Components/Header/page.jsx";
-import Sidebar from "@/app/Components/Sidebar/page";
-import { Menu, Ban, Trash2, Check, X } from "lucide-react";
+import { Ban, Trash2, Check, X, ArrowLeft } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
-import { IoIosArrowRoundBack } from "react-icons/io";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Card from "@/components/ui/Card";
+import Table from "@/components/ui/Table";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import Loader from "@/components/ui/Loader";
 
 const Page = () => {
     const router = useRouter();
     const [token, setToken] = useState(null);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [users, setUsers] = useState([]);
@@ -29,7 +34,7 @@ const Page = () => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            setToken(localStorage.getItem("token"));
+            setToken(localStorage.getItem("admintoken"));
         }
     }, []);
 
@@ -178,322 +183,231 @@ const Page = () => {
     }
 
     return (
-        <>
-            <div className="flex h-screen bg-gray-100">
-
-                {/* Sidebar */}
-                <div
-                    className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300 
-                    lg:static lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-                >
-                    <Sidebar />
-                </div>
-
-                {isSidebarOpen && (
-                    <div
-                        onClick={() => setIsSidebarOpen(false)}
-                        className="fixed inset-0 bg-black bg-opacity-40 z-30 lg:hidden"
-                    ></div>
-                )}
-
-                <div className="flex-1 flex flex-col overflow-hidden">
-                    {/* Header */}
-                    <div className="items-center justify-between">
-                        <button
-                            className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md"
-                            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        >
-                            <Menu size={22} />
-                        </button>
-                        <Header />
-                    </div>
-
-                    {/* Main Content */}
-                    <div className="flex-1 overflow-auto p-6">
-                        <div className=" ">
-                            <div >
-                                <div className="px-6 py-4 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4" >
-                                    {/* Back Icon + Title (NO GAP) */}
-                                    <div className="flex items-center gap-1">
-                                        <button onClick={handleBackout} className="flex items-center text-gray-700 hover:text-black">
-                                            <IoIosArrowRoundBack size={28} />
-                                        </button>
-
-                                        <h1 className="text-2xl font-semibold text-gray-800">
-                                            User Management
-                                        </h1>
-                                    </div>
-
-                                    {/* Search */}
-                                    <input
-                                        type="text"
-                                        value={searchQuery}
-                                        onChange={handleSearch}
-                                        placeholder="Search by name, email, phone, location..."
-                                        className="w-full lg:w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring focus:border-black-300"
-                                    />
-
-                                    <select
-                                        value={planFilter}
-                                        onChange={(e) => {
-                                            setPlanFilter(e.target.value);
-                                            setCurrentPage(1);
-                                        }}
-                                        className="px-4 py-2 border rounded-md"
-                                    >
-                                        <option value="all">All Plans</option>
-                                        <option value="free">Free</option> {/* ✅ FIX */}
-
-                                        {plans.map((plan) => (
-                                            <option key={plan._id} value={plan._id}>
-                                                {plan.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Table */}
-                                {loading ? (
-                                    <div className="flex justify-center items-center py-20">
-                                        <div className="animate-spin rounded-full h-14 w-14 border-4 border-gray-900 border-t-transparent"></div>
-                                        <p className="ml-4 text-lg font-medium text-gray-700">
-                                            Loading Users...
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="overflow-x-auto">
-                                            <table className="min-w-full mb-3">
-                                                <thead className="bg-slate-800 text-white">
-                                                    <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-b-0 border-r-0 ">
-                                                            Name
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
-                                                            Email
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
-                                                            Phone
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0">
-                                                            Plan
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
-                                                            Create for
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
-                                                            Verified
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
-                                                            Blocked
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase border border-slate-800 border-l-0 border-b-0 border-r-0 ">
-                                                            Action
-                                                        </th>
-
-                                                    </tr>
-                                                </thead>
-
-                                                <tbody className="bg-white divide-y divide-gray-300">
-                                                    {users.length > 0 ? (
-                                                        users.map((user) => (
-                                                            <tr key={user._id} className="hover:bg-gray-100 transition">
-                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
-                                                                    {user.name || "N/A"}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
-                                                                    {user.email || "N/A"}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
-                                                                    {user.phone || "N/A"}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
-                                                                    {user.currentPlan ? (
-                                                                        <div className="flex flex-col gap-1">
-
-                                                                            {/* 🔥 Plan Name */}
-                                                                            <span className="text-blue-600 font-semibold">
-                                                                                {user.currentPlan.plan?.name || "Plan"}
-                                                                            </span>
-
-                                                                            {/* 🔥 Status + Expiry */}
-                                                                            <span
-                                                                                className={`px-2 py-1 rounded-full text-[10px] w-fit ${user.currentPlan.status === "active"
-                                                                                    ? "bg-green-100 text-green-600"
-                                                                                    : "bg-red-100 text-red-600"
-                                                                                    }`}
-                                                                            >
-                                                                                {user.currentPlan.status === "active" ? "Active" : "Expired"} |
-                                                                                Exp: {new Date(user.currentPlan.endDate).toLocaleDateString("en-IN")}
-
-
-                                                                            </span>
-
-                                                                        </div>
-                                                                    ) : (
-                                                                        <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-xs">
-                                                                            Free Plan
-                                                                        </span>
-                                                                    )}
-                                                                </td>
-                                                                <td className="px-6 py-4 text-xs font-medium border border-slate-800 whitespace-nowrap">
-                                                                    {user.createdfor || "N/A"}
-                                                                </td>
-                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
-                                                                    <span
-                                                                        className={`px-3 py-1 rounded-full text-xs font-medium 
-                                                                            ${user.isVerified ? "bg-green-100 text-green-600" : "bg-red-100 text-red-500"}`}
-                                                                    >
-                                                                        {user.isVerified ? "Yes" : "No"}
-                                                                    </span>
-                                                                </td>
-
-                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
-                                                                    <span
-                                                                        className={`px-3 py-1 rounded-full text-xs 
-                                                                        ${user.isBlocked ? "bg-red-100 text-red-600" : "bg-green-100 text-green-600"}`}
-                                                                    >
-                                                                        {user.isBlocked ? "Yes" : "No"}
-                                                                    </span>
-                                                                </td>
-
-                                                                <td className="px-6 py-4 border border-slate-800 whitespace-nowrap">
-
-                                                                    {/* Block / Unblock */}
-                                                                    <button
-                                                                        className="me-3 text-yellow-600 hover:text-yellow-800 cursor-pointer"
-                                                                        onClick={() => handleBlock(user._id)}
-                                                                        title={user.isBlocked ? "Unblock User" : "Block User"}
-                                                                    >
-                                                                        <Ban size={20} />
-                                                                    </button>
-
-                                                                    {/* Verify / Unverify */}
-                                                                    <button
-                                                                        className="me-3 cursor-pointer"
-                                                                        onClick={() => handleVerify(user._id)}
-                                                                        title={user.isVerified ? "Remove Verification" : "Verify User"}
-                                                                    >
-                                                                        {user.isVerified ? (
-                                                                            <X size={20} className="text-red-500 hover:text-red-700" />
-                                                                        ) : (
-                                                                            <Check size={20} className="text-green-600 hover:text-green-800" />
-                                                                        )}
-                                                                    </button>
-
-                                                                    {/* Delete */}
-                                                                    <button
-                                                                        className="text-red-600 hover:text-red-800 cursor-pointer"
-                                                                        onClick={() => handleDelete(user._id)}
-                                                                        title="Delete User"
-                                                                    >
-                                                                        <Trash2 size={20} />
-                                                                    </button>
-
-                                                                </td>
-                                                            </tr>
-                                                        ))
-                                                    ) : (
-                                                        <tr>
-                                                            <td colSpan="15" className="text-center py-6 text-gray-500">
-                                                                No users found
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        {/* Pagination */}
-                                        <div className="flex justify-center items-center my-6 gap-2 flex-wrap">
-
-                                            {/* Prev Button */}
-                                            <button
-                                                className="px-3 py-2 bg-gray-200 rounded-md disabled:opacity-50"
-                                                onClick={() => handlePageChange(currentPage - 1)}
-                                                disabled={currentPage === 1}
-                                            >
-                                                Prev
-                                            </button>
-
-                                            {/* Dynamic Pages */}
-                                            {(() => {
-                                                const pages = [];
-                                                const maxVisible = 5;
-
-                                                let start = Math.max(currentPage - 2, 1);
-                                                let end = Math.min(start + maxVisible - 1, totalPages);
-
-                                                if (end - start < maxVisible - 1) {
-                                                    start = Math.max(end - maxVisible + 1, 1);
-                                                }
-
-                                                // First page + dots
-                                                if (start > 1) {
-                                                    pages.push(
-                                                        <button key={1}
-                                                            onClick={() => handlePageChange(1)}
-                                                            className="px-3 py-2 bg-gray-200 rounded-md"
-                                                        >
-                                                            1
-                                                        </button>
-                                                    );
-
-                                                    if (start > 2) {
-                                                        pages.push(<span key="start-dots">...</span>);
-                                                    }
-                                                }
-
-                                                // Middle pages
-                                                for (let i = start; i <= end; i++) {
-                                                    pages.push(
-                                                        <button
-                                                            key={i}
-                                                            onClick={() => handlePageChange(i)}
-                                                            className={`px-3 py-2 rounded-md 
-                        ${currentPage === i ? "bg-black text-white" : "bg-gray-200"}`}
-                                                        >
-                                                            {i}
-                                                        </button>
-                                                    );
-                                                }
-
-                                                // Last page + dots
-                                                if (end < totalPages) {
-                                                    if (end < totalPages - 1) {
-                                                        pages.push(<span key="end-dots">...</span>);
-                                                    }
-
-                                                    pages.push(
-                                                        <button key={totalPages}
-                                                            onClick={() => handlePageChange(totalPages)}
-                                                            className="px-3 py-2 bg-gray-200 rounded-md"
-                                                        >
-                                                            {totalPages}
-                                                        </button>
-                                                    );
-                                                }
-
-                                                return pages;
-                                            })()}
-
-                                            {/* Next Button */}
-                                            <button
-                                                className="px-3 py-2 bg-gray-200 rounded-md disabled:opacity-50"
-                                                onClick={() => handlePageChange(currentPage + 1)}
-                                                disabled={currentPage === totalPages}
-                                            >
-                                                Next
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
+        <AdminShell>
+            <Card className="p-4 md:p-6">
+                <PageHeader
+                    title="User Management"
+                    actions={
+                        <>
+                            <Button
+                                variant="outline"
+                                leftIcon={<ArrowLeft />}
+                                onClick={handleBackout}
+                            >
+                                Back
+                            </Button>
+                            <div className="w-full md:w-80">
+                                <Input
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                    placeholder="Search by name, email, phone, location..."
+                                />
                             </div>
+                            <div className="w-full md:w-56">
+                                <Select
+                                    value={planFilter}
+                                    onChange={(e) => {
+                                        setPlanFilter(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    <option value="all">All Plans</option>
+                                    <option value="free">Free</option>
+                                    {plans.map((plan) => (
+                                        <option key={plan._id} value={plan._id}>
+                                            {plan.name}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </div>
+                        </>
+                    }
+                />
+
+                {loading ? (
+                    <Loader label="Loading users..." />
+                ) : (
+                    <>
+                        <div className="mt-4">
+                            <Table
+                                columns={[
+                                    { key: "name", header: "Name" },
+                                    { key: "email", header: "Email" },
+                                    { key: "phone", header: "Phone" },
+                                    {
+                                        key: "plan",
+                                        header: "Plan",
+                                        render: (user) =>
+                                            user.currentPlan ? (
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="font-semibold text-primary">
+                                                        {user.currentPlan.plan?.name || "Plan"}
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {user.currentPlan.status === "active" ? (
+                                                            <Badge variant="success" className="mr-2">
+                                                                Active
+                                                            </Badge>
+                                                        ) : (
+                                                            <Badge variant="danger" className="mr-2">
+                                                                Expired
+                                                            </Badge>
+                                                        )}
+                                                        <span>
+                                                            Exp:{" "}
+                                                            {new Date(user.currentPlan.endDate).toLocaleDateString(
+                                                                "en-IN"
+                                                            )}
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <Badge>Free Plan</Badge>
+                                            ),
+                                    },
+                                    { key: "createdfor", header: "Create for" },
+                                    {
+                                        key: "isVerified",
+                                        header: "Verified",
+                                        render: (user) =>
+                                            user.isVerified ? (
+                                                <Badge variant="success">Yes</Badge>
+                                            ) : (
+                                                <Badge variant="danger">No</Badge>
+                                            ),
+                                    },
+                                    {
+                                        key: "isBlocked",
+                                        header: "Blocked",
+                                        render: (user) =>
+                                            user.isBlocked ? (
+                                                <Badge variant="danger">Yes</Badge>
+                                            ) : (
+                                                <Badge variant="success">No</Badge>
+                                            ),
+                                    },
+                                    {
+                                        key: "actions",
+                                        header: "Action",
+                                        render: (user) => (
+                                            <div className="flex items-center gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="h-9 w-9 px-0"
+                                                    onClick={() => handleBlock(user._id)}
+                                                    title={user.isBlocked ? "Unblock user" : "Block user"}
+                                                >
+                                                    <Ban />
+                                                </Button>
+
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="h-9 w-9 px-0"
+                                                    onClick={() => handleVerify(user._id)}
+                                                    title={user.isVerified ? "Remove verification" : "Verify user"}
+                                                >
+                                                    {user.isVerified ? <X /> : <Check />}
+                                                </Button>
+
+                                                <Button
+                                                    variant="danger"
+                                                    size="sm"
+                                                    className="h-9 w-9 px-0"
+                                                    onClick={() => handleDelete(user._id)}
+                                                    title="Delete user"
+                                                >
+                                                    <Trash2 />
+                                                </Button>
+                                            </div>
+                                        ),
+                                    },
+                                ]}
+                                rows={users}
+                                emptyText="No users found"
+                            />
                         </div>
-                    </div>
-                </div>
-            </div>
-        </>
+
+                        {/* Pagination */}
+                        <div className="flex justify-center items-center mt-5 gap-2 flex-wrap">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                            >
+                                Prev
+                            </Button>
+
+                            {(() => {
+                                const pages = [];
+                                const maxVisible = 5;
+
+                                let start = Math.max(currentPage - 2, 1);
+                                let end = Math.min(start + maxVisible - 1, totalPages);
+
+                                if (end - start < maxVisible - 1) {
+                                    start = Math.max(end - maxVisible + 1, 1);
+                                }
+
+                                if (start > 1) {
+                                    pages.push(
+                                        <Button
+                                            key={1}
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handlePageChange(1)}
+                                        >
+                                            1
+                                        </Button>
+                                    );
+                                    if (start > 2) pages.push(<span key="start-dots" className="px-1 text-muted-foreground">...</span>);
+                                }
+
+                                for (let i = start; i <= end; i++) {
+                                    pages.push(
+                                        <Button
+                                            key={i}
+                                            variant={currentPage === i ? "primary" : "outline"}
+                                            size="sm"
+                                            onClick={() => handlePageChange(i)}
+                                        >
+                                            {i}
+                                        </Button>
+                                    );
+                                }
+
+                                if (end < totalPages) {
+                                    if (end < totalPages - 1) pages.push(<span key="end-dots" className="px-1 text-muted-foreground">...</span>);
+                                    pages.push(
+                                        <Button
+                                            key={totalPages}
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handlePageChange(totalPages)}
+                                        >
+                                            {totalPages}
+                                        </Button>
+                                    );
+                                }
+
+                                return pages;
+                            })()}
+
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            >
+                                Next
+                            </Button>
+                        </div>
+                    </>
+                )}
+            </Card>
+        </AdminShell>
     );
 };
 

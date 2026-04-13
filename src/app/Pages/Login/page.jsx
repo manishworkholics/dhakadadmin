@@ -4,6 +4,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 const Page = () => {
     const router = useRouter();
@@ -39,7 +43,7 @@ const Page = () => {
                 const { token, admin } = res.data;
 
                 // Save token
-                localStorage.setItem("token", token);
+                localStorage.setItem("admintoken", token);
 
                 // Save user data
                 localStorage.setItem("adminData", JSON.stringify(admin));
@@ -64,59 +68,51 @@ const Page = () => {
         <div
             className="
         min-h-screen 
-        bg-black 
-        bg-[url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1500&q=80')] 
-        bg-cover bg-center 
-        relative flex items-center justify-center px-4
+        bg-muted
+        relative flex items-center justify-center px-4 py-10
       "
         >
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/70"></div>
-
             {/* Card Container */}
-            <div className="relative bg-white/95 shadow-xl rounded-xl p-8 w-full max-w-md">
+            <Card className="relative w-full max-w-md p-6 md:p-8">
                 {/* Header */}
-                <h2 className="text-center text-3xl font-bold text-gray-800">
+                <h2 className="text-center text-2xl font-semibold tracking-tight">
                     Sign in to your account
                 </h2>
-                <p className="mt-2 text-center text-sm text-gray-600">
-                    Or{" "}
-                    <a
-                        href="#"
-                        className="font-semibold text-indigo-600 hover:text-indigo-500"
-                    >
-                        create an account
-                    </a>
+                <p className="mt-2 text-center text-sm text-muted-foreground">
+                    Welcome back. Please enter your credentials.
                 </p>
 
                 {/* Error message */}
                 {errorMsg && (
-                    <p className="mt-4 text-center text-red-600 text-sm font-medium">
+                    <p className="mt-4 text-center text-danger text-sm font-medium">
                         {errorMsg}
                     </p>
                 )}
 
                 {/* Form */}
-                <form className="space-y-6 mt-8" onSubmit={handleSubmit}>
+                <form className="space-y-5 mt-8" onSubmit={handleSubmit}>
                     {/* Email */}
                     <div>
                         <label
                             htmlFor="email"
-                            className="block text-sm font-medium text-gray-700"
+                            className="block text-sm font-medium"
                         >
                             Email address
                         </label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            autoComplete="email"
-                            required
-                            value={formData.email}
-                            onChange={handleChange}
-                            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Enter your email"
-                        />
+                        <div className="relative mt-1">
+                            <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
+                                id="email"
+                                name="email"
+                                type="email"
+                                autoComplete="email"
+                                required
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Enter your email"
+                                className="pl-9"
+                            />
+                        </div>
                     </div>
 
                     {/* Password */}
@@ -129,7 +125,8 @@ const Page = () => {
                         </label>
 
                         <div className="relative">
-                            <input
+                            <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input
                                 id="password"
                                 name="password"
                                 type={showPassword ? "text" : "password"}
@@ -137,19 +134,15 @@ const Page = () => {
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="Enter your password"
+                                className="pl-9 pr-10"
                             />
 
                             <span
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-600 hover:text-gray-800"
+                                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-muted-foreground hover:text-foreground transition"
                             >
-                                {showPassword ? (
-                                    <i className="fa-regular fa-eye"></i>
-                                ) : (
-                                    <i className="fa-regular fa-eye-slash"></i>
-                                )}
+                                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                             </span>
                         </div>
                     </div>
@@ -158,35 +151,32 @@ const Page = () => {
 
                     {/* Remember + Forgot */}
                     <div className="flex items-center justify-between">
-                        <label className="flex items-center text-sm text-gray-700">
+                        <label className="flex items-center text-sm text-muted-foreground">
                             <input
                                 type="checkbox"
-                                className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                className="h-4 w-4 rounded border-border"
                             />
                             <span className="ml-2">Remember me</span>
                         </label>
 
                         <a
                             href="#"
-                            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                            className="text-sm font-medium text-primary hover:brightness-95"
                         >
                             Forgot password?
                         </a>
                     </div>
 
                     {/* Submit */}
-                    <button
+                    <Button
                         type="submit"
                         disabled={loading}
-                        className={`w-full py-2 rounded-md text-white font-medium ${loading
-                            ? "bg-indigo-400 cursor-not-allowed"
-                            : "bg-indigo-600 hover:bg-indigo-700 transition"
-                            }`}
+                        className="w-full"
                     >
                         {loading ? "Signing in..." : "Sign in"}
-                    </button>
+                    </Button>
                 </form>
-            </div>
+            </Card>
         </div>
     );
 };

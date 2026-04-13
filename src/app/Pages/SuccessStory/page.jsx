@@ -1,8 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 import toast from "react-hot-toast";
@@ -131,196 +135,199 @@ const Page = () => {
     }
   };
 
-  return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden">
-      <Sidebar />
+ return (
+  <AdminShell>
 
-      <div className="flex-1 flex flex-col">
-        <Header />
+    <Card className="p-4 md:p-6">
 
-        <div className="p-6 overflow-y-auto">
+      <PageHeader
+        title="Success Stories"
+        subtitle={editingId ? "Editing Mode" : ""}
+      />
 
-          {/* HEADER */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Success Stories</h1>
-            {editingId && (
-              <span className="text-sm text-blue-600 font-medium">
-                Editing Mode
-              </span>
-            )}
-          </div>
+      {/* ================= FORM ================= */}
+      <Card className="p-5 mt-6">
 
-          {/* ================= FORM ================= */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-xl shadow mb-8 border"
-          >
-            <div className="grid md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit}>
 
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                value={form.name}
-                onChange={handleChange}
-                className="border p-3 rounded-lg"
-                required
-              />
+          <div className="grid md:grid-cols-2 gap-4">
 
-              <input
-                type="text"
-                name="partnerName"
-                placeholder="Partner Name"
-                value={form.partnerName}
-                onChange={handleChange}
-                className="border p-3 rounded-lg"
-                required
-              />
-
-              <input
-                type="text"
-                name="title"
-                placeholder="Story Title"
-                value={form.title}
-                onChange={handleChange}
-                className="border p-3 rounded-lg"
-                required
-              />
-
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="border p-2 rounded-lg w-full"
-                />
-
-                {uploading && <p className="text-blue-500">Uploading...</p>}
-
-                {form.image && (
-                  <img src={form.image} className="h-20 mt-2 rounded" />
-                )}
-              </div>
-
-            </div>
-
-            <textarea
-              name="story"
-              placeholder="Write Story..."
-              value={form.story}
+            <Input
+              name="name"
+              placeholder="Your Name"
+              value={form.name}
               onChange={handleChange}
-              className="border p-3 rounded-lg w-full mt-4"
-              rows="4"
-              required
             />
 
-            <div className="flex gap-3 mt-4">
+            <Input
+              name="partnerName"
+              placeholder="Partner Name"
+              value={form.partnerName}
+              onChange={handleChange}
+            />
 
-              <button
-                type="submit"
-                className={`px-6 py-2 rounded-lg text-white ${
-                  editingId ? "bg-blue-600" : "bg-green-600"
-                }`}
-              >
-                {editingId ? "Update Story" : "Add Story"}
-              </button>
+            <Input
+              name="title"
+              placeholder="Story Title"
+              value={form.title}
+              onChange={handleChange}
+            />
 
-              {editingId && (
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="bg-gray-400 text-white px-4 py-2 rounded-lg"
-                >
-                  Cancel
-                </button>
+            <div>
+              <input
+                type="file"
+                onChange={handleImageUpload}
+                className="border rounded-lg p-2 w-full"
+              />
+
+              {uploading && (
+                <p className="text-sm text-primary mt-2">
+                  Uploading...
+                </p>
               )}
 
-            </div>
-          </form>
-
-          {/* ================= LIST ================= */}
-          {stories.length === 0 ? (
-            <p className="text-gray-500">No success stories yet</p>
-          ) : (
-            <div className="grid md:grid-cols-4 gap-6">
-              {stories.map((item) => (
-                <div
-                  key={item._id}
-                  className="bg-white rounded-xl shadow hover:shadow-xl transition p-4"
-                >
-                  <img
-                    src={item.image}
-                    className="h-48 w-full object-cover rounded-lg"
-                  />
-
-                  <h3 className="font-bold mt-3">
-                    {item.name} ❤️ {item.partnerName}
-                  </h3>
-
-                  <p className="text-sm text-gray-500">{item.title}</p>
-
-                  <p className="text-sm mt-2 line-clamp-3">
-                    {item.story}
-                  </p>
-
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => setSelectedStory(item)}
-                      className="bg-indigo-500 text-white px-3 py-1 rounded"
-                    >
-                      View
-                    </button>
-
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(item._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ================= MODAL ================= */}
-          {selectedStory && (
-            <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-              <div className="bg-white p-6 rounded-xl w-[900px]">
+              {form.image && (
                 <img
-                  src={selectedStory.image}
-                  className="h-64 mx-auto object-contain"
+                  src={form.image}
+                  className="h-20 mt-2 rounded"
                 />
-
-                <h2 className="font-bold mt-4 text-lg">
-                  {selectedStory.name} ❤️ {selectedStory.partnerName}
-                </h2>
-
-                <p className="text-gray-500">{selectedStory.title}</p>
-
-                <p className="mt-3">{selectedStory.story}</p>
-
-                <button
-                  onClick={() => setSelectedStory(null)}
-                  className="mt-4 bg-black text-white px-4 py-2 rounded"
-                >
-                  Close
-                </button>
-              </div>
+              )}
             </div>
-          )}
 
-        </div>
+          </div>
+
+          <textarea
+            name="story"
+            placeholder="Write Story..."
+            value={form.story}
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3 mt-4"
+            rows="4"
+          />
+
+          <div className="flex gap-3 mt-4">
+
+            <Button type="submit">
+              {editingId ? "Update Story" : "Add Story"}
+            </Button>
+
+            {editingId && (
+              <Button variant="outline" onClick={resetForm}>
+                Cancel
+              </Button>
+            )}
+
+          </div>
+
+        </form>
+
+      </Card>
+
+      {/* ================= LIST ================= */}
+      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+
+        {stories.length === 0 ? (
+          <p className="text-muted-foreground">
+            No success stories yet
+          </p>
+        ) : (
+
+          stories.map((item) => (
+
+            <Card key={item._id} className="p-3 space-y-2">
+
+              <img
+                src={item.image}
+                className="h-40 w-full object-cover rounded"
+              />
+
+              <h3 className="font-semibold text-sm">
+                {item.name} ❤️ {item.partnerName}
+              </h3>
+
+              <p className="text-xs text-muted-foreground">
+                {item.title}
+              </p>
+
+              <p className="text-sm line-clamp-3">
+                {item.story}
+              </p>
+
+              <div className="flex gap-2 pt-2">
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setSelectedStory(item)}
+                >
+                  View
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleEdit(item)}
+                >
+                  Edit
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => handleDelete(item._id)}
+                >
+                  Delete
+                </Button>
+
+              </div>
+
+            </Card>
+
+          ))
+
+        )}
+
       </div>
-    </div>
-  );
+
+    </Card>
+
+    {/* ================= MODAL ================= */}
+    {selectedStory && (
+      <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+        <Card className="p-6 w-[800px]">
+
+          <img
+            src={selectedStory.image}
+            className="h-60 mx-auto object-contain"
+          />
+
+          <h2 className="font-semibold mt-4">
+            {selectedStory.name} ❤️ {selectedStory.partnerName}
+          </h2>
+
+          <p className="text-muted-foreground">
+            {selectedStory.title}
+          </p>
+
+          <p className="mt-3 text-sm">
+            {selectedStory.story}
+          </p>
+
+          <Button
+            className="mt-4 w-full"
+            onClick={() => setSelectedStory(null)}
+          >
+            Close
+          </Button>
+
+        </Card>
+
+      </div>
+    )}
+
+  </AdminShell>
+);
 };
 
 export default ProtectedRoute(Page);

@@ -1,16 +1,22 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
+
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 
 const API = "http://143.110.244.163:5000/api/review";
 
 const Page = () => {
   const token =
     typeof window !== "undefined"
-      ? localStorage.getItem("token")
+      ? localStorage.getItem("admintoken")
       : null;
 
   const [reviews, setReviews] = useState([]);
@@ -24,7 +30,6 @@ const Page = () => {
     reviewerName: "",
   });
 
-  // ================= FETCH =================
   const fetchReviews = async () => {
     const res = await axios.get(`${API}/testimonials`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -36,7 +41,6 @@ const Page = () => {
     fetchReviews();
   }, []);
 
-  // ================= STATS =================
   const approved = reviews.filter((r) => r.isApproved);
   const pending = reviews.filter((r) => !r.isApproved);
 
@@ -44,37 +48,29 @@ const Page = () => {
     approved.reduce((acc, r) => acc + (r.rating || 0), 0) /
     (approved.length || 1);
 
-  // ================= SEARCH =================
   const filteredReviews = reviews.filter((r) =>
     r.comment?.toLowerCase().includes(search.toLowerCase())
   );
 
-  // ================= CHANGE =================
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ================= STAR CLICK =================
   const handleStarClick = (value) => {
     setForm({ ...form, rating: value });
   };
 
-  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (editingId) {
-      await axios.put(
-        `${API}/admin/update-review/${editingId}`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.put(`${API}/admin/update-review/${editingId}`, form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     } else {
-      await axios.post(
-        `${API}/admin/add-review`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axios.post(`${API}/admin/add-review`, form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     }
 
     setForm({ title: "", rating: 5, comment: "", reviewerName: "" });
@@ -82,7 +78,6 @@ const Page = () => {
     fetchReviews();
   };
 
-  // ================= EDIT =================
   const handleEdit = (r) => {
     setEditingId(r._id);
     setForm({
@@ -94,7 +89,6 @@ const Page = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // ================= DELETE =================
   const deleteReview = async (id) => {
     await axios.delete(`${API}/admin/delete-review/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -102,7 +96,6 @@ const Page = () => {
     fetchReviews();
   };
 
-  // ================= APPROVE =================
   const approveReview = async (id) => {
     await axios.patch(`${API}/admin/status/${id}`, {}, {
       headers: { Authorization: `Bearer ${token}` },
@@ -111,153 +104,168 @@ const Page = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <AdminShell>
+      <Card className="p-4 md:p-6">
 
-      <Sidebar />
+        <PageHeader title="Review Management" />
 
-      <div className="flex-1 flex flex-col">
+        {/* 🔥 ANALYTICS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
 
-        <Header />
+          <Card className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Total</p>
+            <h2 className="text-xl font-bold">{reviews.length}</h2>
+          </Card>
 
-        <div className="p-6 overflow-y-auto">
+          <Card className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Approved</p>
+            <h2 className="text-xl font-bold">{approved.length}</h2>
+          </Card>
 
-          <h1 className="text-2xl font-bold mb-6">
-            Review Management
-          </h1>
+          <Card className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Pending</p>
+            <h2 className="text-xl font-bold">{pending.length}</h2>
+          </Card>
 
-          {/* 🔥 ANALYTICS */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <Card className="p-4 text-center">
+            <p className="text-sm text-muted-foreground">Avg Rating</p>
+            <h2 className="text-xl font-bold">{avgRating.toFixed(1)}</h2>
+          </Card>
 
-            <Card title="Total" value={reviews.length} />
-            <Card title="Approved" value={approved.length} />
-            <Card title="Pending" value={pending.length} />
-            <Card title="Avg Rating" value={avgRating.toFixed(1)} />
+        </div>
 
-          </div>
-
-          {/* 🔍 SEARCH */}
-          <input
+        {/* 🔍 SEARCH */}
+        <div className="mt-6 max-w-md">
+          <Input
             placeholder="Search reviews..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-3 rounded w-full mb-6"
           />
+        </div>
 
-          {/* 🔥 FORM */}
-          <form onSubmit={handleSubmit} className="bg-white p-5 rounded shadow mb-8">
+        {/* 🔥 FORM */}
+        <Card className="p-5 mt-6">
 
-            <h2 className="font-bold mb-4">
-              {editingId ? "Edit Review" : "Add Review"}
-            </h2>
+          <h2 className="font-semibold mb-4">
+            {editingId ? "Edit Review" : "Add Review"}
+          </h2>
 
-            <input
+          <div className="grid md:grid-cols-2 gap-4">
+
+            <Input
               name="reviewerName"
               placeholder="Reviewer Name"
               value={form.reviewerName}
               onChange={handleChange}
-              className="border p-2 rounded w-full mb-3"
             />
 
-            <input
+            <Input
               name="title"
               placeholder="Title"
               value={form.title}
               onChange={handleChange}
-              className="border p-2 rounded w-full mb-3"
             />
 
-            {/* ⭐ STAR UI */}
-            <div className="flex gap-1 mb-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  onClick={() => handleStarClick(star)}
-                  className={`text-2xl cursor-pointer ${star <= form.rating ? "text-yellow-400" : "text-gray-300"
-                    }`}
-                >
-                  ★
-                </span>
-              ))}
-            </div>
+          </div>
 
+          {/* ⭐ STARS */}
+          <div className="flex gap-2 mt-4">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                onClick={() => handleStarClick(star)}
+                className={`text-2xl cursor-pointer ${
+                  star <= form.rating
+                    ? "text-yellow-400"
+                    : "text-muted-foreground"
+                }`}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-4">
             <textarea
               name="comment"
               placeholder="Comment"
               value={form.comment}
               onChange={handleChange}
-              className="border p-2 rounded w-full mb-3"
+              className="w-full border rounded-lg p-3"
             />
+          </div>
 
-            <button className="bg-green-600 text-white px-5 py-2 rounded">
-              {editingId ? "Update" : "Add"}
-            </button>
+          <Button className="mt-4">
+            {editingId ? "Update Review" : "Add Review"}
+          </Button>
 
-          </form>
+        </Card>
 
-          {/* 🔥 LIST */}
-          <div className="grid md:grid-cols-3 gap-6">
+        {/* 🔥 LIST */}
+        <div className="grid md:grid-cols-3 gap-6 mt-6">
 
-            {filteredReviews.map((r) => (
-              <div key={r._id} className="bg-white p-4 rounded shadow">
+          {filteredReviews.map((r) => (
 
-                <h3 className="font-bold">{r.title}</h3>
+            <Card key={r._id} className="p-4 space-y-2">
 
-                <div className="text-yellow-400">
-                  {"★".repeat(r.rating)}
-                </div>
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold">{r.title}</h3>
+                <Badge variant={r.isApproved ? "success" : "warning"}>
+                  {r.isApproved ? "Approved" : "Pending"}
+                </Badge>
+              </div>
 
-                <p className="text-sm mt-2">{r.comment}</p>
+              <div className="text-yellow-400">
+                {"★".repeat(r.rating)}
+              </div>
 
-                <p className="text-xs text-gray-500 mt-1">
-                  {r.reviewerName || "Anonymous"}
-                </p>
+              <p className="text-sm text-muted-foreground">
+                {r.comment}
+              </p>
 
-                <div className="flex gap-2 mt-3">
+              <p className="text-xs text-muted-foreground">
+                {r.reviewerName || "Anonymous"}
+              </p>
 
-                  {!r.isApproved && (
-                    <button
-                      onClick={() => approveReview(r._id)}
-                      className="bg-green-500 text-white px-2 py-1 rounded"
-                    >
-                      Approve
-                    </button>
-                  )}
+              <div className="flex gap-2 pt-2">
 
-                  <button
-                    onClick={() => handleEdit(r)}
-                    className="bg-blue-500 text-white px-2 py-1 rounded"
+                {!r.isApproved && (
+                  <Button
+                    size="sm"
+                    variant="success"
+                    onClick={() => approveReview(r._id)}
                   >
-                    Edit
-                  </button>
+                    Approve
+                  </Button>
+                )}
 
-                  <button
-                    onClick={() => deleteReview(r._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                  >
-                    Delete
-                  </button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => handleEdit(r)}
+                >
+                  Edit
+                </Button>
 
-                </div>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => deleteReview(r._id)}
+                >
+                  Delete
+                </Button>
 
               </div>
-            ))}
 
-          </div>
+            </Card>
+
+          ))}
 
         </div>
 
-      </div>
-
-    </div>
+      </Card>
+    </AdminShell>
   );
 };
-
-// 🔥 SMALL CARD COMPONENT
-const Card = ({ title, value }) => (
-  <div className="bg-white p-4 rounded shadow text-center">
-    <h4 className="text-gray-500">{title}</h4>
-    <h2 className="text-xl font-bold">{value}</h2>
-  </div>
-);
 
 export default ProtectedRoute(Page);

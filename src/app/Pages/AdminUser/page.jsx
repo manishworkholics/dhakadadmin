@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../Components/Sidebar/page.jsx";
-import Header from "../../Components/Header/page.jsx";
+import AdminShell from "@/components/layout/AdminShell";
+import PageHeader from "@/components/ui/PageHeader";
+import Card from "@/components/ui/Card";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import Table from "@/components/ui/Table";
+import Badge from "@/components/ui/Badge";
+import Select from "@/components/ui/Select";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
@@ -31,7 +37,7 @@ const Page = () => {
 
   const token =
     typeof window !== "undefined"
-      ? localStorage.getItem("token")
+      ? localStorage.getItem("admintoken")
       : null;
 
   // ================= CREATE ROLE =================
@@ -269,347 +275,207 @@ const Page = () => {
 
   };
 
-  return (
+return (
+  <AdminShell>
 
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <Header />
-        <div className="p-6 overflow-y-auto">
-          <h1 className="text-2xl font-bold mb-2">
-            Admin Management
-          </h1>
-          {/* ================= TOP STATS ================= */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
-            {/* TOTAL ROLES */}
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Total Roles</p>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {roles?.length || 0}
-                </h2>
-              </div>
-              <div className="bg-blue-100 text-blue-600 p-3 rounded-lg text-xl">
-                🛡️
-              </div>
-            </div>
-            {/* TOTAL ADMINS */}
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Total Admins</p>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {admins?.length || 0}
-                </h2>
-              </div>
-              <div className="bg-green-100 text-green-600 p-3 rounded-lg text-xl">
-                👤
-              </div>
-            </div>
-            {/* TOTAL PERMISSIONS */}
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Permissions</p>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {permissions?.length || 0}
-                </h2>
-              </div>
-              <div className="bg-yellow-100 text-yellow-600 p-3 rounded-lg text-xl">
-                🔐
-              </div>
-            </div>
-            {/* TOTAL LOGS */}
-            <div className="bg-white rounded-xl shadow-sm p-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">Activity Logs</p>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {logs?.length || 0}
-                </h2>
-              </div>
-              <div className="bg-purple-100 text-purple-600 p-3 rounded-lg text-xl">
-                📊
-              </div>
-            </div>
-          </div>
-          {/* ================= CREATE ROLE ================= */}
-          <h2 className="text-lg font-bold mb-3">
-            Create Role
-          </h2>
-          <div className="flex items-center justify-between gap-6 bg-white p-3 rounded-md shadow mb-4">
-            <input
-              type="text"
-              placeholder="Role name"
-              value={roleName}
-              onChange={(e) => setRoleName(e.target.value)}
-              className="border p-2 rounded w-150"
-            />
+    <Card className="p-4 md:p-6">
 
-            <div className="flex items-center justify-between gap-6 flex-wrap  w-160 border p-2 rounded">
+      <PageHeader title="Admin Management" />
 
-              {/* FIRST 2 PERMISSIONS */}
+      {/* ================= STATS ================= */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
 
-              {permissions.slice(0, 2).map((perm) => (
+        <Card className="p-4 text-center">
+          <p className="text-sm text-muted-foreground">Roles</p>
+          <h2 className="text-xl font-bold">{roles.length}</h2>
+        </Card>
 
-                <label key={perm._id} className="flex items-center gap-2">
+        <Card className="p-4 text-center">
+          <p className="text-sm text-muted-foreground">Admins</p>
+          <h2 className="text-xl font-bold">{admins.length}</h2>
+        </Card>
 
-                  <input
-                    type="checkbox"
-                    checked={selectedPermissions.includes(perm._id)}
-                    onChange={() => togglePermission(perm._id)}
-                    className="cursor-pointer"
-                  />
+        <Card className="p-4 text-center">
+          <p className="text-sm text-muted-foreground">Permissions</p>
+          <h2 className="text-xl font-bold">{permissions.length}</h2>
+        </Card>
 
-                  {perm.name}
+        <Card className="p-4 text-center">
+          <p className="text-sm text-muted-foreground">Logs</p>
+          <h2 className="text-xl font-bold">{logs.length}</h2>
+        </Card>
 
-                </label>
-
-              ))}
-
-              {/* SIMPLE DROPDOWN */}
-
-              <div className="relative">
-
-                <select
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="outline-none bg-white cursor-pointer"
-                >
-                  <option>More Permissions</option>
-                </select>
-
-                {showDropdown && (
-
-                  <div className="absolute bg-white border rounded shadow p-3 space-y-2 z-50 min-w-[200px]">
-
-                    {permissions.slice(2).map((perm) => (
-
-                      <label key={perm._id} className="flex items-center gap-2">
-
-                        <input
-                          type="checkbox"
-                          checked={selectedPermissions.includes(perm._id)}
-                          onChange={() => togglePermission(perm._id)}
-                        />
-
-                        {perm.name}
-
-                      </label>
-
-                    ))}
-
-                  </div>
-
-                )}
-
-              </div>
-
-            </div>
-
-            <button
-              onClick={createRole}
-              className="bg-slate-800 text-white p-2 rounded w-80 cursor-pointer"
-            >
-              Create Role
-            </button>
-
-          </div>
-          <h2 className="text-lg font-bold mb-4">
-            Roles & Permissions
-          </h2>
-          <div className=" bg-white p-6 rounded shadow mb-4">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {roles.map(role => (
-                <div key={role._id} className="border p-4 mb-3 rounded">
-                  <h3 className="font-bold mb-2">
-                    {role.name}
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {permissions.map(perm => {
-                      const checked =
-                        role.permissions?.some(p => p._id === perm._id);
-                      return (
-                        <label key={perm._id} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => updateRolePermission(role, perm._id)}
-                          />
-                          {perm.name}
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* ================= CREATE ADMIN ================= */}
-          <h2 className="text-lg font-bold mb-4">
-            Create Admin
-          </h2>
-          <form
-            onSubmit={createAdmin}
-            className="grid md:grid-cols-5 gap-4 mb-4"
-          >
-            <input
-              type="text"
-              name="name"
-              placeholder="Admin Name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="border p-2 rounded"
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Admin Email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="border p-2 rounded"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="border p-2 rounded"
-            />
-            <select
-              name="roleName"
-              value={form.roleName}
-              onChange={handleChange}
-              className="border p-2 rounded"
-            >
-              {roles.length === 0 && (
-                <option>No Roles Found</option>
-              )}
-
-              {roles.map(role => (
-                <option key={role._id} value={role.name}>
-                  {role.name}
-                </option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              className="bg-slate-800 text-white rounded px-4 cursor-pointer"
-            >
-              Add Admin
-            </button>
-          </form>
-          {/* ================= ADMIN TABLE ================= */}
-          <div className="bg-white rounded shadow mb-4">
-            <table className="min-w-full">
-              <thead className="bg-slate-800 text-white">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs uppercase">Name</th>
-                  <th className="px-6 py-3 text-left text-xs uppercase">Email</th>
-                  <th className="px-6 py-3 text-left text-xs uppercase">Role</th>
-                  <th className="px-6 py-3 text-left text-xs uppercase">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {admins.length > 0 ? (
-                  admins.map(admin => (
-                    <tr key={admin._id} className="border-b">
-                      <td className="px-6 py-4">{admin.name}</td>
-                      <td className="px-6 py-4">{admin.email}</td>
-                      <td className="px-6 py-4">
-                        <span className="px-2 py-1 bg-gray-200 rounded text-xs">
-                          {admin.roles?.map(r => r.name).join(", ")}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => deleteAdmin(admin._id)}
-                          className="bg-rose-400 hover:bg-rose-600 text-white px-3 py-1 rounded cursor-pointer"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-
-                  <tr>
-                    <td colSpan="4" className="text-center py-6 text-gray-500">
-                      No Admin Found
-                    </td>
-                  </tr>
-
-                )}
-              </tbody>
-            </table>
-          </div>
-          {/* ================= ADMIN LOGS ================= */}
-          <div className="bg-white p-6 rounded shadow">
-
-            <h2 className="text-xl font-semibold mb-4">
-              Admin Activity Logs
-            </h2>
-
-            <table className="min-w-full border">
-
-              <thead className="bg-slate-800 text-white">
-
-                <tr>
-                  <th className="px-4 py-2 text-left">Admin</th>
-                  <th className="px-4 py-2 text-left">Action</th>
-                  <th className="px-4 py-2 text-left">Target</th>
-                  <th className="px-4 py-2 text-left">Time</th>
-                </tr>
-
-              </thead>
-
-              <tbody>
-
-                {logs.length > 0 ? (
-
-                  logs.map(log => (
-
-                    <tr key={log._id} className="border-t">
-
-                      <td className="px-4 py-2">
-                        {log.admin?.name}
-                      </td>
-
-                      <td className="px-4 py-2">
-                        {log.action}
-                      </td>
-
-                      <td className="px-4 py-2">
-                        {log.targetType}
-                      </td>
-
-                      <td className="px-4 py-2">
-                        {new Date(log.createdAt).toLocaleString()}
-                      </td>
-
-                    </tr>
-
-                  ))
-
-                ) : (
-
-                  <tr>
-                    <td colSpan="4" className="text-center py-4 text-gray-500">
-                      No Logs Found
-                    </td>
-                  </tr>
-
-                )}
-
-              </tbody>
-
-            </table>
-
-          </div>
-        </div>
       </div>
-    </div>
-  );
+
+      {/* ================= CREATE ROLE ================= */}
+      <Card className="p-5 mt-6">
+
+        <h2 className="font-semibold mb-4">Create Role</h2>
+
+        <div className="grid md:grid-cols-3 gap-4">
+
+          <Input
+            placeholder="Role Name"
+            value={roleName}
+            onChange={(e) => setRoleName(e.target.value)}
+          />
+
+          <div className="md:col-span-2 flex flex-wrap gap-3">
+
+            {permissions.map((perm) => (
+              <label key={perm._id} className="flex items-center gap-2 text-sm cursor-pointer">
+
+                <input
+                  type="checkbox"
+                  checked={selectedPermissions.includes(perm._id)}
+                  onChange={() => togglePermission(perm._id)}
+                />
+
+                {perm.name}
+
+              </label>
+            ))}
+
+          </div>
+
+        </div>
+
+        <Button className="mt-4" onClick={createRole}>
+          Create Role
+        </Button>
+
+      </Card>
+
+      {/* ================= ROLES & PERMISSIONS ================= */}
+      <div className="mt-6">
+
+        <h2 className="text-lg font-semibold mb-4">
+          Roles & Permissions
+        </h2>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          {roles.map((role) => (
+            <Card key={role._id} className="p-4 space-y-3">
+
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold">{role.name}</h3>
+                <Badge>{role.permissions?.length || 0}</Badge>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+
+                {permissions.map((perm) => {
+                  const checked =
+                    role.permissions?.some(p => p._id === perm._id);
+
+                  return (
+                    <label key={perm._id} className="flex items-center gap-2 text-sm cursor-pointer">
+
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => updateRolePermission(role, perm._id)}
+                      />
+
+                      <span className="text-muted-foreground">
+                        {perm.name}
+                      </span>
+
+                    </label>
+                  );
+                })}
+
+              </div>
+
+            </Card>
+          ))}
+
+        </div>
+
+      </div>
+
+      {/* ================= CREATE ADMIN ================= */}
+      <Card className="p-5 mt-6">
+
+        <h2 className="font-semibold mb-4">Create Admin</h2>
+
+        <form className="grid md:grid-cols-5 gap-4" onSubmit={createAdmin}>
+
+          <Input name="name" value={form.name} onChange={handleChange} placeholder="Name" />
+          <Input name="email" value={form.email} onChange={handleChange} placeholder="Email" />
+          <Input name="password" value={form.password} onChange={handleChange} placeholder="Password" />
+
+          <Select name="roleName" value={form.roleName} onChange={handleChange}>
+            {roles.map(role => (
+              <option key={role._id} value={role.name}>
+                {role.name}
+              </option>
+            ))}
+          </Select>
+
+          <Button type="submit">Add</Button>
+
+        </form>
+
+      </Card>
+
+      {/* ================= ADMIN TABLE ================= */}
+      <div className="mt-6">
+        <Table
+          columns={[
+            { key: "name", header: "Name" },
+            { key: "email", header: "Email" },
+            {
+              key: "roles",
+              header: "Role",
+              render: (a) => (
+                <Badge>
+                  {a.roles?.map(r => r.name).join(", ")}
+                </Badge>
+              ),
+            },
+            {
+              key: "actions",
+              header: "Action",
+              render: (a) => (
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => deleteAdmin(a._id)}
+                >
+                  Delete
+                </Button>
+              ),
+            },
+          ]}
+          rows={admins}
+          emptyText="No Admin Found"
+        />
+      </div>
+
+      {/* ================= LOGS ================= */}
+      <div className="mt-6">
+        <Table
+          columns={[
+            { key: "admin", header: "Admin", render: (l) => l.admin?.name },
+            { key: "action", header: "Action" },
+            { key: "targetType", header: "Target" },
+            {
+              key: "time",
+              header: "Time",
+              render: (l) => new Date(l.createdAt).toLocaleString()
+            },
+          ]}
+          rows={logs}
+          emptyText="No Logs Found"
+        />
+      </div>
+
+    </Card>
+
+  </AdminShell>
+);
 };
 
 export default ProtectedRoute(Page);

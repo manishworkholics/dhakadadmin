@@ -9,7 +9,7 @@ const ProtectedRoute = (WrappedComponent) => {
     const router = useRouter();
 
     useEffect(() => {
-      const token = localStorage.getItem("token"); // or localStorage if needed
+      const token = localStorage.getItem("admintoken"); // or localStorage if needed
       if (!token) {
         router.replace("/Pages/Login"); // Redirect to login if no token
       } else {
