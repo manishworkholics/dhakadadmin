@@ -1,3 +1,194 @@
+// "use client";
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import ProtectedRoute from "../Common_Method/protectedroute.js";
+
+// import AdminShell from "@/components/layout/AdminShell";
+// import PageHeader from "@/components/ui/PageHeader";
+// import Card from "@/components/ui/Card";
+// import Button from "@/components/ui/Button";
+
+// const API = "http://143.110.244.163:5000/api/review";
+
+// const Page = () => {
+//   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+//   const [approved, setApproved] = useState([]);
+//   const [pending, setPending] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   const fetchReviews = async () => {
+//     try {
+//       setLoading(true);
+
+//       const [approvedRes, pendingRes] = await Promise.all([
+//         axios.get(`${API}/testimonials`),
+//         axios.get(`${API}/admin/pending`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         }),
+//       ]);
+
+//       setApproved(approvedRes.data.data || []);
+//       setPending(pendingRes.data.data || []);
+
+//     } catch (error) {
+//       console.log(error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchReviews();
+//   }, []);
+
+//   const approveReview = async (id) => {
+//     await axios.patch(
+//       `${API}/admin/status/${id}`,
+//       { isApproved: true },
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
+//     fetchReviews();
+//   };
+
+//   const rejectReview = async (id) => {
+//     await axios.patch(
+//       `${API}/admin/status/${id}`,
+//       { isApproved: false },
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
+//     fetchReviews();
+//   };
+
+//   const deleteReview = async (id) => {
+//     if (!confirm("Delete this review?")) return;
+//     await axios.delete(`${API}/admin/delete-review/${id}`, {
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+//     fetchReviews();
+//   };
+
+//   return (
+//     <AdminShell>
+//       <div className="space-y-6">
+
+//         <PageHeader title="⭐ Review Management" subtitle="Manage all user reviews easily" />
+
+//         {/* Stats */}
+//         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+//           <Card className="p-4 text-center">
+//             <p className="text-sm text-gray-500">Pending</p>
+//             <h2 className="text-2xl font-bold">{pending.length}</h2>
+//           </Card>
+
+//           <Card className="p-4 text-center">
+//             <p className="text-sm text-gray-500">Approved</p>
+//             <h2 className="text-2xl font-bold">{approved.length}</h2>
+//           </Card>
+
+//           <Card className="p-4 text-center">
+//             <p className="text-sm text-gray-500">Total</p>
+//             <h2 className="text-2xl font-bold">{pending.length + approved.length}</h2>
+//           </Card>
+
+//           <Card className="p-4 text-center">
+//             <p className="text-sm text-gray-500">Rating Avg</p>
+//             <h2 className="text-2xl font-bold">
+//               {approved.length
+//                 ? (approved.reduce((a, b) => a + b.rating, 0) / approved.length).toFixed(1)
+//                 : "0"}
+//             </h2>
+//           </Card>
+//         </div>
+
+//         {/* Pending Section */}
+//         <div>
+//           <h2 className="text-xl font-semibold mb-4">🕒 Pending Reviews</h2>
+
+//           {loading ? (
+//             <p>Loading...</p>
+//           ) : (
+//             <div className="grid md:grid-cols-3 gap-6">
+//               {pending.map((r) => (
+//                 <Card key={r._id} className="p-5 rounded-2xl shadow-md hover:shadow-xl transition">
+
+//                   <h3 className="font-semibold text-lg">{r.title}</h3>
+
+//                   <div className="text-yellow-400 text-lg">
+//                     {"★".repeat(r.rating)}
+//                   </div>
+
+//                   <p className="text-sm text-gray-600">{r.comment}</p>
+
+//                   <p className="text-xs text-gray-400">
+//                     {r.reviewerName || "Anonymous"}
+//                   </p>
+
+//                   <div className="flex gap-2 pt-3">
+
+//                     <Button size="sm" variant="success" onClick={() => approveReview(r._id)}>
+//                       Approve
+//                     </Button>
+
+//                     <Button size="sm" variant="outline" onClick={() => rejectReview(r._id)}>
+//                       Reject
+//                     </Button>
+
+//                     <Button size="sm" variant="danger" onClick={() => deleteReview(r._id)}>
+//                       Delete
+//                     </Button>
+
+//                   </div>
+
+//                 </Card>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Approved Section */}
+//         <div>
+//           <h2 className="text-xl font-semibold mb-4">✅ Approved Reviews</h2>
+
+//           <div className="grid md:grid-cols-3 gap-6">
+//             {approved.map((r) => (
+//               <Card key={r._id} className="p-5 rounded-2xl shadow-sm hover:shadow-lg transition">
+
+//                 <h3 className="font-semibold text-lg">{r.title}</h3>
+
+//                 <div className="text-yellow-400 text-lg">
+//                   {"★".repeat(r.rating)}
+//                 </div>
+
+//                 <p className="text-sm text-gray-600">{r.comment}</p>
+
+//                 <p className="text-xs text-gray-400">
+//                   {r.reviewerName || "Anonymous"}
+//                 </p>
+
+//                 <div className="flex gap-2 pt-3">
+//                   <Button size="sm" variant="danger" onClick={() => deleteReview(r._id)}>
+//                     Delete
+//                   </Button>
+//                 </div>
+
+//               </Card>
+//             ))}
+//           </div>
+//         </div>
+
+//       </div>
+//     </AdminShell>
+//   );
+// };
+
+// export default ProtectedRoute(Page);
+
+
+
+
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -7,21 +198,17 @@ import ProtectedRoute from "../Common_Method/protectedroute.js";
 import AdminShell from "@/components/layout/AdminShell";
 import PageHeader from "@/components/ui/PageHeader";
 import Card from "@/components/ui/Card";
-import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import Input from "@/components/ui/Input";
 
 const API = "http://143.110.244.163:5000/api/review";
 
 const Page = () => {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("admintoken")
-      : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const [reviews, setReviews] = useState([]);
-  const [search, setSearch] = useState("");
-  const [editingId, setEditingId] = useState(null);
+  const [approved, setApproved] = useState([]);
+  const [pending, setPending] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -30,240 +217,169 @@ const Page = () => {
     reviewerName: "",
   });
 
+  const [editingId, setEditingId] = useState(null);
+
   const fetchReviews = async () => {
-    const res = await axios.get(`${API}/testimonials`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setReviews(res.data.data || []);
+    try {
+      setLoading(true);
+
+      const [approvedRes, pendingRes] = await Promise.all([
+        axios.get(`${API}/testimonials`),
+        axios.get(`${API}/admin/pending`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setApproved(approvedRes.data.data || []);
+      setPending(pendingRes.data.data || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchReviews();
   }, []);
 
-  const approved = reviews.filter((r) => r.isApproved);
-  const pending = reviews.filter((r) => !r.isApproved);
-
-  const avgRating =
-    approved.reduce((acc, r) => acc + (r.rating || 0), 0) /
-    (approved.length || 1);
-
-  const filteredReviews = reviews.filter((r) =>
-    r.comment?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleStarClick = (value) => {
-    setForm({ ...form, rating: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (editingId) {
-      await axios.put(`${API}/admin/update-review/${editingId}`, form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } else {
-      await axios.post(`${API}/admin/add-review`, form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    }
-
-    setForm({ title: "", rating: 5, comment: "", reviewerName: "" });
-    setEditingId(null);
+  const approveReview = async (id) => {
+    await axios.patch(`${API}/admin/status/${id}`, { isApproved: true }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     fetchReviews();
   };
 
-  const handleEdit = (r) => {
-    setEditingId(r._id);
-    setForm({
-      title: r.title,
-      rating: r.rating,
-      comment: r.comment,
-      reviewerName: r.reviewerName || "",
+  const rejectReview = async (id) => {
+    await axios.patch(`${API}/admin/status/${id}`, { isApproved: false }, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    fetchReviews();
   };
 
   const deleteReview = async (id) => {
+    if (!confirm("Delete this review?")) return;
     await axios.delete(`${API}/admin/delete-review/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     fetchReviews();
   };
 
-  const approveReview = async (id) => {
-    await axios.patch(`${API}/admin/status/${id}`, {}, {
-      headers: { Authorization: `Bearer ${token}` },
+  const handleSubmit = async () => {
+    try {
+      if (editingId) {
+        await axios.put(`${API}/admin/update-review/${editingId}`, form, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        await axios.post(`${API}/admin/add-review`, form, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+
+      setForm({ title: "", rating: 5, comment: "", reviewerName: "" });
+      setEditingId(null);
+      fetchReviews();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleEdit = (r) => {
+    setForm({
+      title: r.title,
+      rating: r.rating,
+      comment: r.comment,
+      reviewerName: r.reviewerName || "",
     });
-    fetchReviews();
+    setEditingId(r._id);
   };
 
   return (
     <AdminShell>
-      <Card className="p-4 md:p-6">
+      <div className="space-y-6">
 
-        <PageHeader title="Review Management" />
+        <PageHeader title="⭐ Review Management" subtitle="Admin can manage all reviews" />
 
-        {/* 🔥 ANALYTICS */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Total</p>
-            <h2 className="text-xl font-bold">{reviews.length}</h2>
-          </Card>
-
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Approved</p>
-            <h2 className="text-xl font-bold">{approved.length}</h2>
-          </Card>
-
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Pending</p>
-            <h2 className="text-xl font-bold">{pending.length}</h2>
-          </Card>
-
-          <Card className="p-4 text-center">
-            <p className="text-sm text-muted-foreground">Avg Rating</p>
-            <h2 className="text-xl font-bold">{avgRating.toFixed(1)}</h2>
-          </Card>
-
-        </div>
-
-        {/* 🔍 SEARCH */}
-        <div className="mt-6 max-w-md">
-          <Input
-            placeholder="Search reviews..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        {/* 🔥 FORM */}
-        <Card className="p-5 mt-6">
-
-          <h2 className="font-semibold mb-4">
-            {editingId ? "Edit Review" : "Add Review"}
+        {/* Add / Edit Form */}
+        <Card className="p-4 space-y-3">
+          <h2 className="font-semibold text-lg">
+            {editingId ? "✏️ Edit Review" : "➕ Add Review"}
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <Input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
 
-            <Input
-              name="reviewerName"
-              placeholder="Reviewer Name"
-              value={form.reviewerName}
-              onChange={handleChange}
-            />
+          <Input type="number" placeholder="Rating (1-5)" value={form.rating} onChange={(e) => setForm({ ...form, rating: e.target.value })} />
 
-            <Input
-              name="title"
-              placeholder="Title"
-              value={form.title}
-              onChange={handleChange}
-            />
+          <Input placeholder="Reviewer Name" value={form.reviewerName} onChange={(e) => setForm({ ...form, reviewerName: e.target.value })} />
 
+          <textarea
+            className="border rounded p-2 w-full"
+            placeholder="Comment"
+            value={form.comment}
+            onChange={(e) => setForm({ ...form, comment: e.target.value })}
+          />
+
+          <div className="flex gap-2">
+            <Button onClick={handleSubmit}>
+              {editingId ? "Update" : "Add"}
+            </Button>
+
+            {editingId && (
+              <Button variant="outline" onClick={() => {
+                setEditingId(null);
+                setForm({ title: "", rating: 5, comment: "", reviewerName: "" });
+              }}>
+                Cancel
+              </Button>
+            )}
           </div>
-
-          {/* ⭐ STARS */}
-          <div className="flex gap-2 mt-4">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <span
-                key={star}
-                onClick={() => handleStarClick(star)}
-                className={`text-2xl cursor-pointer ${
-                  star <= form.rating
-                    ? "text-yellow-400"
-                    : "text-muted-foreground"
-                }`}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-4">
-            <textarea
-              name="comment"
-              placeholder="Comment"
-              value={form.comment}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-3"
-            />
-          </div>
-
-          <Button className="mt-4">
-            {editingId ? "Update Review" : "Add Review"}
-          </Button>
-
         </Card>
 
-        {/* 🔥 LIST */}
-        <div className="grid md:grid-cols-3 gap-6 mt-6">
+        {/* Pending Reviews */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">🕒 Pending Reviews</h2>
 
-          {filteredReviews.map((r) => (
-
-            <Card key={r._id} className="p-4 space-y-2">
-
-              <div className="flex justify-between items-center">
+          <div className="grid md:grid-cols-3 gap-6">
+            {pending.map((r) => (
+              <Card key={r._id} className="p-5 space-y-2">
                 <h3 className="font-semibold">{r.title}</h3>
-                <Badge variant={r.isApproved ? "success" : "warning"}>
-                  {r.isApproved ? "Approved" : "Pending"}
-                </Badge>
-              </div>
+                <div className="text-yellow-400">{"★".repeat(r.rating)}</div>
+                <p>{r.comment}</p>
+                <p className="text-xs">{r.reviewerName || "Anonymous"}</p>
 
-              <div className="text-yellow-400">
-                {"★".repeat(r.rating)}
-              </div>
-
-              <p className="text-sm text-muted-foreground">
-                {r.comment}
-              </p>
-
-              <p className="text-xs text-muted-foreground">
-                {r.reviewerName || "Anonymous"}
-              </p>
-
-              <div className="flex gap-2 pt-2">
-
-                {!r.isApproved && (
-                  <Button
-                    size="sm"
-                    variant="success"
-                    onClick={() => approveReview(r._id)}
-                  >
-                    Approve
-                  </Button>
-                )}
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleEdit(r)}
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => deleteReview(r._id)}
-                >
-                  Delete
-                </Button>
-
-              </div>
-
-            </Card>
-
-          ))}
-
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => approveReview(r._id)}>Approve</Button>
+                  <Button size="sm" variant="outline" onClick={() => rejectReview(r._id)}>Reject</Button>
+                  <Button size="sm" variant="danger" onClick={() => deleteReview(r._id)}>Delete</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
 
-      </Card>
+        {/* Approved Reviews */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">✅ Approved Reviews</h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {approved.map((r) => (
+              <Card key={r._id} className="p-5 space-y-2">
+                <h3 className="font-semibold">{r.title}</h3>
+                <div className="text-yellow-400">{"★".repeat(r.rating)}</div>
+                <p>{r.comment}</p>
+                <p className="text-xs">{r.reviewerName || "Anonymous"}</p>
+
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => handleEdit(r)}>Edit</Button>
+                  <Button size="sm" variant="danger" onClick={() => deleteReview(r._id)}>Delete</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </AdminShell>
   );
 };

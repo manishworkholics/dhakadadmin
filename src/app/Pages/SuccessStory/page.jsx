@@ -6,14 +6,25 @@ import PageHeader from "@/components/ui/PageHeader";
 import Card from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 import toast from "react-hot-toast";
 
+// ✅ FIXED BASE URL
 const API = "http://143.110.244.163:5000/api/success";
 
 const Page = () => {
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("admintoken")
+      : "";
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
   const [stories, setStories] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [selectedStory, setSelectedStory] = useState(null);
@@ -62,7 +73,7 @@ const Page = () => {
   // ================= FETCH =================
   const fetchStories = async () => {
     try {
-      const res = await axios.get(API);
+      const res = await axios.get(`${API}/admin`, { headers });
       setStories(res.data.stories || []);
     } catch (error) {
       console.log(error);
@@ -102,10 +113,13 @@ const Page = () => {
 
     try {
       if (editingId) {
-        await axios.put(`${API}/${editingId}`, form);
+        // ✅ FIXED UPDATE
+        await axios.put(`${API}/${editingId}`, form, { headers });
         toast.success("Story updated");
       } else {
-        await axios.post(API, form);
+        // ✅ FIXED CREATE
+        await axios.post(`${API}/admin`, form, { headers });
+
         toast.success("Story added");
       }
 
@@ -127,7 +141,8 @@ const Page = () => {
     if (!confirm("Delete this story?")) return;
 
     try {
-      await axios.delete(`${API}/${id}`);
+      // ✅ FIXED DELETE
+      await axios.delete(`${API}/${id}`, { headers });
       toast.success("Deleted");
       fetchStories();
     } catch (error) {
@@ -135,199 +150,229 @@ const Page = () => {
     }
   };
 
- return (
-  <AdminShell>
+  const changeApproval = async (id, approved) => {
+    try {
+      await axios.put(`${API}/${id}`, { approved }, { headers }); // ✅ FINAL
+      toast.success(approved ? "Story approved" : "Story disapproved");
+      fetchStories();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return (
+    <AdminShell>
 
-    <Card className="p-4 md:p-6">
+      <Card className="p-4 md:p-6">
 
-      <PageHeader
-        title="Success Stories"
-        subtitle={editingId ? "Editing Mode" : ""}
-      />
+        <PageHeader
+          title="Success Stories"
+          subtitle={editingId ? "Editing Mode" : ""}
+        />
 
-      {/* ================= FORM ================= */}
-      <Card className="p-5 mt-6">
+        {/* ================= FORM ================= */}
+        <Card className="p-5 mt-6">
 
-        <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
 
-          <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
 
-            <Input
-              name="name"
-              placeholder="Your Name"
-              value={form.name}
-              onChange={handleChange}
-            />
-
-            <Input
-              name="partnerName"
-              placeholder="Partner Name"
-              value={form.partnerName}
-              onChange={handleChange}
-            />
-
-            <Input
-              name="title"
-              placeholder="Story Title"
-              value={form.title}
-              onChange={handleChange}
-            />
-
-            <div>
-              <input
-                type="file"
-                onChange={handleImageUpload}
-                className="border rounded-lg p-2 w-full"
+              <Input
+                name="name"
+                placeholder="Your Name"
+                value={form.name}
+                onChange={handleChange}
               />
 
-              {uploading && (
-                <p className="text-sm text-primary mt-2">
-                  Uploading...
-                </p>
-              )}
+              <Input
+                name="partnerName"
+                placeholder="Partner Name"
+                value={form.partnerName}
+                onChange={handleChange}
+              />
 
-              {form.image && (
-                <img
-                  src={form.image}
-                  className="h-20 mt-2 rounded"
+              <Input
+                name="title"
+                placeholder="Story Title"
+                value={form.title}
+                onChange={handleChange}
+              />
+
+              <div>
+                <input
+                  type="file"
+                  onChange={handleImageUpload}
+                  className="border rounded-lg p-2 w-full"
                 />
-              )}
-            </div>
 
-          </div>
+                {uploading && (
+                  <p className="text-sm text-primary mt-2">
+                    Uploading...
+                  </p>
+                )}
 
-          <textarea
-            name="story"
-            placeholder="Write Story..."
-            value={form.story}
-            onChange={handleChange}
-            className="w-full border rounded-lg p-3 mt-4"
-            rows="4"
-          />
-
-          <div className="flex gap-3 mt-4">
-
-            <Button type="submit">
-              {editingId ? "Update Story" : "Add Story"}
-            </Button>
-
-            {editingId && (
-              <Button variant="outline" onClick={resetForm}>
-                Cancel
-              </Button>
-            )}
-
-          </div>
-
-        </form>
-
-      </Card>
-
-      {/* ================= LIST ================= */}
-      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-
-        {stories.length === 0 ? (
-          <p className="text-muted-foreground">
-            No success stories yet
-          </p>
-        ) : (
-
-          stories.map((item) => (
-
-            <Card key={item._id} className="p-3 space-y-2">
-
-              <img
-                src={item.image}
-                className="h-40 w-full object-cover rounded"
-              />
-
-              <h3 className="font-semibold text-sm">
-                {item.name} ❤️ {item.partnerName}
-              </h3>
-
-              <p className="text-xs text-muted-foreground">
-                {item.title}
-              </p>
-
-              <p className="text-sm line-clamp-3">
-                {item.story}
-              </p>
-
-              <div className="flex gap-2 pt-2">
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setSelectedStory(item)}
-                >
-                  View
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleEdit(item)}
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => handleDelete(item._id)}
-                >
-                  Delete
-                </Button>
-
+                {form.image && (
+                  <img
+                    src={form.image}
+                    className="h-20 mt-2 rounded"
+                  />
+                )}
               </div>
 
-            </Card>
+            </div>
 
-          ))
+            <textarea
+              name="story"
+              placeholder="Write Story..."
+              value={form.story}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-3 mt-4"
+              rows="4"
+            />
 
-        )}
+            <div className="flex gap-3 mt-4">
 
-      </div>
+              <Button type="submit">
+                {editingId ? "Update Story" : "Add Story"}
+              </Button>
 
-    </Card>
+              {editingId && (
+                <Button variant="outline" onClick={resetForm}>
+                  Cancel
+                </Button>
+              )}
 
-    {/* ================= MODAL ================= */}
-    {selectedStory && (
-      <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+            </div>
 
-        <Card className="p-6 w-[800px]">
-
-          <img
-            src={selectedStory.image}
-            className="h-60 mx-auto object-contain"
-          />
-
-          <h2 className="font-semibold mt-4">
-            {selectedStory.name} ❤️ {selectedStory.partnerName}
-          </h2>
-
-          <p className="text-muted-foreground">
-            {selectedStory.title}
-          </p>
-
-          <p className="mt-3 text-sm">
-            {selectedStory.story}
-          </p>
-
-          <Button
-            className="mt-4 w-full"
-            onClick={() => setSelectedStory(null)}
-          >
-            Close
-          </Button>
+          </form>
 
         </Card>
 
-      </div>
-    )}
+        {/* ================= LIST ================= */}
+        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
 
-  </AdminShell>
-);
+          {stories.length === 0 ? (
+            <p className="text-muted-foreground">
+              No success stories yet
+            </p>
+          ) : (
+
+            stories.map((item) => (
+
+              <Card key={item._id} className="p-3 space-y-2">
+
+                <img
+                  src={item.image}
+                  className="h-40 w-full object-cover rounded"
+                />
+
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="font-semibold text-sm">
+                    {item.name} ❤️ {item.partnerName}
+                  </h3>
+                  <Badge variant={item.approved ? "success" : "warning"}>
+                    {item.approved ? "Approved" : "Pending"}
+                  </Badge>
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  {item.title}
+                </p>
+
+                <p className="text-sm line-clamp-3">
+                  {item.story}
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {!item.approved ? (
+                    <Button
+                      size="sm"
+                      variant="success"
+                      onClick={() => changeApproval(item._id, true)}
+                    >
+                      Approve
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => changeApproval(item._id, false)}
+                    >
+                      Disapprove
+                    </Button>
+                  )}
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setSelectedStory(item)}
+                  >
+                    View
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEdit(item)}
+                  >
+                    Edit
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    onClick={() => handleDelete(item._id)}
+                  >
+                    Delete
+                  </Button>
+                </div>
+
+              </Card>
+
+            ))
+
+          )}
+
+        </div>
+
+      </Card>
+
+      {/* ================= MODAL ================= */}
+      {selectedStory && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+          <Card className="p-6 w-[800px]">
+
+            <img
+              src={selectedStory.image}
+              className="h-60 mx-auto object-contain"
+            />
+
+            <h2 className="font-semibold mt-4">
+              {selectedStory.name} ❤️ {selectedStory.partnerName}
+            </h2>
+
+            <p className="text-muted-foreground">
+              {selectedStory.title}
+            </p>
+
+            <p className="mt-3 text-sm">
+              {selectedStory.story}
+            </p>
+
+            <Button
+              className="mt-4 w-full"
+              onClick={() => setSelectedStory(null)}
+            >
+              Close
+            </Button>
+
+          </Card>
+
+        </div>
+      )}
+
+    </AdminShell>
+  );
 };
 
 export default ProtectedRoute(Page);
