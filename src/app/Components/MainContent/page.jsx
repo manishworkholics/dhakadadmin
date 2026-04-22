@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
 BarChart,
 Bar,
@@ -23,6 +24,7 @@ Crown,
 UserCheck,
 Clock
 } from "lucide-react";
+import { adminMenuItems } from "../Sidebar/menuItems";
 
 const API = "http://143.110.244.163:5000/api/admin/dashboard";
 
@@ -32,8 +34,17 @@ const monthNames = [
 ];
 
 export default function Dashboard(){
+const router = useRouter()
 
 const [dashboard,setDashboard] = useState(null)
+
+const menuPathByName = adminMenuItems.reduce((acc, item) => {
+acc[item.name] = item.path
+return acc
+}, {})
+
+const resolveMenuPath = (name, fallback = "/Pages/Dashboard") =>
+menuPathByName[name] || fallback
 
 useEffect(()=>{
 
@@ -82,21 +93,21 @@ return(
 
 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 
-<Card title="Total Users" value={stats.totalUsers} icon={<Users/>} color="blue"/>
+<Card title="Total Users" value={stats.totalUsers} icon={<Users/>} color="blue" onClick={()=>router.push(resolveMenuPath("Users Management"))}/>
 
-<Card title="Verified Profiles" value={stats.verifiedProfiles} icon={<UserCheck/>} color="green"/>
+<Card title="Verified Profiles" value={stats.verifiedProfiles} icon={<UserCheck/>} color="green" onClick={()=>router.push(resolveMenuPath("Profile Management"))}/>
 
-<Card title="Premium Users" value={stats.premiumUsers} icon={<Crown/>} color="purple"/>
+<Card title="Premium Users" value={stats.premiumUsers} icon={<Crown/>} color="purple" onClick={()=>router.push(resolveMenuPath("Membership Plans"))}/>
 
-<Card title="Active Matches" value={stats.activeMatches} icon={<Heart/>} color="pink"/>
+<Card title="Active Matches" value={stats.activeMatches} icon={<Heart/>} color="pink" onClick={()=>router.push(resolveMenuPath("Profile Management"))}/>
 
-<Card title="Total Revenue" value={`₹${Math.round(stats.totalRevenue)}`} icon={<DollarSign/>} color="green"/>
+<Card title="Total Revenue" value={`₹${Math.round(stats.totalRevenue)}`} icon={<DollarSign/>} color="green" onClick={()=>router.push(resolveMenuPath("Payment Management"))}/>
 
-<Card title="Today Revenue" value={`₹${Math.round(stats.todayRevenue)}`} icon={<DollarSign/>} color="yellow"/>
+<Card title="Today Revenue" value={`₹${Math.round(stats.todayRevenue)}`} icon={<DollarSign/>} color="yellow" onClick={()=>router.push(resolveMenuPath("Payment Management"))}/>
 
-<Card title="Pending Profiles" value={stats.pendingProfiles} icon={<Clock/>} color="red"/>
+<Card title="Pending Profiles" value={stats.pendingProfiles} icon={<Clock/>} color="red" onClick={()=>router.push(resolveMenuPath("Profile Management"))}/>
 
-<Card title="Active Today" value={stats.activeToday} icon={<Activity/>} color="blue"/>
+<Card title="Active Today" value={stats.activeToday} icon={<Activity/>} color="blue" onClick={()=>router.push(resolveMenuPath("Users Management"))}/>
 
 </div>
 
@@ -106,7 +117,7 @@ return(
 
 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-<Chart title="User Growth">
+<Chart title="User Growth" onClick={()=>router.push(resolveMenuPath("Users Management"))}>
 
 <ResponsiveContainer width="100%" height={300}>
 <BarChart data={userChart}>
@@ -120,7 +131,7 @@ return(
 </Chart>
 
 
-<Chart title="Revenue Overview">
+<Chart title="Revenue Overview" onClick={()=>router.push(resolveMenuPath("Payment Management"))}>
 
 <ResponsiveContainer width="100%" height={300}>
 <LineChart data={revenueChart}>
@@ -145,7 +156,7 @@ return(
 
 {/* TOP CITIES */}
 
-<Widget title="Top Cities" icon={<MapPin size={18}/>}>
+<Widget title="Top Cities" icon={<MapPin size={18}/>} onClick={()=>router.push(resolveMenuPath("Cities"))}>
 {topCities.map((city,i)=>(
 <div key={i} className="flex justify-between border-b py-2">
 <span>{city.city}</span>
@@ -158,7 +169,7 @@ return(
 
 {/* TOP PLANS */}
 
-<Widget title="Top Plans" icon={<Crown size={18}/>}>
+<Widget title="Top Plans" icon={<Crown size={18}/>} onClick={()=>router.push(resolveMenuPath("Membership Plans"))}>
 {topPlans.map((plan,i)=>(
 <div key={i} className="flex justify-between border-b py-2">
 <span>{plan.plan}</span>
@@ -171,7 +182,7 @@ return(
 
 {/* RECENT ACTIVITIES */}
 
-<Widget title="Recent Activities">
+<Widget title="Recent Activities" onClick={()=>router.push(resolveMenuPath("Users Management"))}>
 
 {recentActivities.map((a,i)=>{
 
@@ -209,13 +220,19 @@ Quick Admin Actions
 
 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-<ActionBtn title="Approve Profiles"/>
+<ActionBtn title="Approve Profiles" onClick={()=>router.push(resolveMenuPath("Profile Management"))}/>
 
-<ActionBtn title="View Payments"/>
+<ActionBtn title="View Payments" onClick={()=>router.push(resolveMenuPath("Payment Management"))}/>
 
-<ActionBtn title="Manage Plans"/>
+<ActionBtn title="Manage Plans" onClick={()=>router.push(resolveMenuPath("Membership Plans"))}/>
 
-<ActionBtn title="Send Notification"/>
+<ActionBtn
+title="Send Notification"
+onClick={()=>{
+// Closest match found in project pages: AutoSendEmail route.
+router.push("/Pages/AutoSendEmail")
+}}
+/>
 
 </div>
 
@@ -230,7 +247,7 @@ Quick Admin Actions
 
 
 
-function Card({title,value,icon,color}){
+function Card({title,value,icon,color,onClick}){
 
 const colors={
 blue:"bg-blue-100 text-blue-700",
@@ -243,7 +260,10 @@ red:"bg-red-100 text-red-700"
 
 return(
 
-<div className="bg-white p-5 rounded-xl shadow flex justify-between items-center">
+<div
+onClick={onClick}
+className="bg-white p-5 rounded-xl shadow flex justify-between items-center cursor-pointer hover:shadow-md transition"
+>
 
 <div>
 
@@ -269,11 +289,14 @@ return(
 
 
 
-function Chart({title,children}){
+function Chart({title,children,onClick}){
 
 return(
 
-<div className="bg-white p-6 rounded-xl shadow">
+<div
+onClick={onClick}
+className="bg-white p-6 rounded-xl shadow cursor-pointer hover:shadow-md transition"
+>
 
 <h3 className="text-lg font-semibold mb-4">
 {title}
@@ -289,11 +312,14 @@ return(
 
 
 
-function Widget({title,icon,children}){
+function Widget({title,icon,children,onClick}){
 
 return(
 
-<div className="bg-white p-6 rounded-xl shadow">
+<div
+onClick={onClick}
+className="bg-white p-6 rounded-xl shadow cursor-pointer hover:shadow-md transition"
+>
 
 <div className="flex items-center gap-2 font-semibold mb-4">
 {icon}
@@ -312,11 +338,14 @@ return(
 
 
 
-function ActionBtn({title}){
+function ActionBtn({title,onClick}){
 
 return(
 
-<button className="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-lg text-sm">
+<button
+onClick={onClick}
+className="bg-slate-800 hover:bg-slate-700 text-white p-3 rounded-lg text-sm cursor-pointer hover:shadow-md transition"
+>
 {title}
 </button>
 

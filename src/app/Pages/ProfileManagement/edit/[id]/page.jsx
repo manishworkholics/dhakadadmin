@@ -110,9 +110,24 @@ const Page = () => {
         caste: "",
         subCaste: "",
         gotra: "",
+        mamaGotra: "",
+        mangalik: "",
+        rashiNakshatra: "",
         skinTone: "",
+        bodyType: "",
+        drink: "",
+        smoke: "",
         birthPlace: "",
         birthTime: "",
+        fatherName: "",
+        fatherOccupation: "",
+        fatherStatus: "",
+        fatherContactNo: "",
+        motherName: "",
+        motherOccupation: "",
+        motherStatus: "",
+        noOfBrothers: "",
+        noOfSisters: "",
         educationDetails: "",
         educationOther: "",
         employmentType: "",
@@ -120,6 +135,7 @@ const Page = () => {
         annualIncome: "",
         familyStatus: "Middle class",
         diet: "Veg",
+        physicalChallengeDescription: "",
         aboutYourself: "",
         hobbies: "",
         photos: [],
@@ -187,9 +203,24 @@ const Page = () => {
                     caste: profile.caste || "",
                     subCaste: profile.subCaste || "",
                     gotra: profile.gotra || "",
+                    mamaGotra: profile.mamaGotra || "",
+                    mangalik: profile.mangalik || "",
+                    rashiNakshatra: profile.rashiNakshatra || "",
                     skinTone: profile.skinTone || "",
+                    bodyType: profile.bodyType || "",
+                    drink: profile.drink || "",
+                    smoke: profile.smoke || "",
                     birthPlace: profile.birthPlace || "",
                     birthTime: profile.birthTime || "",
+                    fatherName: profile.fatherName || "",
+                    fatherOccupation: profile.fatherOccupation || "",
+                    fatherStatus: profile.fatherStatus || "",
+                    fatherContactNo: profile.fatherContactNo || "",
+                    motherName: profile.motherName || "",
+                    motherOccupation: profile.motherOccupation || "",
+                    motherStatus: profile.motherStatus || "",
+                    noOfBrothers: profile.noOfBrothers ?? "",
+                    noOfSisters: profile.noOfSisters ?? "",
                     educationDetails: education,
                     educationOther: educationOther,
                     employmentType: profile.employmentType || "",
@@ -197,6 +228,7 @@ const Page = () => {
                     annualIncome: profile.annualIncome || "",
                     familyStatus: profile.familyStatus || "Middle class",
                     diet: profile.diet || "Veg",
+                    physicalChallengeDescription: profile.physicalChallengeDescription || "",
                     aboutYourself: profile.aboutYourself || "",
                     hobbies: profile.hobbies || "",
                     photos: profile.photos || [],
@@ -280,8 +312,21 @@ const Page = () => {
         try {
             setSaving(true);
 
+            const nullIfEmpty = (value) => (value === "" ? null : value);
+
+            const normalizedOptionalFields = {
+                skinTone: nullIfEmpty(formData.skinTone),
+                bodyType: nullIfEmpty(formData.bodyType),
+                smoke: nullIfEmpty(formData.smoke),
+                drink: nullIfEmpty(formData.drink),
+                physicalChallengeDescription: nullIfEmpty(formData.physicalChallengeDescription),
+                mangalik: nullIfEmpty(formData.mangalik),
+                rashiNakshatra: nullIfEmpty(formData.rashiNakshatra),
+            };
+
             const payload = {
                 ...formData,
+                ...normalizedOptionalFields,
                 educationDetails:
                     formData.educationDetails === "others"
                         ? formData.educationOther
@@ -535,6 +580,31 @@ const Page = () => {
                                 onChange={handleChange}
                                 placeholder="Enter gotra"
                             />
+                            <FormInput
+                                label="Mama Gotra"
+                                name="mamaGotra"
+                                value={formData.mamaGotra}
+                                onChange={handleChange}
+                                placeholder="Enter mama gotra"
+                            />
+                            <FormSelect
+                                label="Mangalik"
+                                name="mangalik"
+                                value={formData.mangalik}
+                                onChange={handleChange}
+                                options={[
+                                    { label: "Yes", value: "Yes" },
+                                    { label: "No", value: "No" },
+                                ]}
+                                placeholder="Select mangalik"
+                            />
+                            <FormInput
+                                label="Rashi / Nakshatra"
+                                name="rashiNakshatra"
+                                value={formData.rashiNakshatra}
+                                onChange={handleChange}
+                                placeholder="Enter rashi or nakshatra"
+                            />
                             <FormSelect
                                 label="Skin Tone"
                                 name="skinTone"
@@ -549,6 +619,19 @@ const Page = () => {
                                 ]}
                                 placeholder="Select skin tone"
                             />
+                            <FormSelect
+                                label="Body Type"
+                                name="bodyType"
+                                value={formData.bodyType}
+                                onChange={handleChange}
+                                options={[
+                                    { label: "Slim", value: "Slim" },
+                                    { label: "Average", value: "Average" },
+                                    { label: "Athletic", value: "Athletic" },
+                                    { label: "Heavy", value: "Heavy" },
+                                ]}
+                                placeholder="Select body type"
+                            />
                             <FormInput
                                 label="Birth Place"
                                 name="birthPlace"
@@ -562,6 +645,108 @@ const Page = () => {
                                 type="time"
                                 value={formData.birthTime}
                                 onChange={handleChange}
+                            />
+                            <FormSelect
+                                label="Drink"
+                                name="drink"
+                                value={formData.drink}
+                                onChange={handleChange}
+                                options={[
+                                    { label: "Yes", value: "Yes" },
+                                    { label: "No", value: "No" },
+                                ]}
+                                placeholder="Select drinking habit"
+                            />
+                            <FormSelect
+                                label="Smoke"
+                                name="smoke"
+                                value={formData.smoke}
+                                onChange={handleChange}
+                                options={[
+                                    { label: "Yes", value: "Yes" },
+                                    { label: "No", value: "No" },
+                                ]}
+                                placeholder="Select smoking habit"
+                            />
+                            <FormTextarea
+                                label="Physical Challenge Description"
+                                name="physicalChallengeDescription"
+                                value={formData.physicalChallengeDescription}
+                                onChange={handleChange}
+                                placeholder="If any, describe physical challenge"
+                                rows={3}
+                            />
+                        </div>
+                    </section>
+
+                    {/* FAMILY DETAILS */}
+                    <section>
+                        <SectionTitle title="Family Details" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <FormInput
+                                label="Father Name"
+                                name="fatherName"
+                                value={formData.fatherName}
+                                onChange={handleChange}
+                                placeholder="Enter father name"
+                            />
+                            <FormInput
+                                label="Father Occupation"
+                                name="fatherOccupation"
+                                value={formData.fatherOccupation}
+                                onChange={handleChange}
+                                placeholder="Enter father occupation"
+                            />
+                            <FormInput
+                                label="Father Status"
+                                name="fatherStatus"
+                                value={formData.fatherStatus}
+                                onChange={handleChange}
+                                placeholder="Enter father status"
+                            />
+                            <FormInput
+                                label="Father Contact Number"
+                                name="fatherContactNo"
+                                value={formData.fatherContactNo}
+                                onChange={handleChange}
+                                placeholder="Enter father contact number"
+                            />
+                            <FormInput
+                                label="Mother Name"
+                                name="motherName"
+                                value={formData.motherName}
+                                onChange={handleChange}
+                                placeholder="Enter mother name"
+                            />
+                            <FormInput
+                                label="Mother Occupation"
+                                name="motherOccupation"
+                                value={formData.motherOccupation}
+                                onChange={handleChange}
+                                placeholder="Enter mother occupation"
+                            />
+                            <FormInput
+                                label="Mother Status"
+                                name="motherStatus"
+                                value={formData.motherStatus}
+                                onChange={handleChange}
+                                placeholder="Enter mother status"
+                            />
+                            <FormInput
+                                label="Number of Brothers"
+                                name="noOfBrothers"
+                                type="number"
+                                value={formData.noOfBrothers}
+                                onChange={handleChange}
+                                placeholder="Enter number of brothers"
+                            />
+                            <FormInput
+                                label="Number of Sisters"
+                                name="noOfSisters"
+                                type="number"
+                                value={formData.noOfSisters}
+                                onChange={handleChange}
+                                placeholder="Enter number of sisters"
                             />
                         </div>
                     </section>

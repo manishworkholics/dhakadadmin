@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import AdminShell from "@/components/layout/AdminShell";
 import PageHeader from "@/components/ui/PageHeader";
 import Card from "@/components/ui/Card";
@@ -13,6 +13,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
+import RichTextEditor from "@webbycrown/react-advanced-richtext-editor";
 
 const API = "http://143.110.244.163:5000/api/blogs";
 const UPLOAD = "http://143.110.244.163:5000/api/upload-image";
@@ -36,6 +37,8 @@ const Page = () => {
         seoDescription: "",
         status: "draft"
     });
+
+    const editorValue = useMemo(() => form.content || "", [form.content]);
 
     // ================= FETCH BLOGS =================
 
@@ -267,13 +270,22 @@ const Page = () => {
             className="w-full border rounded-lg p-3 mt-4"
           />
 
-          <textarea
-            name="content"
-            placeholder="Write blog content..."
-            value={form.content}
-            onChange={handleChange}
-            className="w-full border rounded-lg p-3 mt-4 h-48"
-          />
+          <div className="mt-4">
+            <label className="text-sm font-semibold text-gray-700">
+              Content
+            </label>
+            <div className="mt-2 border rounded-lg overflow-hidden">
+              <RichTextEditor
+                value={editorValue}
+                onChange={(value) =>
+                  setForm((prev) => ({ ...prev, content: value }))
+                }
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Blog content is saved as HTML.
+            </p>
+          </div>
 
           <Button type="submit" className="mt-4">
             {editingId ? "Update Blog" : "Create Blog"}

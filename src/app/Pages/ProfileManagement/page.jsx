@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Eye, X } from "lucide-react";
@@ -185,6 +185,84 @@ const ViewProfileModal = ({ profile, isOpen, onClose }) => {
                         </div>
                     </div>
 
+                    {/* Family Details */}
+                    <div>
+                        <h3 className="text-lg font-semibold mb-4 pb-2 border-b">Family Details</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div>
+                                <p className="text-sm text-gray-600">Father Name</p>
+                                <p className="font-semibold">{profile.fatherName || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Father Occupation</p>
+                                <p className="font-semibold">{profile.fatherOccupation || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Father Contact</p>
+                                <p className="font-semibold">{profile.fatherContactNo || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Father Status</p>
+                                <p className="font-semibold">{profile.fatherStatus || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Mother Name</p>
+                                <p className="font-semibold">{profile.motherName || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Mother Occupation</p>
+                                <p className="font-semibold">{profile.motherOccupation || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Mother Status</p>
+                                <p className="font-semibold">{profile.motherStatus || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Mama Gotra</p>
+                                <p className="font-semibold">{profile.mamaGotra || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">No. of Brothers</p>
+                                <p className="font-semibold">{profile.noOfBrothers ?? "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">No. of Sisters</p>
+                                <p className="font-semibold">{profile.noOfSisters ?? "N/A"}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Astrology & Lifestyle */}
+                    <div>
+                        <h3 className="text-lg font-semibold mb-4 pb-2 border-b">Astrology & Lifestyle</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div>
+                                <p className="text-sm text-gray-600">Mangalik</p>
+                                <p className="font-semibold">{profile.mangalik || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Rashi Nakshatra</p>
+                                <p className="font-semibold">{profile.rashiNakshatra || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Body Type</p>
+                                <p className="font-semibold">{profile.bodyType || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Drink</p>
+                                <p className="font-semibold">{profile.drink || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Smoke</p>
+                                <p className="font-semibold">{profile.smoke || "N/A"}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-600">Physical Challenge Description</p>
+                                <p className="font-semibold">{profile.physicalChallengeDescription || "N/A"}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* About & Hobbies */}
                     <div>
                         <h3 className="text-lg font-semibold mb-4 pb-2 border-b">About & Interests</h3>
@@ -264,6 +342,7 @@ const Page = () => {
 
     const [search, setSearch] = useState("");
     const [filterMaritalStatus, setFilterMaritalStatus] = useState("");
+    const [filterStatus, setFilterStatus] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -295,11 +374,28 @@ const Page = () => {
             const params = {
                 page: currentPage,
                 limit: perPage,
-                search,
             };
+
+            const trimmedSearch = search.trim();
+            const isPhoneSearch = /^\d+$/.test(trimmedSearch);
+
+            // Send either name/email search or phone search to backend (not both).
+            if (trimmedSearch) {
+                if (isPhoneSearch) {
+                    params.phone = trimmedSearch;
+                } else {
+                    params.search = trimmedSearch;
+                    params.oldVirtualId = trimmedSearch;
+                }
+            }
 
             if (filterMaritalStatus) {
                 params.maritalStatus = filterMaritalStatus;
+            }
+
+            if (filterStatus) {
+                params.status = filterStatus;
+                params.isVisible = filterStatus === "approved";
             }
 
             const res = await axios.get(`${API}/api/admin/profiles`, {
@@ -316,11 +412,46 @@ const Page = () => {
         }
 
         setLoading(false);
-    }, [token, currentPage, search, filterMaritalStatus]);
+    }, [token, currentPage, search, filterMaritalStatus, filterStatus]);
 
     useEffect(() => {
         if (token) fetchProfiles();
     }, [fetchProfiles, token]);
+
+    const filteredProfiles = useMemo(() => {
+        const query = search.trim().toLowerCase();
+
+        return profiles.filter((profile) => {
+            const matchesStatus = !filterStatus
+                ? true
+                : filterStatus === "approved"
+                    ? profile.isVisible
+                    : !profile.isVisible;
+
+            const profileMarital = String(profile.maritalStatus || "").toLowerCase();
+            const selectedMarital = String(filterMaritalStatus || "").toLowerCase();
+            const matchesMarital = !selectedMarital || profileMarital === selectedMarital;
+
+            if (!matchesStatus || !matchesMarital) return false;
+            if (!query) return true;
+
+            const phone = String(profile.userId?.phone || profile.phone || "").toLowerCase();
+            const oldVirtualId = String(
+                profile.oldVirtualId || profile.userId?.oldVirtualId || ""
+            ).toLowerCase();
+            const name = String(profile.name || "").toLowerCase();
+            const email = String(profile.email || "").toLowerCase();
+            const location = String(profile.location || "").toLowerCase();
+
+            return (
+                phone.includes(query) ||
+                oldVirtualId.includes(query) ||
+                name.includes(query) ||
+                email.includes(query) ||
+                location.includes(query)
+            );
+        });
+    }, [profiles, filterStatus, filterMaritalStatus, search]);
 
     const handleViewProfile = (profile) => {
         setSelectedProfile(profile);
@@ -362,6 +493,20 @@ const Page = () => {
                                     <option value="Awaiting divorce">Legally Separated / Awaiting Divorce</option>
                                 </Select>
                             </div>
+
+                            <div className="w-full md:w-44">
+                                <Select
+                                    value={filterStatus}
+                                    onChange={(e) => {
+                                        setFilterStatus(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    <option value="">Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                </Select>
+                            </div>
                         </>
                     }
                 />
@@ -374,6 +519,16 @@ const Page = () => {
                             <Table
                                 columns={[
                                     { key: "name", header: "Name" },
+                                    {
+                                        key: "oldVirtualId",
+                                        header: "Old Virtual ID",
+                                        render: (p) => p.oldVirtualId || p.userId?.oldVirtualId || "N/A",
+                                    },
+                                    {
+                                        key: "phone",
+                                        header: "Phone",
+                                        render: (p) => p.userId?.phone || p.phone || "N/A",
+                                    },
                                     {
                                         key: "age",
                                         header: "Age",
@@ -472,7 +627,7 @@ const Page = () => {
                                         ),
                                     },
                                 ]}
-                                rows={profiles}
+                                rows={filteredProfiles}
                                 emptyText="No profiles found"
                             />
                         </div>
