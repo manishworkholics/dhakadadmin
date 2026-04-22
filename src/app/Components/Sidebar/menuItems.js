@@ -13,6 +13,8 @@ import {
   CreditCard,
   Shield,
   BarChart2,
+  TicketPercent,
+  UserX,
 } from "lucide-react";
 
 export const adminMenuItems = [
@@ -38,11 +40,21 @@ export const adminMenuItems = [
     icon: <CreditCard size={20} />,
     path: "/Pages/MembershipPlans",
   },
+  {
+    name: "Coupons",
+    icon: <TicketPercent size={20} />,
+    path: "/Pages/Coupon",
+  },
   { name: "Admin User", icon: <Shield size={20} />, path: "/Pages/AdminUser" },
   {
     name: "Users Management",
     icon: <Users size={20} />,
     path: "/Pages/UserManagement",
+  },
+  {
+    name: "Deactivate Requests",
+    icon: <UserX size={20} />,
+    path: "/Pages/DeactivateRequests",
   },
   {
     name: "Payment Management",

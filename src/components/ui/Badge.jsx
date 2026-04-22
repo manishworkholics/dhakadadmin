@@ -6,6 +6,7 @@ export default function Badge({ variant = "default", className = "", children })
     default: "bg-muted text-foreground",
     primary: "bg-primary/10 text-primary",
     success: "bg-success/10 text-success",
+    warning: "bg-yellow-100 text-yellow-700",
     danger: "bg-danger/10 text-danger",
     outline: "border border-border bg-transparent text-foreground",
   };
