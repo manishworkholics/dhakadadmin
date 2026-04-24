@@ -13,7 +13,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Loader from "@/components/ui/Loader";
 
-const API = "http://143.110.244.163:5000";
+const API = "https://dhakadmatrimony.com";
 
 const educationOptions = [
     "10th",

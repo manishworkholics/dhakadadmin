@@ -112,7 +112,7 @@ const Page = () => {
     setUploading(true);
 
     const res = await api.post(
-      "http://143.110.244.163:5000/api/upload-image",
+      "https://dhakadmatrimony.com/api/upload-image",
       formData,
       {
         headers: { "Content-Type": "multipart/form-data" },

@@ -35,7 +35,7 @@ const Page = () => {
             setLoading(true);
 
             const res = await axios.post(
-                "http://143.110.244.163:5000/api/admin/login",
+                "https://dhakadmatrimony.com/api/admin/login",
                 formData
             );
 

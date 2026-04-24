@@ -14,7 +14,7 @@ import ProtectedRoute from "../Common_Method/protectedroute.js";
 import axios from "axios";
 
 const API_URL =
-  "http://143.110.244.163:5000/api/plan/get-all-payment-history";
+  "https://dhakadmatrimony.com/api/plan/get-all-payment-history";
 
 const PaymentManagement = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

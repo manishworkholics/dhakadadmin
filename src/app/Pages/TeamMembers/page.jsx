@@ -14,9 +14,9 @@ import ProtectedRoute from "../Common_Method/protectedroute.js";
 import toast from "react-hot-toast";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 
-const API_LIST = "http://143.110.244.163:5000/api/team/admin";
-const API_BASE = "http://143.110.244.163:5000/api/team";
-const API_UPLOAD = "http://143.110.244.163:5000/api/upload-image";
+const API_LIST = "https://dhakadmatrimony.com/api/team/admin";
+const API_BASE = "https://dhakadmatrimony.com/api/team";
+const API_UPLOAD = "https://dhakadmatrimony.com/api/upload-image";
 
 const Page = () => {
 

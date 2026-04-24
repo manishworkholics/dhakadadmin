@@ -16,7 +16,7 @@ import Table from "@/components/ui/Table";
 import Badge from "@/components/ui/Badge";
 import Loader from "@/components/ui/Loader";
 
-const API_BASE = "http://143.110.244.163:5000";
+const API_BASE = "https://dhakadmatrimony.com";
 const ADMIN_COUPON_API = `${API_BASE}/api/admin/coupon`;
 
 const initialForm = {

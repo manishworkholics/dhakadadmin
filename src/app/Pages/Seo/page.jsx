@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { Search, Pencil, Trash2, Eye, Globe } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
-const API = "http://143.110.244.163:5000/api/seo";
+const API = "https://dhakadmatrimony.com/api/seo";
 
 const Page = () => {
 

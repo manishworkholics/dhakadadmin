@@ -15,8 +15,8 @@ import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 import RichTextEditor from "@webbycrown/react-advanced-richtext-editor";
 
-const API = "http://143.110.244.163:5000/api/blogs";
-const UPLOAD = "http://143.110.244.163:5000/api/upload-image";
+const API = "https://dhakadmatrimony.com/api/blogs";
+const UPLOAD = "https://dhakadmatrimony.com/api/upload-image";
 
 
 

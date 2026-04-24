@@ -26,7 +26,7 @@ Clock
 } from "lucide-react";
 import { adminMenuItems } from "../Sidebar/menuItems";
 
-const API = "http://143.110.244.163:5000/api/admin/dashboard";
+const API = "https://dhakadmatrimony.com/api/admin/dashboard";
 
 const monthNames = [
 "", "Jan","Feb","Mar","Apr","May","Jun",

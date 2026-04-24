@@ -16,7 +16,7 @@ import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Loader from "@/components/ui/Loader";
 
-const API = "http://143.110.244.163:5000";
+const API = "https://dhakadmatrimony.com";
 
 const ViewProfileModal = ({ profile, isOpen, onClose }) => {
     if (!isOpen || !profile) return null;

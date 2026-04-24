@@ -13,7 +13,7 @@ import { Eye, Trash2, CheckCircle, Mail } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import axios from "axios";
 
-const API = "http://143.110.244.163:5000/api/contact";
+const API = "https://dhakadmatrimony.com/api/contact";
 
 const ContactCRM = () => {
 

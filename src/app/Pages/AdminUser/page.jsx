@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 import { handleApiError } from "@/utils/apiErrorHandler.js";
 
-const API = "http://143.110.244.163:5000/api/admin";
+const API = "https://dhakadmatrimony.com/api/admin";
 
 
 const Page = () => {

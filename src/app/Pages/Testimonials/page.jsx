@@ -9,7 +9,7 @@
 // import Card from "@/components/ui/Card";
 // import Button from "@/components/ui/Button";
 
-// const API = "http://143.110.244.163:5000/api/review";
+// const API = "https://dhakadmatrimony.com/api/review";
 
 // const Page = () => {
 //   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -201,7 +201,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 
-const API = "http://143.110.244.163:5000/api/review";
+const API = "https://dhakadmatrimony.com/api/review";
 
 const Page = () => {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;

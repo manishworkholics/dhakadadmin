@@ -14,7 +14,7 @@ import Table from "@/components/ui/Table";
 import Badge from "@/components/ui/Badge";
 import RichTextEditor from "@webbycrown/react-advanced-richtext-editor";
 
-const API_URL = "http://143.110.244.163:5000/api/plan";
+const API_URL = "https://dhakadmatrimony.com/api/plan";
 
 const formatFeaturesForEditor = (features = []) => {
   if (!Array.isArray(features) || features.length === 0) {

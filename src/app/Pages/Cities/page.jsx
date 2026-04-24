@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { MapPin, Trash2, Plus, Search } from "lucide-react";
 import ProtectedRoute from "../Common_Method/protectedroute.js";
 
-const API = "http://143.110.244.163:5000/api/location";
+const API = "https://dhakadmatrimony.com/api/location";
 
 const Page = () => {
 

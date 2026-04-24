@@ -13,7 +13,7 @@ import { handleApiError } from "@/utils/apiErrorHandler.js";
 import toast from "react-hot-toast";
 
 // ✅ FIXED BASE URL
-const API = "http://143.110.244.163:5000/api/success";
+const API = "https://dhakadmatrimony.com/api/success";
 
 const Page = () => {
   const token =
@@ -51,7 +51,7 @@ const Page = () => {
       setUploading(true);
 
       const res = await axios.post(
-        "http://143.110.244.163:5000/api/upload-image",
+        "https://dhakadmatrimony.com/api/upload-image",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
